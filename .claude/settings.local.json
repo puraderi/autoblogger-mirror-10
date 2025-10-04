@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(for:*)",
+      "Bash(do sed -i \"s/label: ''Blog''/label: ''Blogg''/g\" \"$file\")",
+      "Bash(awk:*)",
+      "Bash(do sed -i 's|href: `/blog/|href: `/blogg/|g' \"$file\")"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
