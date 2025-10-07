@@ -6,8 +6,9 @@ import StructuredData from "@/components/StructuredData";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 
-// Revalidate every 5 minutes (skip for localhost in production check)
-export const revalidate = 300;
+// Use ISR with revalidation - pages are cached but refreshed every 24 hours
+export const revalidate = 86400;
+export const dynamicParams = true;
 
 export async function generateMetadata({
   params,
@@ -61,12 +62,6 @@ export async function generateMetadata({
       canonical: url,
     },
   };
-}
-
-export async function generateStaticParams() {
-  // This will be called at build time to generate static pages
-  // For now, return empty array - pages will be generated on-demand
-  return [];
 }
 
 export default async function BlogPostPage({
