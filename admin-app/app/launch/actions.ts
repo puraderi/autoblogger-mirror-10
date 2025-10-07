@@ -2,6 +2,7 @@
 
 import Anthropic from '@anthropic-ai/sdk';
 import { createClient } from '@supabase/supabase-js';
+import { uploadAuthorImageToSupabase } from '@/lib/author-image-upload';
 
 const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY!,
@@ -229,37 +230,119 @@ Returnera ENDAST meta description-texten, inget annat.`;
   return callClaude(prompt, context);
 }
 
+async function generateAuthor(websiteName: string, topic: string) {
+  const prompt = `Skapa en fiktiv svenskspråkig författare/bloggare för bloggen "${websiteName}" om "${topic}".
+
+Generera:
+1. AUTHOR_NAME: Ett vanligt svenskt namn (förnamn och efternamn)
+2. AUTHOR_BIO: En kort biografi om författaren (2-3 meningar, ca 100-150 tecken)
+
+Formatera svaret EXAKT så här:
+AUTHOR_NAME: [namn]
+AUTHOR_BIO: [biografi]
+
+Returnera ENDAST dessa två rader.`;
+
+  const response = await callClaude(prompt);
+
+  let authorName = '';
+  let authorBio = '';
+
+  for (const line of response.split('\n')) {
+    if (line.startsWith('AUTHOR_NAME:')) {
+      authorName = line.replace('AUTHOR_NAME:', '').trim();
+    } else if (line.startsWith('AUTHOR_BIO:')) {
+      authorBio = line.replace('AUTHOR_BIO:', '').trim();
+    }
+  }
+
+  // Generate slug from author name
+  const authorSlug = authorName
+    .toLowerCase()
+    .replace(/å/g, 'a')
+    .replace(/ä/g, 'a')
+    .replace(/ö/g, 'o')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '');
+
+  return { authorName, authorBio, authorSlug };
+}
+
+async function generateAuthorImage(authorName: string, authorBio: string, websiteName: string, topic: string): Promise<string> {
+  try {
+    // Generate image prompt
+    const imagePrompt = `A studio photo of a blogger for ${websiteName}, a website about ${topic}. ${authorBio}
+Professional headshot, clean background, good lighting, facing camera, friendly expression.
+High quality portrait photography.`;
+
+    // Call Flux to generate image
+    const response = await fetch('https://fal.run/fal-ai/flux/schnell', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Key ${process.env.FAL_API_KEY}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        prompt: imagePrompt,
+        image_size: {
+          width: 512,
+          height: 512
+        },
+        num_images: 1,
+        num_inference_steps: 12,
+        enable_safety_checker: true,
+        sync_mode: true
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`FAL API error: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    const fluxImageUrl = data.images[0].url;
+
+    // Upload cropped and compressed image to Supabase
+    const authorImageUrl = await uploadAuthorImageToSupabase(fluxImageUrl, authorName);
+
+    return authorImageUrl;
+  } catch (error) {
+    console.error('Error generating author image:', error);
+    throw error;
+  }
+}
+
 export async function launchWebsite(
   websiteName: string,
   topic: string,
-  hostname: string,
-  onProgress?: (step: number) => void
+  hostname: string
 ) {
   try {
     // Step 1: About Us
     const aboutUs = await generateAboutUs(websiteName, topic);
     let context = `Om oss: ${aboutUs}\n`;
-    onProgress?.(0);
 
     // Step 2: Contact Us
     const contactUs = await generateContactUs(websiteName, topic, context);
     context += `Kontakt: ${contactUs}\n`;
-    onProgress?.(1);
 
     // Step 3: Hero Content
     const hero = await generateHeroContent(websiteName, topic, context);
     context += `Hero: ${hero.heroTitle} - ${hero.heroText}\n`;
-    onProgress?.(2);
 
     // Step 4: Design System
     const design = await generateDesignSystem(websiteName, topic, context);
-    onProgress?.(3);
 
     // Step 5: Meta Description
     const metaDescription = await generateMetaDescription(websiteName, topic, context);
-    onProgress?.(4);
 
-    // Step 6: Insert into database
+    // Step 6: Generate Author
+    const author = await generateAuthor(websiteName, topic);
+
+    // Step 7: Generate Author Image
+    const authorImageUrl = await generateAuthorImage(author.authorName, author.authorBio, websiteName, topic);
+
+    // Step 8: Insert into database
     const randomTemplates = () => Math.floor(Math.random() * 5) + 1;
     const randomBool = () => Math.random() > 0.5;
 
@@ -299,13 +382,15 @@ export async function launchWebsite(
         show_reading_time: randomBool(),
         show_post_navigation: randomBool(),
         show_reading_progress_bar: randomBool(),
+        author_name: author.authorName,
+        author_bio: author.authorBio,
+        author_image_url: authorImageUrl,
+        author_slug: author.authorSlug,
       })
       .select()
       .single();
 
     if (error) throw error;
-
-    onProgress?.(5);
 
     return {
       website_id: data.id,

@@ -15,6 +15,7 @@ export default function LaunchPage() {
   const [websiteName, setWebsiteName] = useState('');
   const [topic, setTopic] = useState('');
   const [hostname, setHostname] = useState('');
+  const [keywords, setKeywords] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
   const [steps, setSteps] = useState<GenerationStep[]>([]);
   const [result, setResult] = useState<any>(null);
@@ -44,16 +45,23 @@ export default function LaunchPage() {
     ]);
 
     try {
-      const data = await launchWebsite(websiteName, topic, hostname, (stepIndex: number) => {
-        setSteps(prev => prev.map((s, i) => {
-          if (i === stepIndex) return { ...s, status: 'complete' };
-          if (i === stepIndex + 1) return { ...s, status: 'loading' };
-          return s;
-        }));
-      });
+      const data = await launchWebsite(websiteName, topic, hostname);
 
       setSteps(prev => prev.map(s => ({ ...s, status: 'complete' as const })));
       setResult(data);
+
+      // If keywords provided, queue blog generation jobs
+      if (keywords.trim()) {
+        const keywordList = keywords
+          .split('\n')
+          .map(k => k.trim())
+          .filter(k => k.length > 0);
+
+        if (keywordList.length > 0) {
+          const { queueBlogJobs } = await import('../generate/actions');
+          await queueBlogJobs(data.website_id, keywordList);
+        }
+      }
     } catch (err: any) {
       setError(err.message || 'Ett fel uppstod');
       setSteps([]);
@@ -68,12 +76,20 @@ export default function LaunchPage() {
         <div className="bg-white rounded-lg shadow-md p-8">
           <div className="flex justify-between items-center mb-8">
             <h1 className="text-3xl font-bold">Skapa ny webbplats</h1>
-            <button
-              onClick={() => router.push('/websites')}
-              className="text-blue-600 hover:underline"
-            >
-              Se alla webbplatser →
-            </button>
+            <div className="space-x-4">
+              <button
+                onClick={() => router.push('/generate')}
+                className="text-blue-600 hover:underline"
+              >
+                Generera Inlägg
+              </button>
+              <button
+                onClick={() => router.push('/websites')}
+                className="text-blue-600 hover:underline"
+              >
+                Visa Webbplatser
+              </button>
+            </div>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
@@ -123,6 +139,24 @@ export default function LaunchPage() {
                 required
                 disabled={isGenerating}
               />
+            </div>
+
+            <div>
+              <label htmlFor="keywords" className="block text-sm font-medium text-gray-700 mb-2">
+                Nyckelord (valfritt) - ett per rad
+              </label>
+              <textarea
+                id="keywords"
+                value={keywords}
+                onChange={(e) => setKeywords(e.target.value)}
+                rows={6}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent font-mono text-sm"
+                placeholder="bästa kaffebryggare 2025&#10;hur välja rätt laptop&#10;tips för hemmaträning"
+                disabled={isGenerating}
+              />
+              <p className="text-sm text-gray-500 mt-1">
+                {keywords ? `${keywords.split('\n').filter(k => k.trim()).length} nyckelord` : 'Lämna tomt för att hoppa över'}
+              </p>
             </div>
 
             {error && (

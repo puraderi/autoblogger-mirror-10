@@ -8,7 +8,7 @@ import { getFontVariable, getCSSFontFamily } from "@/lib/fonts";
 
 export async function generateMetadata(): Promise<Metadata> {
   const headersList = await headers();
-  const hostname = headersList.get("host") || "localhost";
+  const hostname = (headersList.get("host") || "localhost").split(':')[0];
   const websiteData = await getWebsiteDataByHostname(hostname);
 
   return {
@@ -26,7 +26,8 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const headersList = await headers();
-  const hostname = headersList.get("host") || "localhost";
+  const hostname = (headersList.get("host") || "localhost").split(':')[0];
+  console.log('Hostname received:', hostname);
   const websiteData = await getWebsiteDataByHostname(hostname);
 
   if (!websiteData) {

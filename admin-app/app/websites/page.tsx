@@ -66,12 +66,20 @@ export default function WebsitesPage() {
         <div className="bg-white rounded-lg shadow-md p-8">
           <div className="flex justify-between items-center mb-8">
             <h1 className="text-3xl font-bold">Alla webbplatser ({websites.length})</h1>
-            <button
-              onClick={() => router.push('/launch')}
-              className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
-            >
-              + Skapa ny
-            </button>
+            <div className="space-x-3">
+              <button
+                onClick={() => router.push('/generate')}
+                className="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition-colors"
+              >
+                Generera Inlägg
+              </button>
+              <button
+                onClick={() => router.push('/launch')}
+                className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+              >
+                + Skapa Webbplats
+              </button>
+            </div>
           </div>
 
           {websites.length === 0 ? (

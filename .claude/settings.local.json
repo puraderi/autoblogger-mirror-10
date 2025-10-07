@@ -21,7 +21,10 @@
       "Bash(do sed -i '/const authorSlug/,/replace.*$/d' \"$file\")",
       "Bash(do sed -i 's/post\\.author_name/websiteData.author_name/g' \"$file\")",
       "Bash(do sed -i 's/post\\.author_avatar/websiteData.author_image_url/g' \"$file\")",
-      "Bash(git reset:*)"
+      "Bash(git reset:*)",
+      "Bash(do sed -i 's/alt={websiteData\\.author_name}/alt={websiteData.author_name || \"\"Author\"\"}/g' \"$file\")",
+      "Bash(npm run build:*)",
+      "Bash(npx tsc:*)"
     ],
     "deny": [],
     "ask": []
