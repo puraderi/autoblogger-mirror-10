@@ -16,7 +16,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const headersList = await headers();
-  const hostname = headersList.get("host") || "localhost";
+  const hostname = (headersList.get("host") || "localhost").split(':')[0];
   const websiteData = await getWebsiteDataByHostname(hostname);
 
   if (!websiteData) {
@@ -76,7 +76,7 @@ export default async function BlogPostPage({
 }) {
   const { slug } = await params;
   const headersList = await headers();
-  const hostname = headersList.get("host") || "localhost";
+  const hostname = (headersList.get("host") || "localhost").split(':')[0];
   const websiteData = await getWebsiteDataByHostname(hostname);
 
   if (!websiteData) {

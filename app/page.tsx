@@ -8,7 +8,7 @@ export const revalidate = 60;
 
 export default async function Home() {
   const headersList = await headers();
-  const hostname = headersList.get("host") || "localhost";
+  const hostname = (headersList.get("host") || "localhost").split(':')[0];
   const websiteData = await getWebsiteDataByHostname(hostname);
 
   if (!websiteData) {
