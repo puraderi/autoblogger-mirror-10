@@ -3,12 +3,14 @@ import { WebsiteData } from '@/lib/services/website';
 
 interface AuthorBoxProps {
   websiteData: WebsiteData;
-  authorName: string;
+  authorName: string | null;
   authorAvatar?: string | null;
   authorBio?: string;
 }
 
 export default function AuthorBox({ websiteData, authorName, authorAvatar, authorBio }: AuthorBoxProps) {
+  if (!authorName) return null;
+
   const defaultBio = `${authorName} är en skribent för ${websiteData.website_name}.`;
 
   return (
