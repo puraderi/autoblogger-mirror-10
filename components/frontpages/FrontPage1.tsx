@@ -49,7 +49,7 @@ export default function FrontPage1({ websiteData, blogPosts }: FrontPageProps) {
                     {post.title}
                   </h3>
                   <p className="text-sm mb-3" style={{ color: websiteData.text_color }}>{post.excerpt}</p>
-                  <div className="text-sm opacity-70" style={{ color: websiteData.text_color }}>Av {post.author_name}</div>
+                  <div className="text-sm opacity-70" style={{ color: websiteData.text_color }}>Av {websiteData.author_name}</div>
                 </div>
               </div>
             </Link>

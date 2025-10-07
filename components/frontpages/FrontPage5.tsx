@@ -56,17 +56,17 @@ export default function FrontPage5({ websiteData, blogPosts }: FrontPageProps) {
                     </h2>
                     <p className="text-gray-600 text-sm mb-4">{post.excerpt}</p>
                     <div className="flex items-center gap-3">
-                      {post.author_avatar && (
+                      {websiteData.author_image_url && (
                         <Image
-                          src={post.author_avatar}
-                          alt={post.author_name}
+                          src={websiteData.author_image_url}
+                          alt={websiteData.author_name}
                           width={32}
                           height={32}
                           className="rounded-full"
                         />
                       )}
                       <div className="text-sm">
-                        <div className="font-semibold" style={{ color: websiteData.primary_color }}>{post.author_name}</div>
+                        <div className="font-semibold" style={{ color: websiteData.primary_color }}>{websiteData.author_name}</div>
                         {post.published_at && (
                           <div className="text-gray-500 text-xs">
                             {new Date(post.published_at).toLocaleDateString()}

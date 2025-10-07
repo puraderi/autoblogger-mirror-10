@@ -16,8 +16,8 @@ export default function StructuredData({ websiteData, post, hostname }: Structur
     "image": post.image_url || undefined,
     "author": {
       "@type": "Person",
-      "name": post.author_name,
-      "image": post.author_avatar || undefined,
+      "name": websiteData.author_name,
+      "image": websiteData.author_image_url || undefined,
     },
     "publisher": {
       "@type": "Organization",

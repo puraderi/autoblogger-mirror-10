@@ -1,6 +1,9 @@
+'use client';
+
 import Link from 'next/link';
 import Image from 'next/image';
 import { WebsiteData } from '@/lib/services/website';
+import { useState } from 'react';
 
 interface HeaderProps {
   websiteData: WebsiteData;
@@ -8,37 +11,77 @@ interface HeaderProps {
 
 // Header 1: Logo Left, Horizontal Menu
 export default function Header1({ websiteData }: HeaderProps) {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
   return (
     <header className="border-b" style={{ borderColor: websiteData.secondary_color }}>
-      <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-3">
-          {websiteData.logo_url && (
-            <Image
-              src={websiteData.logo_url}
-              alt={websiteData.website_name}
-              width={40}
-              height={40}
-              className="object-contain"
-            />
-          )}
-          <span className="text-xl font-bold" style={{ color: websiteData.primary_color }}>
-            {websiteData.website_name}
-          </span>
-        </Link>
-        <nav className="flex items-center gap-6">
-          <Link href="/" className="hover:opacity-80" style={{ color: websiteData.primary_color }}>
-            Hem
+      <div className="container mx-auto px-4 py-4">
+        <div className="flex items-center justify-between">
+          <Link href="/" className="flex items-center gap-2 md:gap-3">
+            {websiteData.logo_url && (
+              <Image
+                src={websiteData.logo_url}
+                alt={websiteData.website_name}
+                width={32}
+                height={32}
+                className="object-contain md:w-10 md:h-10"
+              />
+            )}
+            <span className="text-lg md:text-xl font-bold" style={{ color: websiteData.primary_color }}>
+              {websiteData.website_name}
+            </span>
           </Link>
-          <Link href="/blogg" className="hover:opacity-80" style={{ color: websiteData.primary_color }}>
-            Blogg
-          </Link>
-          <Link href="/om-oss" className="hover:opacity-80" style={{ color: websiteData.primary_color }}>
-            Om oss
-          </Link>
-          <Link href="/kontakt" className="hover:opacity-80" style={{ color: websiteData.primary_color }}>
-            Kontakt
-          </Link>
-        </nav>
+
+          {/* Hamburger button */}
+          <button
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            className="md:hidden p-2"
+            style={{ color: websiteData.primary_color }}
+            aria-label="Toggle menu"
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              {isMenuOpen ? (
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              ) : (
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              )}
+            </svg>
+          </button>
+
+          {/* Desktop nav */}
+          <nav className="hidden md:flex items-center gap-6">
+            <Link href="/" className="hover:opacity-80" style={{ color: websiteData.primary_color }}>
+              Hem
+            </Link>
+            <Link href="/blogg" className="hover:opacity-80" style={{ color: websiteData.primary_color }}>
+              Blogg
+            </Link>
+            <Link href="/om-oss" className="hover:opacity-80" style={{ color: websiteData.primary_color }}>
+              Om oss
+            </Link>
+            <Link href="/kontakt" className="hover:opacity-80" style={{ color: websiteData.primary_color }}>
+              Kontakt
+            </Link>
+          </nav>
+        </div>
+
+        {/* Mobile nav */}
+        {isMenuOpen && (
+          <nav className="md:hidden flex flex-col gap-4 pt-4 mt-4 border-t" style={{ borderColor: websiteData.secondary_color }}>
+            <Link href="/" className="hover:opacity-80 py-2" style={{ color: websiteData.primary_color }} onClick={() => setIsMenuOpen(false)}>
+              Hem
+            </Link>
+            <Link href="/blogg" className="hover:opacity-80 py-2" style={{ color: websiteData.primary_color }} onClick={() => setIsMenuOpen(false)}>
+              Blogg
+            </Link>
+            <Link href="/om-oss" className="hover:opacity-80 py-2" style={{ color: websiteData.primary_color }} onClick={() => setIsMenuOpen(false)}>
+              Om oss
+            </Link>
+            <Link href="/kontakt" className="hover:opacity-80 py-2" style={{ color: websiteData.primary_color }} onClick={() => setIsMenuOpen(false)}>
+              Kontakt
+            </Link>
+          </nav>
+        )}
       </div>
     </header>
   );

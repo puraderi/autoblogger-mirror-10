@@ -51,7 +51,7 @@ export default function FrontPage4({ websiteData, blogPosts }: FrontPageProps) {
                     </h2>
                     <p className="mb-4 text-lg" style={{ color: websiteData.text_color }}>{post.excerpt}</p>
                     <div className="flex items-center gap-4 text-sm opacity-70" style={{ color: websiteData.text_color }}>
-                      <span>{post.author_name}</span>
+                      <span>{websiteData.author_name}</span>
                       {post.published_at && (
                         <span>{new Date(post.published_at).toLocaleDateString()}</span>
                       )}

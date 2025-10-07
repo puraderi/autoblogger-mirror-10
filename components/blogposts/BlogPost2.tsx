@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import Link from 'next/link';
 import { WebsiteData } from '@/lib/services/website';
 import { BlogPost } from '@/lib/services/blog';
 import Breadcrumbs from '@/components/blogcomponents/Breadcrumbs';
@@ -21,6 +22,8 @@ interface BlogPostProps {
 // BlogPost 2: Magazine Style with Sidebar
 export default function BlogPost2({ websiteData, post, relatedPosts = [], previousPost, nextPost }: BlogPostProps) {
   const currentUrl = typeof window !== 'undefined' ? window.location.href : '';
+
+  const authorSlug = websiteData.author_slug || '';
 
   return (
     <>
@@ -56,7 +59,9 @@ export default function BlogPost2({ websiteData, post, relatedPosts = [], previo
             </h1>
 
             <div className="flex items-center gap-2 md:gap-4 mb-4 md:mb-6 flex-wrap text-sm md:text-base" style={{ color: websiteData.text_color }}>
-              <span>By {post.author_name}</span>
+              <span>
+                By <Link href={`/${authorSlug}`} className="hover:underline">{websiteData.author_name}</Link>
+              </span>
               {post.published_at && (
                 <span>
                   {new Date(post.published_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
@@ -77,8 +82,8 @@ export default function BlogPost2({ websiteData, post, relatedPosts = [], previo
               <div className="mb-12">
                 <AuthorBox
                   websiteData={websiteData}
-                  authorName={post.author_name}
-                  authorAvatar={post.author_avatar}
+                  authorName={websiteData.author_name}
+                  authorAvatar={websiteData.author_image_url}
                 />
               </div>
             )}
@@ -92,16 +97,16 @@ export default function BlogPost2({ websiteData, post, relatedPosts = [], previo
             <div className="border-l-4 pl-4 sticky top-4" style={{ borderColor: websiteData.accent_color }}>
               <div className="mb-6">
                 <h3 className="font-bold text-lg mb-3" style={{ color: websiteData.primary_color }}>Author</h3>
-                {post.author_avatar && (
+                {websiteData.author_image_url && (
                   <Image
-                    src={post.author_avatar}
-                    alt={post.author_name}
+                    src={websiteData.author_image_url}
+                    alt={websiteData.author_name}
                     width={64}
                     height={64}
                     className="rounded-full mb-2"
                   />
                 )}
-                <div className="font-semibold">{post.author_name}</div>
+                <Link href={`/${authorSlug}`} className="font-semibold hover:underline">{websiteData.author_name}</Link>
               </div>
 
               {post.published_at && (

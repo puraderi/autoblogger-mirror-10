@@ -1,3 +1,5 @@
+'use client';
+
 import { WebsiteData } from '@/lib/services/website';
 import Header1 from './Header1';
 import Header2 from './Header2';

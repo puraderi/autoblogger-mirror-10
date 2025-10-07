@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import Link from 'next/link';
 import { WebsiteData } from '@/lib/services/website';
 import { BlogPost } from '@/lib/services/blog';
 import Breadcrumbs from '@/components/blogcomponents/Breadcrumbs';
@@ -21,6 +22,8 @@ interface BlogPostProps {
 // BlogPost 4: Full Width Hero Image
 export default function BlogPost4({ websiteData, post, relatedPosts = [], previousPost, nextPost }: BlogPostProps) {
   const currentUrl = typeof window !== 'undefined' ? window.location.href : '';
+
+  const authorSlug = websiteData.author_slug || '';
 
   return (
     <>
@@ -50,7 +53,7 @@ export default function BlogPost4({ websiteData, post, relatedPosts = [], previo
               )}
               <h1 className="text-6xl font-bold mb-4">{post.title}</h1>
               <div className="flex items-center gap-4 text-lg flex-wrap">
-                <span>{post.author_name}</span>
+                <Link href={`/${authorSlug}`} className="hover:underline">{websiteData.author_name}</Link>
                 {post.published_at && (
                   <span>{new Date(post.published_at).toLocaleDateString()}</span>
                 )}
@@ -78,7 +81,9 @@ export default function BlogPost4({ websiteData, post, relatedPosts = [], previo
                 {post.title}
               </h1>
               <div className="flex items-center gap-4 flex-wrap" style={{ color: websiteData.text_color }}>
-                <span>By {post.author_name}</span>
+                <span>
+                  By <Link href={`/${authorSlug}`} className="hover:underline">{websiteData.author_name}</Link>
+                </span>
                 {post.published_at && (
                   <span>{new Date(post.published_at).toLocaleDateString()}</span>
                 )}
@@ -99,8 +104,8 @@ export default function BlogPost4({ websiteData, post, relatedPosts = [], previo
             <div className="mb-12">
               <AuthorBox
                 websiteData={websiteData}
-                authorName={post.author_name}
-                authorAvatar={post.author_avatar}
+                authorName={websiteData.author_name}
+                authorAvatar={websiteData.author_image_url}
               />
             </div>
           )}
@@ -108,17 +113,17 @@ export default function BlogPost4({ websiteData, post, relatedPosts = [], previo
           <footer className="border-t-2 pt-8 pb-12" style={{ borderColor: websiteData.accent_color }}>
             <div className="flex items-center justify-between flex-wrap gap-4">
               <div className="flex items-center gap-3">
-                {post.author_avatar && (
+                {websiteData.author_image_url && (
                   <Image
-                    src={post.author_avatar}
-                    alt={post.author_name}
+                    src={websiteData.author_image_url}
+                    alt={websiteData.author_name}
                     width={56}
                     height={56}
                     className="rounded-full"
                   />
                 )}
                 <div>
-                  <div className="font-bold text-lg" style={{ color: websiteData.primary_color }}>{post.author_name}</div>
+                  <Link href={`/${authorSlug}`} className="font-bold text-lg hover:underline" style={{ color: websiteData.primary_color }}>{websiteData.author_name}</Link>
                   <div className="text-sm text-gray-600">Author</div>
                 </div>
               </div>

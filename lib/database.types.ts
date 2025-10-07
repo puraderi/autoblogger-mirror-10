@@ -52,6 +52,10 @@ export interface Database {
           show_reading_time: boolean
           show_post_navigation: boolean
           show_reading_progress_bar: boolean
+          author_name: string | null
+          author_bio: string | null
+          author_image_url: string | null
+          author_slug: string | null
         }
         Insert: {
           id?: string
@@ -91,6 +95,10 @@ export interface Database {
           show_reading_time?: boolean
           show_post_navigation?: boolean
           show_reading_progress_bar?: boolean
+          author_name?: string | null
+          author_bio?: string | null
+          author_image_url?: string | null
+          author_slug?: string | null
         }
         Update: {
           id?: string
@@ -130,6 +138,10 @@ export interface Database {
           show_reading_time?: boolean
           show_post_navigation?: boolean
           show_reading_progress_bar?: boolean
+          author_name?: string | null
+          author_bio?: string | null
+          author_image_url?: string | null
+          author_slug?: string | null
         }
       }
       blog_post: {
@@ -186,6 +198,44 @@ export interface Database {
           tags?: string[] | null
           meta_title?: string | null
           meta_description?: string | null
+        }
+      }
+      blog_generation_jobs: {
+        Row: {
+          id: string
+          website_id: string
+          keyword: string
+          status: 'pending' | 'processing' | 'complete' | 'failed'
+          progress_step: string | null
+          result_post_id: string | null
+          error_message: string | null
+          created_at: string
+          updated_at: string
+          completed_at: string | null
+        }
+        Insert: {
+          id?: string
+          website_id: string
+          keyword: string
+          status?: 'pending' | 'processing' | 'complete' | 'failed'
+          progress_step?: string | null
+          result_post_id?: string | null
+          error_message?: string | null
+          created_at?: string
+          updated_at?: string
+          completed_at?: string | null
+        }
+        Update: {
+          id?: string
+          website_id?: string
+          keyword?: string
+          status?: 'pending' | 'processing' | 'complete' | 'failed'
+          progress_step?: string | null
+          result_post_id?: string | null
+          error_message?: string | null
+          created_at?: string
+          updated_at?: string
+          completed_at?: string | null
         }
       }
     }

@@ -67,7 +67,7 @@ export default function FrontPage2({ websiteData, blogPosts }: FrontPageProps) {
                 <h4 className="font-semibold mb-1 group-hover:opacity-80" style={{ color: websiteData.primary_color }}>
                   {post.title}
                 </h4>
-                <p className="text-sm text-gray-500">{post.author_name}</p>
+                <p className="text-sm text-gray-500">{websiteData.author_name}</p>
               </div>
             </Link>
           ))}

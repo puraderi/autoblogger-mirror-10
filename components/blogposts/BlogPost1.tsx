@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import Link from 'next/link';
 import { WebsiteData } from '@/lib/services/website';
 import { BlogPost } from '@/lib/services/blog';
 import Breadcrumbs from '@/components/blogcomponents/Breadcrumbs';
@@ -23,6 +24,8 @@ interface BlogPostProps {
 export default function BlogPost1({ websiteData, post, relatedPosts = [], previousPost, nextPost }: BlogPostProps) {
   const currentUrl = typeof window !== 'undefined' ? window.location.href : '';
 
+  const authorSlug = websiteData.author_slug || '';
+
   return (
     <>
       {websiteData.show_reading_progress_bar && <ReadingProgressBar websiteData={websiteData} />}
@@ -44,7 +47,9 @@ export default function BlogPost1({ websiteData, post, relatedPosts = [], previo
           </h1>
 
           <div className="flex flex-wrap items-center gap-2 md:gap-4 mb-4 md:mb-6 text-sm md:text-base">
-            <span style={{ color: websiteData.text_color }}>Av {post.author_name}</span>
+            <span style={{ color: websiteData.text_color }}>
+              Av <Link href={`/${authorSlug}`} className="hover:underline">{websiteData.author_name}</Link>
+            </span>
             {post.published_at && (
               <span style={{ color: websiteData.text_color }}>
                 {formatSwedishDate(post.published_at)}
@@ -82,8 +87,8 @@ export default function BlogPost1({ websiteData, post, relatedPosts = [], previo
           <div className="mb-12">
             <AuthorBox
               websiteData={websiteData}
-              authorName={post.author_name}
-              authorAvatar={post.author_avatar}
+              authorName={websiteData.author_name}
+              authorAvatar={websiteData.author_image_url}
             />
           </div>
         )}

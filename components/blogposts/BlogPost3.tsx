@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import Link from 'next/link';
 import { WebsiteData } from '@/lib/services/website';
 import { BlogPost } from '@/lib/services/blog';
 import Breadcrumbs from '@/components/blogcomponents/Breadcrumbs';
@@ -21,6 +22,8 @@ interface BlogPostProps {
 // BlogPost 3: Minimal Centered Layout
 export default function BlogPost3({ websiteData, post, relatedPosts = [], previousPost, nextPost }: BlogPostProps) {
   const currentUrl = typeof window !== 'undefined' ? window.location.href : '';
+
+  const authorSlug = websiteData.author_slug || '';
 
   return (
     <>
@@ -53,17 +56,17 @@ export default function BlogPost3({ websiteData, post, relatedPosts = [], previo
           </h1>
 
           <div className="flex items-center justify-center gap-4">
-            {post.author_avatar && (
+            {websiteData.author_image_url && (
               <Image
-                src={post.author_avatar}
-                alt={post.author_name}
+                src={websiteData.author_image_url}
+                alt={websiteData.author_name}
                 width={48}
                 height={48}
                 className="rounded-full"
               />
             )}
             <div className="text-left">
-              <div className="font-semibold" style={{ color: websiteData.primary_color }}>{post.author_name}</div>
+              <Link href={`/${authorSlug}`} className="font-semibold hover:underline" style={{ color: websiteData.primary_color }}>{websiteData.author_name}</Link>
               <div className="flex items-center gap-2 text-sm text-gray-500">
                 {post.published_at && (
                   <span>
@@ -104,8 +107,8 @@ export default function BlogPost3({ websiteData, post, relatedPosts = [], previo
           <div className="mt-12">
             <AuthorBox
               websiteData={websiteData}
-              authorName={post.author_name}
-              authorAvatar={post.author_avatar}
+              authorName={websiteData.author_name}
+              authorAvatar={websiteData.author_image_url}
             />
           </div>
         )}

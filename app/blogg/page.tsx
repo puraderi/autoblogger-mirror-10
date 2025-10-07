@@ -50,7 +50,7 @@ export default async function BlogListPage() {
                 </h2>
                 <p className="text-gray-600 text-sm mb-4">{post.excerpt}</p>
                 <div className="flex items-center justify-between text-sm text-gray-500">
-                  <span>{post.author_name}</span>
+                  <span>{websiteData.author_name}</span>
                   {post.published_at && (
                     <span>{new Date(post.published_at).toLocaleDateString()}</span>
                   )}

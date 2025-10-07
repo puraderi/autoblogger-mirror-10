@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import Link from 'next/link';
 import { WebsiteData } from '@/lib/services/website';
 import { BlogPost } from '@/lib/services/blog';
 import Breadcrumbs from '@/components/blogcomponents/Breadcrumbs';
@@ -21,6 +22,8 @@ interface BlogPostProps {
 // BlogPost 5: Card Style with Accent
 export default function BlogPost5({ websiteData, post, relatedPosts = [], previousPost, nextPost }: BlogPostProps) {
   const currentUrl = typeof window !== 'undefined' ? window.location.href : '';
+
+  const authorSlug = websiteData.author_slug || '';
 
   return (
     <>
@@ -64,10 +67,10 @@ export default function BlogPost5({ websiteData, post, relatedPosts = [], previo
                 </h1>
 
                 <div className="flex items-center gap-4 flex-wrap">
-                  {post.author_avatar && (
+                  {websiteData.author_image_url && (
                     <Image
-                      src={post.author_avatar}
-                      alt={post.author_name}
+                      src={websiteData.author_image_url}
+                      alt={websiteData.author_name}
                       width={56}
                       height={56}
                       className="rounded-full border-2"
@@ -75,9 +78,9 @@ export default function BlogPost5({ websiteData, post, relatedPosts = [], previo
                     />
                   )}
                   <div>
-                    <div className="font-bold text-lg" style={{ color: websiteData.primary_color }}>
-                      {post.author_name}
-                    </div>
+                    <Link href={`/${authorSlug}`} className="font-bold text-lg hover:underline" style={{ color: websiteData.primary_color }}>
+                      {websiteData.author_name}
+                    </Link>
                     <div className="flex items-center gap-2 text-sm text-gray-600">
                       {post.published_at && (
                         <span>
@@ -102,8 +105,8 @@ export default function BlogPost5({ websiteData, post, relatedPosts = [], previo
                 <div className="mb-12">
                   <AuthorBox
                     websiteData={websiteData}
-                    authorName={post.author_name}
-                    authorAvatar={post.author_avatar}
+                    authorName={websiteData.author_name}
+                    authorAvatar={websiteData.author_image_url}
                   />
                 </div>
               )}

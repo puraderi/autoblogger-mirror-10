@@ -68,7 +68,7 @@ export default function FrontPage3({ websiteData, blogPosts }: FrontPageProps) {
                 <h3 className="font-bold mb-2 group-hover:opacity-80" style={{ color: websiteData.primary_color }}>
                   {post.title}
                 </h3>
-                <p className="text-xs opacity-70" style={{ color: websiteData.text_color }}>{post.author_name}</p>
+                <p className="text-xs opacity-70" style={{ color: websiteData.text_color }}>{websiteData.author_name}</p>
               </div>
             </Link>
           ))}
