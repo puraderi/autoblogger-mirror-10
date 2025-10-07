@@ -59,7 +59,7 @@ export default function BlogPost3({ websiteData, post, relatedPosts = [], previo
             {websiteData.author_image_url && (
               <Image
                 src={websiteData.author_image_url}
-                alt={websiteData.author_name}
+                alt={websiteData.author_name || "Author"}
                 width={48}
                 height={48}
                 className="rounded-full"
