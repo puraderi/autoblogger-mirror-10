@@ -57,7 +57,7 @@ export default async function AuthorPage({ params }: AuthorPageProps) {
           {websiteData.author_image_url && (
             <Image
               src={websiteData.author_image_url}
-              alt={websiteData.author_name}
+              alt={websiteData.author_name || "Author"}
               width={150}
               height={150}
               className="rounded-full mx-auto mb-6"
