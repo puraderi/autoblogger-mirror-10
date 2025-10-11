@@ -24,6 +24,7 @@ export default function Footer4({ websiteData }: FooterProps) {
               <Link href="/blogg" className="hover:opacity-80 text-gray-700">Blogg</Link>
               <Link href="/om-oss" className="hover:opacity-80 text-gray-700">Om oss</Link>
               <Link href="/kontakt" className="hover:opacity-80 text-gray-700">Kontakt</Link>
+              <Link href="/sitemap.xml" className="hover:opacity-80 text-gray-700">Sitemap</Link>
             </nav>
           </div>
           <div>
@@ -36,18 +37,18 @@ export default function Footer4({ websiteData }: FooterProps) {
             </div>
           </div>
           <div>
-            <h4 className="font-semibold mb-4" style={{ color: websiteData.primary_color }}>Newsletter</h4>
-            <p className="text-sm text-gray-700 mb-3">Stay updated with our latest posts</p>
+            <h4 className="font-semibold mb-4" style={{ color: websiteData.primary_color }}>Nyhetsbrev</h4>
+            <p className="text-sm text-gray-700 mb-3">Håll dig uppdaterad med våra senaste inlägg</p>
             <input
               type="email"
-              placeholder="Your email"
+              placeholder="Din e-post"
               className="w-full px-3 py-2 text-sm border rounded"
               style={{ borderColor: websiteData.primary_color }}
             />
           </div>
         </div>
         <div className="pt-8 border-t text-center text-sm text-gray-600" style={{ borderColor: websiteData.primary_color }}>
-          © {new Date().getFullYear()} {websiteData.website_name}. All rights reserved.
+          © {new Date().getFullYear()} {websiteData.website_name}. Alla rättigheter förbehållna.
         </div>
       </div>
     </footer>

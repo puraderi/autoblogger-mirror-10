@@ -16,6 +16,7 @@ export default function Footer2({ websiteData }: FooterProps) {
           <Link href="/blogg" className="hover:opacity-80">Blogg</Link>
           <Link href="/om-oss" className="hover:opacity-80">Om oss</Link>
           <Link href="/kontakt" className="hover:opacity-80">Kontakt</Link>
+          <Link href="/sitemap.xml" className="hover:opacity-80">Sitemap</Link>
         </nav>
         <div className="flex items-center justify-center gap-4 mb-6">
           {websiteData.social_twitter && <a href={websiteData.social_twitter} className="hover:opacity-80">Twitter</a>}
@@ -23,7 +24,7 @@ export default function Footer2({ websiteData }: FooterProps) {
           {websiteData.social_instagram && <a href={websiteData.social_instagram} className="hover:opacity-80">Instagram</a>}
           {websiteData.social_linkedin && <a href={websiteData.social_linkedin} className="hover:opacity-80">LinkedIn</a>}
         </div>
-        <p className="text-sm opacity-90">© {new Date().getFullYear()} {websiteData.website_name}. All rights reserved.</p>
+        <p className="text-sm opacity-90">© {new Date().getFullYear()} {websiteData.website_name}. Alla rättigheter förbehållna.</p>
       </div>
     </footer>
   );

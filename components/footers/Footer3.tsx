@@ -31,6 +31,7 @@ export default function Footer3({ websiteData }: FooterProps) {
             <Link href="/blogg" className="hover:opacity-80" style={{ color: websiteData.primary_color }}>Blogg</Link>
             <Link href="/om-oss" className="hover:opacity-80" style={{ color: websiteData.primary_color }}>Om oss</Link>
             <Link href="/kontakt" className="hover:opacity-80" style={{ color: websiteData.primary_color }}>Kontakt</Link>
+            <Link href="/sitemap.xml" className="hover:opacity-80" style={{ color: websiteData.primary_color }}>Sitemap</Link>
           </nav>
           <div className="flex items-center gap-3 text-sm">
             {websiteData.social_twitter && <a href={websiteData.social_twitter} className="hover:opacity-80" style={{ color: websiteData.primary_color }}>TW</a>}

@@ -24,17 +24,18 @@ export default function Footer5({ websiteData }: FooterProps) {
             </div>
           </div>
           <div>
-            <h4 className="font-semibold mb-4" style={{ color: websiteData.primary_color }}>Site Map</h4>
+            <h4 className="font-semibold mb-4" style={{ color: websiteData.primary_color }}>Webbplatskarta</h4>
             <nav className="grid grid-cols-2 gap-2 text-sm">
               <Link href="/" className="hover:opacity-80" style={{ color: websiteData.primary_color }}>Hem</Link>
               <Link href="/blogg" className="hover:opacity-80" style={{ color: websiteData.primary_color }}>Blogg</Link>
               <Link href="/om-oss" className="hover:opacity-80" style={{ color: websiteData.primary_color }}>Om oss</Link>
               <Link href="/kontakt" className="hover:opacity-80" style={{ color: websiteData.primary_color }}>Kontakt</Link>
+              <Link href="/sitemap.xml" className="hover:opacity-80" style={{ color: websiteData.primary_color }}>Sitemap</Link>
             </nav>
           </div>
         </div>
         <div className="text-center text-sm text-gray-600">
-          © {new Date().getFullYear()} {websiteData.website_name}. All rights reserved.
+          © {new Date().getFullYear()} {websiteData.website_name}. Alla rättigheter förbehållna.
         </div>
       </div>
     </footer>
