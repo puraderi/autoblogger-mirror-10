@@ -1,24 +1,29 @@
 import { headers } from "next/headers";
 import { getWebsiteDataByHostname } from "@/lib/services/website";
 import PageTemplate from "@/components/pages";
+import { normalizeHostname } from "@/lib/utils";
 
 // Revalidate every hour (skip for localhost in production check)
 export const revalidate = 3600;
 
 export default async function ContactPage() {
   const headersList = await headers();
-  const hostname = (headersList.get("host") || "localhost").split(':')[0];
+  const hostname = normalizeHostname(headersList.get("host") || "localhost");
   const websiteData = await getWebsiteDataByHostname(hostname);
 
   if (!websiteData) {
     return null;
   }
 
+  // Replace {{CONTACT_EMAIL}} placeholder with actual email
+  const contactEmail = websiteData.contact_email || 'nordicblogs@gmail.com';
+  const contactContent = websiteData.contact_us.replace(/\{\{CONTACT_EMAIL\}\}/g, contactEmail);
+
   return (
     <PageTemplate
       websiteData={websiteData}
       title="Kontakt"
-      content={websiteData.contact_us}
+      content={contactContent}
     />
   );
 }

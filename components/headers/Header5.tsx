@@ -5,6 +5,8 @@ import Image from 'next/image';
 import { WebsiteData } from '@/lib/services/website';
 import { useState } from 'react';
 
+import { iconToUrl } from '@/lib/utils';
+
 interface HeaderProps {
   websiteData: WebsiteData;
 }
@@ -18,7 +20,13 @@ export default function Header5({ websiteData }: HeaderProps) {
       <div className="container mx-auto px-4 py-2">
         <div className="flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
-            {websiteData.logo_url && (
+            {websiteData.icon_identifier && iconToUrl(websiteData.icon_identifier) ? (
+              <img
+                src={iconToUrl(websiteData.icon_identifier)!}
+                alt=""
+                className="w-[30px] h-[30px]"
+              />
+            ) : websiteData.logo_url ? (
               <Image
                 src={websiteData.logo_url}
                 alt={websiteData.website_name}
@@ -26,7 +34,7 @@ export default function Header5({ websiteData }: HeaderProps) {
                 height={30}
                 className="object-contain"
               />
-            )}
+            ) : null}
             <span className="text-base md:text-lg font-semibold" style={{ color: websiteData.primary_color }}>
               {websiteData.website_name}
             </span>

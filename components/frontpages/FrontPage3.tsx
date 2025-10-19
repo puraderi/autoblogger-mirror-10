@@ -12,7 +12,7 @@ interface FrontPageProps {
 export default function FrontPage3({ websiteData, blogPosts }: FrontPageProps) {
   return (
     <>
-      {/* Hero Section */}
+      {/* Hero Section - Always present */}
       <div className={`${websiteData.container_width} mx-auto px-4 py-12`}>
         <div className="mb-12 border-b-4 pb-8" style={{ borderColor: websiteData.primary_color }}>
           {websiteData.frontpage_hero_title && (
@@ -26,6 +26,19 @@ export default function FrontPage3({ websiteData, blogPosts }: FrontPageProps) {
             </p>
           )}
         </div>
+
+        {/* Topic Image Below Text */}
+        {websiteData.topic_image_landscape_16_9 && (
+          <div className="mb-12 max-w-4xl mx-auto">
+            <Image
+              src={websiteData.topic_image_landscape_16_9}
+              alt={websiteData.website_name}
+              width={1200}
+              height={675}
+              className={`w-full h-auto ${websiteData.border_radius}`}
+            />
+          </div>
+        )}
       </div>
 
       <div className={`${websiteData.container_width} mx-auto px-4 py-12`}>

@@ -56,6 +56,11 @@ export interface Database {
           author_bio: string | null
           author_image_url: string | null
           author_slug: string | null
+          icon_identifier: string | null
+          contact_email: string | null
+          topic_image_landscape_16_9: string | null
+          topic_image_portrait_2_3: string | null
+          topic_image_square_1_1: string | null
         }
         Insert: {
           id?: string
@@ -99,6 +104,11 @@ export interface Database {
           author_bio?: string | null
           author_image_url?: string | null
           author_slug?: string | null
+          icon_identifier?: string | null
+          contact_email?: string | null
+          topic_image_landscape_16_9?: string | null
+          topic_image_portrait_2_3?: string | null
+          topic_image_square_1_1?: string | null
         }
         Update: {
           id?: string
@@ -142,6 +152,11 @@ export interface Database {
           author_bio?: string | null
           author_image_url?: string | null
           author_slug?: string | null
+          icon_identifier?: string | null
+          contact_email?: string | null
+          topic_image_landscape_16_9?: string | null
+          topic_image_portrait_2_3?: string | null
+          topic_image_square_1_1?: string | null
         }
       }
       blog_post: {

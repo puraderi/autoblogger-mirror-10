@@ -5,6 +5,8 @@ import Image from 'next/image';
 import { WebsiteData } from '@/lib/services/website';
 import { useState } from 'react';
 
+import { iconToUrl } from '@/lib/utils';
+
 interface HeaderProps {
   websiteData: WebsiteData;
 }
@@ -21,7 +23,13 @@ export default function Header4({ websiteData }: HeaderProps) {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between md:hidden mb-4">
           <Link href="/" className="flex items-center gap-2">
-            {websiteData.logo_url && (
+            {websiteData.icon_identifier && iconToUrl(websiteData.icon_identifier) ? (
+              <img
+                src={iconToUrl(websiteData.icon_identifier)!}
+                alt=""
+                className="w-10 h-10 brightness-0 invert"
+              />
+            ) : websiteData.logo_url ? (
               <Image
                 src={websiteData.logo_url}
                 alt={websiteData.website_name}
@@ -29,7 +37,7 @@ export default function Header4({ websiteData }: HeaderProps) {
                 height={40}
                 className="object-contain"
               />
-            )}
+            ) : null}
             <span className="text-lg font-bold text-white">
               {websiteData.website_name}
             </span>
@@ -51,7 +59,13 @@ export default function Header4({ websiteData }: HeaderProps) {
 
         {/* Desktop logo */}
         <Link href="/" className="hidden md:flex items-center justify-center gap-4 mb-6">
-          {websiteData.logo_url && (
+          {websiteData.icon_identifier && iconToUrl(websiteData.icon_identifier) ? (
+            <img
+              src={iconToUrl(websiteData.icon_identifier)!}
+              alt=""
+              className="w-[70px] h-[70px] brightness-0 invert"
+            />
+          ) : websiteData.logo_url ? (
             <Image
               src={websiteData.logo_url}
               alt={websiteData.website_name}
@@ -59,7 +73,7 @@ export default function Header4({ websiteData }: HeaderProps) {
               height={70}
               className="object-contain"
             />
-          )}
+          ) : null}
           <span className="text-3xl font-bold text-white">
             {websiteData.website_name}
           </span>

@@ -2,13 +2,14 @@ import { headers } from "next/headers";
 import { getWebsiteDataByHostname } from "@/lib/services/website";
 import { getBlogPosts } from "@/lib/services/blog";
 import FrontPage from "@/components/frontpages";
+import { normalizeHostname } from "@/lib/utils";
 
 // Revalidate every 60 seconds (skip for localhost in production check)
 export const revalidate = 60;
 
 export default async function Home() {
   const headersList = await headers();
-  const hostname = (headersList.get("host") || "localhost").split(':')[0];
+  const hostname = normalizeHostname(headersList.get("host") || "localhost");
   const websiteData = await getWebsiteDataByHostname(hostname);
 
   if (!websiteData) {

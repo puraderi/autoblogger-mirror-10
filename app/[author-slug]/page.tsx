@@ -5,23 +5,25 @@ import { headers } from 'next/headers';
 import { getWebsiteDataByHostname } from '@/lib/services/website';
 import { getBlogPosts } from '@/lib/services/blog';
 import { Metadata } from 'next';
+import { normalizeHostname } from '@/lib/utils';
 
 interface AuthorPageProps {
-  params: {
+  params: Promise<{
     'author-slug': string;
-  };
+  }>;
 }
 
 export async function generateMetadata({ params }: AuthorPageProps): Promise<Metadata> {
+  const { 'author-slug': authorSlug } = await params;
   const headersList = await headers();
-  const hostname = headersList.get('host') || 'localhost';
+  const hostname = normalizeHostname(headersList.get('host') || 'localhost');
 
   const websiteData = await getWebsiteDataByHostname(hostname);
   if (!websiteData || !websiteData.author_name) {
     return {};
   }
 
-  if (!websiteData.author_slug || websiteData.author_slug !== params['author-slug']) {
+  if (!websiteData.author_slug || websiteData.author_slug !== authorSlug) {
     return {};
   }
 
@@ -32,8 +34,9 @@ export async function generateMetadata({ params }: AuthorPageProps): Promise<Met
 }
 
 export default async function AuthorPage({ params }: AuthorPageProps) {
+  const { 'author-slug': authorSlug } = await params;
   const headersList = await headers();
-  const hostname = headersList.get('host') || 'localhost';
+  const hostname = normalizeHostname(headersList.get('host') || 'localhost');
 
   const websiteData = await getWebsiteDataByHostname(hostname);
 
@@ -42,7 +45,7 @@ export default async function AuthorPage({ params }: AuthorPageProps) {
   }
 
   // Verify the slug matches
-  if (!websiteData.author_slug || websiteData.author_slug !== params['author-slug']) {
+  if (!websiteData.author_slug || websiteData.author_slug !== authorSlug) {
     notFound();
   }
 

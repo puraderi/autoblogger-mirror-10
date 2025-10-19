@@ -26,6 +26,19 @@ export default function FrontPage1({ websiteData, blogPosts }: FrontPageProps) {
             </p>
           )}
         </div>
+
+        {/* Topic Image Below Text */}
+        {websiteData.topic_image_landscape_16_9 && (
+          <div className="mt-8 max-w-4xl mx-auto">
+            <Image
+              src={websiteData.topic_image_landscape_16_9}
+              alt={websiteData.website_name}
+              width={1200}
+              height={675}
+              className={`w-full h-auto ${websiteData.border_radius}`}
+            />
+          </div>
+        )}
       </div>
 
       {/* Blog Posts Grid */}

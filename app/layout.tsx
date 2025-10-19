@@ -5,17 +5,23 @@ import { getWebsiteDataByHostname } from "@/lib/services/website";
 import Header from "@/components/headers";
 import Footer from "@/components/footers";
 import { getFontVariable, getCSSFontFamily } from "@/lib/fonts";
+import { normalizeHostname, iconToUrl } from "@/lib/utils";
 
 export async function generateMetadata(): Promise<Metadata> {
   const headersList = await headers();
-  const hostname = (headersList.get("host") || "localhost").split(':')[0];
+  const hostname = normalizeHostname(headersList.get("host") || "localhost");
   const websiteData = await getWebsiteDataByHostname(hostname);
+
+  // Prioritize icon_identifier, then favicon_url, then default
+  const faviconUrl = websiteData?.icon_identifier
+    ? iconToUrl(websiteData.icon_identifier)
+    : websiteData?.favicon_url || "/favicon.ico";
 
   return {
     title: websiteData?.website_name || "Blog",
     description: websiteData?.meta_description || websiteData?.topic || "A blog website",
     icons: {
-      icon: websiteData?.favicon_url || "/favicon.ico",
+      icon: faviconUrl || "/favicon.ico",
     },
   };
 }
@@ -26,7 +32,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const headersList = await headers();
-  const hostname = (headersList.get("host") || "localhost").split(':')[0];
+  const hostname = normalizeHostname(headersList.get("host") || "localhost");
   console.log('Hostname received:', hostname);
   const websiteData = await getWebsiteDataByHostname(hostname);
 

@@ -4,6 +4,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { WebsiteData } from '@/lib/services/website';
 import { useState } from 'react';
+import { iconToUrl } from '@/lib/utils';
 
 interface HeaderProps {
   websiteData: WebsiteData;
@@ -18,7 +19,14 @@ export default function Header1({ websiteData }: HeaderProps) {
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2 md:gap-3">
-            {websiteData.logo_url && (
+            {websiteData.icon_identifier && iconToUrl(websiteData.icon_identifier) ? (
+              <img
+                src={iconToUrl(websiteData.icon_identifier)!}
+                alt=""
+                className="w-8 h-8 md:w-10 md:h-10"
+                style={{ filter: `drop-shadow(0 0 0 ${websiteData.primary_color})` }}
+              />
+            ) : websiteData.logo_url ? (
               <Image
                 src={websiteData.logo_url}
                 alt={websiteData.website_name}
@@ -26,7 +34,7 @@ export default function Header1({ websiteData }: HeaderProps) {
                 height={32}
                 className="object-contain md:w-10 md:h-10"
               />
-            )}
+            ) : null}
             <span className="text-lg md:text-xl font-bold" style={{ color: websiteData.primary_color }}>
               {websiteData.website_name}
             </span>

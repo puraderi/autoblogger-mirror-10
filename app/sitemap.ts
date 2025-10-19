@@ -2,10 +2,11 @@ import { MetadataRoute } from 'next';
 import { headers } from 'next/headers';
 import { getWebsiteDataByHostname } from '@/lib/services/website';
 import { getAllBlogPosts } from '@/lib/services/blog';
+import { normalizeHostname } from '@/lib/utils';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const headersList = await headers();
-  const hostname = (headersList.get('host') || 'localhost').split(':')[0];
+  const hostname = normalizeHostname(headersList.get('host') || 'localhost');
   const websiteData = await getWebsiteDataByHostname(hostname);
 
   if (!websiteData) {

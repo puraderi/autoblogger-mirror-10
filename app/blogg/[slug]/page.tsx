@@ -5,6 +5,7 @@ import BlogPostTemplate from "@/components/blogposts";
 import StructuredData from "@/components/StructuredData";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
+import { normalizeHostname } from "@/lib/utils";
 
 // Use ISR with revalidation - pages are cached but refreshed every 24 hours
 export const revalidate = 86400;
@@ -17,7 +18,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const headersList = await headers();
-  const hostname = (headersList.get("host") || "localhost").split(':')[0];
+  const hostname = normalizeHostname(headersList.get("host") || "localhost");
   const websiteData = await getWebsiteDataByHostname(hostname);
 
   if (!websiteData) {
@@ -71,7 +72,7 @@ export default async function BlogPostPage({
 }) {
   const { slug } = await params;
   const headersList = await headers();
-  const hostname = (headersList.get("host") || "localhost").split(':')[0];
+  const hostname = normalizeHostname(headersList.get("host") || "localhost");
   const websiteData = await getWebsiteDataByHostname(hostname);
 
   if (!websiteData) {

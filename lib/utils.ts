@@ -54,6 +54,35 @@ export function generateSlug(title: string): string {
 }
 
 /**
+ * Normalize hostname for database lookup
+ * For localhost: keep the port (localhost:3000)
+ * For production domains: strip the port
+ * @param hostname - Raw hostname from headers (e.g., "localhost:3000" or "example.com:443")
+ */
+export function normalizeHostname(hostname: string): string {
+  // If it's localhost, keep the full hostname with port
+  if (hostname.startsWith('localhost') || hostname.startsWith('127.0.0.1')) {
+    return hostname;
+  }
+
+  // For production domains, strip the port
+  return hostname.split(':')[0];
+}
+
+/**
+ * Convert Iconify icon identifier to SVG URL
+ * @param iconIdentifier - Icon identifier in format "collection:name" (e.g., "mdi:coffee")
+ * @returns SVG URL from Iconify API
+ */
+export function iconToUrl(iconIdentifier: string | null | undefined): string | null {
+  if (!iconIdentifier) return null;
+
+  // Convert "mdi:coffee" to "mdi/coffee"
+  const iconPath = iconIdentifier.replace(':', '/');
+  return `https://api.iconify.design/${iconPath}.svg`;
+}
+
+/**
  * Simple in-memory cache for database queries
  * Disabled for localhost development
  */

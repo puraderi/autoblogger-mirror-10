@@ -4,6 +4,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { WebsiteData } from '@/lib/services/website';
 import { useState } from 'react';
+import { iconToUrl } from '@/lib/utils';
 
 interface HeaderProps {
   websiteData: WebsiteData;
@@ -18,7 +19,13 @@ export default function Header2({ websiteData }: HeaderProps) {
       <div className="container mx-auto px-4 py-4 md:py-6">
         <div className="flex items-center justify-between md:hidden mb-4">
           <Link href="/" className="flex items-center gap-2">
-            {websiteData.logo_url && (
+            {websiteData.icon_identifier && iconToUrl(websiteData.icon_identifier) ? (
+              <img
+                src={iconToUrl(websiteData.icon_identifier)!}
+                alt=""
+                className="w-10 h-10"
+              />
+            ) : websiteData.logo_url ? (
               <Image
                 src={websiteData.logo_url}
                 alt={websiteData.website_name}
@@ -26,7 +33,7 @@ export default function Header2({ websiteData }: HeaderProps) {
                 height={40}
                 className="object-contain"
               />
-            )}
+            ) : null}
             <span className="text-lg font-bold" style={{ color: websiteData.primary_color }}>
               {websiteData.website_name}
             </span>
@@ -49,7 +56,13 @@ export default function Header2({ websiteData }: HeaderProps) {
 
         {/* Desktop logo */}
         <Link href="/" className="hidden md:flex flex-col items-center gap-3 mb-4">
-          {websiteData.logo_url && (
+          {websiteData.icon_identifier && iconToUrl(websiteData.icon_identifier) ? (
+            <img
+              src={iconToUrl(websiteData.icon_identifier)!}
+              alt=""
+              className="w-[60px] h-[60px]"
+            />
+          ) : websiteData.logo_url ? (
             <Image
               src={websiteData.logo_url}
               alt={websiteData.website_name}
@@ -57,7 +70,7 @@ export default function Header2({ websiteData }: HeaderProps) {
               height={60}
               className="object-contain"
             />
-          )}
+          ) : null}
           <span className="text-2xl font-bold" style={{ color: websiteData.primary_color }}>
             {websiteData.website_name}
           </span>
