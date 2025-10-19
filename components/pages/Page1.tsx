@@ -17,7 +17,7 @@ export default function Page1({ websiteData, title, content }: PageProps) {
         {title}
       </h1>
 
-      {hasImage ? (
+      {hasImage && websiteData.topic_image_portrait_2_3 ? (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div className="md:col-span-2">
             <div className="prose prose-lg max-w-none" dangerouslySetInnerHTML={{ __html: content }} />
