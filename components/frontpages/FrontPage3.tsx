@@ -16,7 +16,7 @@ export default function FrontPage3({ websiteData, blogPosts }: FrontPageProps) {
       <div className={`${websiteData.container_width} mx-auto px-4 py-12`}>
         <div className="mb-12 border-b-4 pb-8" style={{ borderColor: websiteData.primary_color }}>
           {websiteData.frontpage_hero_title && (
-            <h1 className="text-6xl font-bold mb-4" style={{ color: websiteData.primary_color }}>
+            <h1 className="text-4xl md:text-6xl font-bold mb-4 break-words max-w-full" style={{ color: websiteData.primary_color }}>
               {websiteData.frontpage_hero_title}
             </h1>
           )}

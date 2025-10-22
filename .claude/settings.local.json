@@ -24,7 +24,11 @@
       "Bash(git reset:*)",
       "Bash(do sed -i 's/alt={websiteData\\.author_name}/alt={websiteData.author_name || \"\"Author\"\"}/g' \"$file\")",
       "Bash(npm run build:*)",
-      "Bash(npx tsc:*)"
+      "Bash(npx tsc:*)",
+      "Bash(npm install @iconify/react)",
+      "Bash(do echo \"=== $file ===\")",
+      "Bash(head -10 \"$file\")",
+      "Bash(done)"
     ],
     "deny": [],
     "ask": []
