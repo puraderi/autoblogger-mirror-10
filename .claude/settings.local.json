@@ -29,7 +29,8 @@
       "Bash(do echo \"=== $file ===\")",
       "Bash(head -10 \"$file\")",
       "Bash(done)",
-      "Bash(find:*)"
+      "Bash(find:*)",
+      "Bash(mkdir:*)"
     ],
     "deny": [],
     "ask": []
