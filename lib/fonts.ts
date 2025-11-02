@@ -27,7 +27,7 @@ export const fontMap = {
   'sans-serif': inter,
   'serif': lora,
   'display': playfair,
-  'cursive': poppins, // Using Poppins as a friendly alternative
+  'cursive': poppins, // Using Poppins as a friendly alternative!
   'monospace': roboto,
 };
 
