@@ -28,7 +28,8 @@
       "Bash(npm install @iconify/react)",
       "Bash(do echo \"=== $file ===\")",
       "Bash(head -10 \"$file\")",
-      "Bash(done)"
+      "Bash(done)",
+      "Bash(find:*)"
     ],
     "deny": [],
     "ask": []

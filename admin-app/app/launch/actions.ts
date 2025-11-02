@@ -3,6 +3,7 @@
 import Anthropic from '@anthropic-ai/sdk';
 import { createClient } from '@supabase/supabase-js';
 import { uploadAuthorImageToSupabase } from '@/lib/author-image-upload';
+import { validateAndFixColorScheme } from '@/lib/color-utils';
 
 const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY!,
@@ -152,8 +153,11 @@ KRITISKT - WCAG Kontrastregler (följ dessa STRIKT):
 - Text på bakgrund MÅSTE ha minst 4.5:1 kontrastförhållande (WCAG AA standard)
 - Stora rubriker kan ha 3:1 men helst högre
 - Använd ALDRIG ljus text på ljus bakgrund eller mörk text på mörk bakgrund
-- Testa färgerna mentalt: Vit bakgrund (#ffffff) kräver TEXT_COLOR som är mörk (#1f2937, #111827, etc)
-- Ljus bakgrund kräver mörk text, mörk bakgrund kräver ljus text
+- BACKGROUND_COLOR ska ALLTID vara mycket ljus (som #ffffff, #fafafa, #f8f9fa, #fffbeb)
+- TEXT_COLOR MÅSTE ALLTID vara mycket mörk (#111827, #1f2937, #0f172a, #1e293b är ALDRIG okej som bakgrundsfärg!)
+- SECONDARY_COLOR ska vara en subtil variant av bakgrunden för boxar/containers (typ #f3f4f6, #e5e7eb om bakgrund är vit)
+- PRIMARY_COLOR och ACCENT_COLOR ska ha tydlig kontrast mot bakgrunden
+- TESTA: Om du väljer #0f172a, det MÅSTE vara TEXT_COLOR, ALDRIG BACKGROUND_COLOR eller SECONDARY_COLOR!
 
 Tillgängliga typsnitt att välja från:
 - Inter (modern, neutral, tech-friendly)
@@ -168,18 +172,22 @@ Tillgängliga typsnitt att välja från:
 - Source Sans Pro (professional, versatile)
 
 Formatera svaret EXAKT så här:
-PRIMARY_COLOR: #hexkod (för rubriker och knappar - måste ha god kontrast mot bakgrund)
-SECONDARY_COLOR: #hexkod (ljusare/mörkare variant för bakgrunder och borders)
-ACCENT_COLOR: #hexkod (kontrastfärg för call-to-actions)
-BACKGROUND_COLOR: #hexkod (huvudbakgrund - oftast vit #ffffff eller mycket ljus #f8f9fa)
-TEXT_COLOR: #hexkod (MÅSTE vara mycket mörk som #1f2937, #111827, #0f172a om bakgrund är ljus)
+PRIMARY_COLOR: #hexkod (för rubriker och knappar - måste vara tydlig och kontrastrik, t.ex. #2563eb, #059669, #dc2626)
+SECONDARY_COLOR: #hexkod (ljusare än bakgrund, för boxar/containers - t.ex. #f3f4f6, #e5e7eb, #f0fdf4)
+ACCENT_COLOR: #hexkod (kontrastfärg för call-to-actions - t.ex. #7c3aed, #ea580c, #0891b2)
+BACKGROUND_COLOR: #hexkod (huvudbakgrund - MÅSTE vara mycket ljus: #ffffff, #fafafa, #f8f9fa, #fffbeb)
+TEXT_COLOR: #hexkod (MÅSTE vara mycket mörk: #111827, #1f2937, #0f172a, #1e293b)
 FONT_HEADING: [välj ett typsnitt från listan ovan]
 FONT_BODY: [välj ett typsnitt från listan ovan]
 
-EXEMPEL på bra kombinationer:
-- Background: #ffffff, Text: #1f2937, Primary: #2563eb (blå tema)
-- Background: #f8f9fa, Text: #111827, Primary: #059669 (grön tema)
-- Background: #fffbeb, Text: #78350f, Primary: #ea580c (varm tema)
+EXEMPEL på KORREKTA kombinationer:
+- Background: #ffffff, Secondary: #f3f4f6, Text: #1f2937, Primary: #2563eb (blå tema)
+- Background: #fafafa, Secondary: #e5e7eb, Text: #111827, Primary: #059669 (grön tema)
+- Background: #fffbeb, Secondary: #fef3c7, Text: #78350f, Primary: #ea580c (varm tema)
+
+FELAKTIGA kombinationer att UNDVIKA:
+❌ Background: #1e293b, Text: #0f172a (båda är mörka!)
+❌ Background: #e5e7eb, Text: #f3f4f6 (båda är ljusa!)
 
 Returnera ENDAST dessa 7 rader.`;
 
@@ -211,7 +219,10 @@ Returnera ENDAST dessa 7 rader.`;
     }
   }
 
-  return design;
+  // Validate and fix color contrast issues
+  const validatedDesign = validateAndFixColorScheme(design);
+
+  return validatedDesign;
 }
 
 async function generateMetaDescription(websiteName: string, topic: string, context: string): Promise<string> {
