@@ -8,33 +8,34 @@ on:
 jobs:
   mirror:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Get full history for proper mirroring
+          fetch-depth: 0
+          persist-credentials: false
 
       - name: Push to mirror repositories
         env:
-          MIRROR_TOKEN: ${{ secrets.MIRROR_REPO_TOKEN }}
+          PAT_TOKEN: ${{ secrets.MIRROR_REPO_TOKEN }}
         run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
           # Mirror 1
-          git remote add mirror1 https://x-access-token:${MIRROR_TOKEN}@github.com/puraderi/autoblogger-mirror-1.git
-          git push mirror1 main --force
+          git push https://$PAT_TOKEN@github.com/puraderi/autoblogger-mirror-1.git HEAD:main --force
 
           # Mirror 2
-          git remote add mirror2 https://x-access-token:${MIRROR_TOKEN}@github.com/puraderi/autoblogger-mirror-2.git
-          git push mirror2 main --force
+          git push https://$PAT_TOKEN@github.com/puraderi/autoblogger-mirror-2.git HEAD:main --force
 
           # Mirror 3
-          git remote add mirror3 https://x-access-token:${MIRROR_TOKEN}@github.com/puraderi/autoblogger-mirror-3.git
-          git push mirror3 main --force
+          git push https://$PAT_TOKEN@github.com/puraderi/autoblogger-mirror-3.git HEAD:main --force
 
           # Mirror 4
-          git remote add mirror4 https://x-access-token:${MIRROR_TOKEN}@github.com/puraderi/autoblogger-mirror-4.git
-          git push mirror4 main --force
+          git push https://$PAT_TOKEN@github.com/puraderi/autoblogger-mirror-4.git HEAD:main --force
 
           # Mirror 5
-          git remote add mirror5 https://x-access-token:${MIRROR_TOKEN}@github.com/puraderi/autoblogger-mirror-5.git
-          git push mirror5 main --force
+          git push https://$PAT_TOKEN@github.com/puraderi/autoblogger-mirror-5.git HEAD:main --force
