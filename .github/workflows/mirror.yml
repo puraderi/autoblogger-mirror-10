@@ -25,6 +25,10 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
+          # Remove workflow files from mirror (they don't need them)
+          git rm -r --cached .github/workflows || true
+          git commit -m "Remove workflows for mirror" --allow-empty
+
           # Mirror 1
           git push https://$PAT_TOKEN@github.com/puraderi/autoblogger-mirror-1.git HEAD:main --force
 
