@@ -42,8 +42,14 @@ export default function FrontPage3({ websiteData, blogPosts }: FrontPageProps) {
       </div>
 
       <div className={`${websiteData.container_width} mx-auto px-4 py-12`}>
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-2xl font-bold" style={{ color: websiteData.primary_color }}>Senaste nytt</h2>
+          <Link href="/blogg" className="text-sm font-medium hover:underline" style={{ color: websiteData.accent_color }}>
+            Visa alla inlägg →
+          </Link>
+        </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
-          {blogPosts.slice(0, 2).map((post, idx) => (
+          {blogPosts.slice(0, 2).map((post) => (
             <Link key={post.id} href={`/blogg/${post.slug}`} className="group">
               <div className={`relative h-96 overflow-hidden ${websiteData.border_radius}`}>
                 {post.image_url && (
@@ -51,13 +57,18 @@ export default function FrontPage3({ websiteData, blogPosts }: FrontPageProps) {
                     src={post.image_url}
                     alt={post.title}
                     fill
-                    className="object-cover group-hover:scale-105 transition-transform"
+                    className="object-cover group-hover:scale-105 transition-transform duration-500"
                   />
                 )}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex items-end">
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex items-end">
                   <div className="p-6 text-white">
+                    {post.tags && post.tags[0] && (
+                      <span className="inline-block px-2 py-1 text-xs font-semibold uppercase tracking-wider bg-white/20 backdrop-blur-sm rounded mb-3">
+                        {post.tags[0]}
+                      </span>
+                    )}
                     <h2 className="text-2xl font-bold mb-2">{post.title}</h2>
-                    <p className="text-sm opacity-90">{post.excerpt}</p>
+                    <p className="text-sm opacity-90 line-clamp-2">{post.excerpt}</p>
                   </div>
                 </div>
               </div>
@@ -65,23 +76,33 @@ export default function FrontPage3({ websiteData, blogPosts }: FrontPageProps) {
           ))}
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-16">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 mb-16">
           {blogPosts.slice(2, 6).map((post) => (
             <Link key={post.id} href={`/blogg/${post.slug}`} className="group">
-              <div className="border-t-4 pt-4" style={{ borderColor: websiteData.accent_color }}>
+              <div className="border-t-4 pt-4 transition-all duration-200 hover:-translate-y-1" style={{ borderColor: websiteData.accent_color }}>
                 {post.image_url && (
-                  <Image
-                    src={post.image_url}
-                    alt={post.title}
-                    width={300}
-                    height={200}
-                    className={`w-full h-32 object-cover ${websiteData.border_radius} mb-3`}
-                  />
+                  <div className="overflow-hidden mb-3">
+                    <Image
+                      src={post.image_url}
+                      alt={post.title}
+                      width={300}
+                      height={200}
+                      className={`w-full h-32 object-cover ${websiteData.border_radius} transition-transform duration-300 group-hover:scale-105`}
+                    />
+                  </div>
                 )}
-                <h3 className="font-bold mb-2 group-hover:opacity-80" style={{ color: websiteData.primary_color }}>
+                <h3 className="font-bold mb-2 line-clamp-2 transition-colors group-hover:opacity-80" style={{ color: websiteData.primary_color }}>
                   {post.title}
                 </h3>
-                <p className="text-xs opacity-70" style={{ color: websiteData.text_color }}>{websiteData.author_name}</p>
+                <div className="flex items-center gap-2 text-xs" style={{ color: websiteData.text_color }}>
+                  <span className="opacity-70">{websiteData.author_name}</span>
+                  {post.published_at && (
+                    <>
+                      <span className="opacity-50">·</span>
+                      <span className="opacity-70">{new Date(post.published_at).toLocaleDateString('sv-SE')}</span>
+                    </>
+                  )}
+                </div>
               </div>
             </Link>
           ))}

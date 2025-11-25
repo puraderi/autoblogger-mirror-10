@@ -6,16 +6,23 @@ interface PageProps {
   content: string;
 }
 
-// Page 3: Full Width with Background
+// Page 3: Card Elevated - White card on colored background
 export default function Page3({ websiteData, title, content }: PageProps) {
   return (
-    <div className="py-16" style={{ backgroundColor: websiteData.secondary_color }}>
-      <div className="container mx-auto px-4 max-w-5xl">
-        <div className="bg-white rounded-lg shadow-lg p-12">
-          <h1 className="text-6xl font-bold mb-8 pb-6 border-b-4" style={{ color: websiteData.primary_color, borderColor: websiteData.accent_color }}>
-            {title}
-          </h1>
-          <div className="prose prose-lg max-w-none" dangerouslySetInnerHTML={{ __html: content }} />
+    <div className="py-10 md:py-16 min-h-screen" style={{ backgroundColor: `${websiteData.secondary_color}50` }}>
+      <div className="container mx-auto px-4 max-w-4xl">
+        <div className={`bg-white shadow-2xl p-6 md:p-10 lg:p-14 ${websiteData.border_radius}`}>
+          <header className="mb-8 pb-6 border-b" style={{ borderColor: websiteData.secondary_color }}>
+            <div className="w-12 h-1 mb-6" style={{ backgroundColor: websiteData.accent_color }} />
+            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold leading-tight" style={{ color: websiteData.primary_color }}>
+              {title}
+            </h1>
+          </header>
+          <div
+            className="prose prose-lg max-w-none"
+            style={{ color: websiteData.text_color }}
+            dangerouslySetInnerHTML={{ __html: content }}
+          />
         </div>
       </div>
     </div>

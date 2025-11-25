@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { WebsiteData } from '@/lib/services/website';
+import { getContrastTextColor } from '@/lib/utils';
 
 interface TagsDisplayProps {
   websiteData: WebsiteData;
@@ -20,7 +21,7 @@ export default function TagsDisplay({ websiteData, tags }: TagsDisplayProps) {
             key={tag}
             href={`/blogg?tag=${encodeURIComponent(tag)}`}
             className={`px-2.5 md:px-3 py-1 ${websiteData.border_radius} text-xs font-medium transition-opacity hover:opacity-80`}
-            style={{ backgroundColor: websiteData.accent_color, color: 'white' }}
+            style={{ backgroundColor: websiteData.accent_color, color: getContrastTextColor(websiteData.accent_color) }}
           >
             {tag}
           </Link>

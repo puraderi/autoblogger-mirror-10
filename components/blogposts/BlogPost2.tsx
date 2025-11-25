@@ -10,6 +10,7 @@ import AuthorBox from '@/components/blogcomponents/AuthorBox';
 import PostNavigation from '@/components/blogcomponents/PostNavigation';
 import RelatedPosts from '@/components/blogcomponents/RelatedPosts';
 import ReadingProgressBar from '@/components/blogcomponents/ReadingProgressBar';
+import { formatSwedishDate } from '@/lib/utils';
 
 interface BlogPostProps {
   websiteData: WebsiteData;
@@ -19,19 +20,18 @@ interface BlogPostProps {
   nextPost?: BlogPost | null;
 }
 
-// BlogPost 2: Magazine Style with Sidebar
+// BlogPost 2: Magazine Sidebar - Content with sticky info sidebar
 export default function BlogPost2({ websiteData, post, relatedPosts = [], previousPost, nextPost }: BlogPostProps) {
   const currentUrl = typeof window !== 'undefined' ? window.location.href : '';
-
   const authorSlug = websiteData.author_slug || '';
 
   return (
     <>
       {websiteData.show_reading_progress_bar && <ReadingProgressBar websiteData={websiteData} />}
 
-      <div className={`${websiteData.container_width} mx-auto px-4 md:px-6 py-6 md:py-12`}>
+      <div className={`${websiteData.container_width} mx-auto px-4 md:px-6 py-8 md:py-14`}>
         {websiteData.show_breadcrumbs && (
-          <div className="mb-4 md:mb-6">
+          <div className="mb-6">
             <Breadcrumbs
               websiteData={websiteData}
               items={[
@@ -42,44 +42,54 @@ export default function BlogPost2({ websiteData, post, relatedPosts = [], previo
           </div>
         )}
 
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 md:gap-8">
-          <article className="lg:col-span-3">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
+          {/* Main content */}
+          <article className="lg:col-span-8">
             {post.image_url && (
               <Image
                 src={post.image_url}
                 alt={post.title}
                 width={1200}
                 height={500}
-                className={`w-full h-48 md:h-64 lg:h-80 object-cover mb-6 md:mb-8 ${websiteData.border_radius}`}
+                className={`w-full h-56 md:h-72 lg:h-80 object-cover mb-8 ${websiteData.border_radius}`}
               />
             )}
 
-            <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-4 md:mb-6" style={{ color: websiteData.primary_color }}>
+            <h1 className="text-3xl md:text-4xl font-bold mb-4 leading-tight" style={{ color: websiteData.primary_color }}>
               {post.title}
             </h1>
 
-            <div className="flex items-center gap-2 md:gap-4 mb-4 md:mb-6 flex-wrap text-sm md:text-base" style={{ color: websiteData.text_color }}>
-              <span>
-                By <Link href={`/${authorSlug}`} className="hover:underline">{websiteData.author_name}</Link>
-              </span>
+            {/* Mobile-only meta info */}
+            <div className="lg:hidden flex flex-wrap items-center gap-3 mb-6 text-sm text-gray-600">
+              <span>Av <Link href={`/${authorSlug}`} className="hover:underline font-medium">{websiteData.author_name}</Link></span>
               {post.published_at && (
-                <span>
-                  {new Date(post.published_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
-                </span>
+                <>
+                  <span>·</span>
+                  <span>{formatSwedishDate(post.published_at)}</span>
+                </>
               )}
-              {websiteData.show_reading_time && <ReadingTime websiteData={websiteData} content={post.content} />}
+              {websiteData.show_reading_time && (
+                <>
+                  <span>·</span>
+                  <ReadingTime websiteData={websiteData} content={post.content} />
+                </>
+              )}
             </div>
 
-            <div className="prose prose-sm md:prose-base max-w-none mb-8 md:mb-12" style={{ color: websiteData.text_color }} dangerouslySetInnerHTML={{ __html: post.content }} />
+            <div
+              className="prose prose-lg max-w-none mb-10"
+              style={{ color: websiteData.text_color }}
+              dangerouslySetInnerHTML={{ __html: post.content }}
+            />
 
             {websiteData.show_share_buttons && (
-              <div className="mb-12 pb-8 border-t pt-8" style={{ borderColor: websiteData.secondary_color }}>
+              <div className="mb-10 pb-8 border-t pt-8" style={{ borderColor: websiteData.secondary_color }}>
                 <ShareButtons websiteData={websiteData} title={post.title} url={currentUrl} />
               </div>
             )}
 
             {websiteData.show_author_box && (
-              <div className="mb-12">
+              <div className="mb-10">
                 <AuthorBox
                   websiteData={websiteData}
                   authorName={websiteData.author_name}
@@ -93,34 +103,52 @@ export default function BlogPost2({ websiteData, post, relatedPosts = [], previo
             )}
           </article>
 
-          <aside className="space-y-6">
-            <div className="border-l-4 pl-4 sticky top-4" style={{ borderColor: websiteData.accent_color }}>
-              <div className="mb-6">
-                <h3 className="font-bold text-lg mb-3" style={{ color: websiteData.primary_color }}>Author</h3>
-                {websiteData.author_image_url && (
-                  <Image
-                    src={websiteData.author_image_url}
-                    alt={websiteData.author_name || "Author"}
-                    width={64}
-                    height={64}
-                    className="rounded-full mb-2"
-                  />
-                )}
-                <Link href={`/${authorSlug}`} className="font-semibold hover:underline">{websiteData.author_name}</Link>
+          {/* Sidebar - desktop only */}
+          <aside className="hidden lg:block lg:col-span-4">
+            <div className="sticky top-8 space-y-6">
+              {/* Author card */}
+              <div className="p-5 rounded-xl" style={{ backgroundColor: `${websiteData.secondary_color}50` }}>
+                <div className="flex items-center gap-3 mb-3">
+                  {websiteData.author_image_url && (
+                    <Image
+                      src={websiteData.author_image_url}
+                      alt={websiteData.author_name || 'Författare'}
+                      width={48}
+                      height={48}
+                      className="rounded-full"
+                    />
+                  )}
+                  <div>
+                    <p className="text-xs uppercase tracking-wider text-gray-500 mb-0.5">Författare</p>
+                    <Link href={`/${authorSlug}`} className="font-semibold hover:underline" style={{ color: websiteData.primary_color }}>
+                      {websiteData.author_name}
+                    </Link>
+                  </div>
+                </div>
               </div>
 
-              {post.published_at && (
-                <div className="mb-6">
-                  <h3 className="font-bold text-sm mb-2" style={{ color: websiteData.primary_color }}>Published</h3>
-                  <p className="text-sm text-gray-600">
-                    {new Date(post.published_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
-                  </p>
-                </div>
-              )}
+              {/* Date + reading time */}
+              <div className="p-5 rounded-xl border" style={{ borderColor: websiteData.secondary_color }}>
+                {post.published_at && (
+                  <div className="mb-4">
+                    <p className="text-xs uppercase tracking-wider text-gray-500 mb-1">Publicerad</p>
+                    <p className="font-medium" style={{ color: websiteData.primary_color }}>
+                      {formatSwedishDate(post.published_at)}
+                    </p>
+                  </div>
+                )}
+                {websiteData.show_reading_time && (
+                  <div>
+                    <p className="text-xs uppercase tracking-wider text-gray-500 mb-1">Lästid</p>
+                    <ReadingTime websiteData={websiteData} content={post.content} />
+                  </div>
+                )}
+              </div>
 
+              {/* Tags */}
               {websiteData.show_tags_display && post.tags && post.tags.length > 0 && (
-                <div>
-                  <h3 className="font-bold text-sm mb-2" style={{ color: websiteData.primary_color }}>Tags</h3>
+                <div className="p-5 rounded-xl border" style={{ borderColor: websiteData.secondary_color }}>
+                  <p className="text-xs uppercase tracking-wider text-gray-500 mb-3">Taggar</p>
                   <TagsDisplay websiteData={websiteData} tags={post.tags} />
                 </div>
               )}

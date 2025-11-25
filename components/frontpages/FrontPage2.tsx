@@ -60,12 +60,12 @@ export default function FrontPage2({ websiteData, blogPosts }: FrontPageProps) {
                   />
                 )}
                 <div className="p-8">
-                  <div className="text-xs font-semibold mb-2" style={{ color: websiteData.accent_color }}>FEATURED</div>
-                  <h2 className="text-3xl font-bold mb-3 group-hover:opacity-80" style={{ color: websiteData.primary_color }}>
+                  <div className="text-xs font-semibold uppercase tracking-wider mb-2" style={{ color: websiteData.accent_color }}>Utvalt inlägg</div>
+                  <h2 className="text-3xl font-bold mb-3 transition-colors group-hover:opacity-80" style={{ color: websiteData.primary_color }}>
                     {featured.title}
                   </h2>
                   <p className="text-gray-600 mb-4">{featured.excerpt}</p>
-                  <div className="text-sm text-gray-500">Av {featured.author_name}</div>
+                  <div className="text-sm text-gray-500">Av {websiteData.author_name}</div>
                 </div>
               </div>
             </Link>
@@ -73,14 +73,27 @@ export default function FrontPage2({ websiteData, blogPosts }: FrontPageProps) {
         </div>
 
         <div className="space-y-6">
-          <h3 className="text-xl font-bold" style={{ color: websiteData.primary_color }}>Senaste inläggen</h3>
+          <div className="flex items-center justify-between">
+            <h3 className="text-xl font-bold" style={{ color: websiteData.primary_color }}>Senaste inläggen</h3>
+            <Link href="/blogg" className="text-sm font-medium hover:underline" style={{ color: websiteData.accent_color }}>
+              Visa alla →
+            </Link>
+          </div>
           {rest.slice(0, 5).map((post) => (
             <Link key={post.id} href={`/blogg/${post.slug}`} className="group block">
-              <div className="border-l-4 pl-4 hover:bg-gray-50 transition-colors py-2" style={{ borderColor: websiteData.secondary_color }}>
-                <h4 className="font-semibold mb-1 group-hover:opacity-80" style={{ color: websiteData.primary_color }}>
+              <div className="border-l-4 pl-4 hover:bg-gray-50 transition-all duration-200 py-2 hover:pl-5" style={{ borderColor: websiteData.secondary_color }}>
+                <h4 className="font-semibold mb-1 transition-colors group-hover:opacity-80" style={{ color: websiteData.primary_color }}>
                   {post.title}
                 </h4>
-                <p className="text-sm text-gray-500">{websiteData.author_name}</p>
+                <div className="flex items-center gap-2 text-sm text-gray-500">
+                  <span>{websiteData.author_name}</span>
+                  {post.published_at && (
+                    <>
+                      <span>·</span>
+                      <span>{new Date(post.published_at).toLocaleDateString('sv-SE')}</span>
+                    </>
+                  )}
+                </div>
               </div>
             </Link>
           ))}

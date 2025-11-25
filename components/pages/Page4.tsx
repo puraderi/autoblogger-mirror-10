@@ -6,16 +6,21 @@ interface PageProps {
   content: string;
 }
 
-// Page 4: Minimal with Top Border
+// Page 4: Minimal Bold - Clean design with bold top accent
 export default function Page4({ websiteData, title, content }: PageProps) {
   return (
-    <div className="container mx-auto px-4 py-16 max-w-3xl">
-      <div className="border-t-8 pt-12 mb-12" style={{ borderColor: websiteData.primary_color }}>
-        <h1 className="text-7xl font-bold mb-4" style={{ color: websiteData.primary_color }}>
+    <div className="container mx-auto px-4 py-12 md:py-20 max-w-3xl">
+      <header className="mb-10 md:mb-14">
+        <div className="h-2 w-24 mb-8" style={{ backgroundColor: websiteData.accent_color }} />
+        <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight" style={{ color: websiteData.primary_color }}>
           {title}
         </h1>
-      </div>
-      <div className="prose prose-xl max-w-none" dangerouslySetInnerHTML={{ __html: content }} />
+      </header>
+      <div
+        className="prose prose-lg md:prose-xl max-w-none"
+        style={{ color: websiteData.text_color }}
+        dangerouslySetInnerHTML={{ __html: content }}
+      />
     </div>
   );
 }

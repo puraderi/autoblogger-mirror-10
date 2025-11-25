@@ -2,6 +2,7 @@ import { headers } from "next/headers";
 import { getWebsiteDataByHostname } from "@/lib/services/website";
 import { getBlogPosts } from "@/lib/services/blog";
 import FrontPage from "@/components/frontpages";
+import WebsiteStructuredData from "@/components/WebsiteStructuredData";
 import { normalizeHostname } from "@/lib/utils";
 
 // Revalidate every 60 seconds (skip for localhost in production check)
@@ -18,5 +19,10 @@ export default async function Home() {
 
   const blogPosts = await getBlogPosts(websiteData.id, 6);
 
-  return <FrontPage websiteData={websiteData} blogPosts={blogPosts} />;
+  return (
+    <>
+      <WebsiteStructuredData websiteData={websiteData} hostname={hostname} />
+      <FrontPage websiteData={websiteData} blogPosts={blogPosts} />
+    </>
+  );
 }

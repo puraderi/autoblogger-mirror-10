@@ -20,18 +20,20 @@ export default function RelatedPosts({ websiteData, posts }: RelatedPostsProps) 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
           {posts.slice(0, 3).map((post) => (
             <Link key={post.id} href={`/blogg/${post.slug}`} className="group">
-              <div className={`bg-white overflow-hidden shadow-md hover:shadow-xl transition-shadow ${websiteData.border_radius}`}>
+              <div className={`bg-white overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 ${websiteData.border_radius}`}>
                 {post.image_url && (
-                  <Image
-                    src={post.image_url}
-                    alt={post.title}
-                    width={400}
-                    height={250}
-                    className="w-full h-40 sm:h-48 object-cover"
-                  />
+                  <div className="overflow-hidden">
+                    <Image
+                      src={post.image_url}
+                      alt={post.title}
+                      width={400}
+                      height={250}
+                      className="w-full h-40 sm:h-48 object-cover transition-transform duration-300 group-hover:scale-105"
+                    />
+                  </div>
                 )}
                 <div className="p-4 md:p-5">
-                  <h3 className="font-bold text-base md:text-lg mb-2 group-hover:opacity-80 line-clamp-2" style={{ color: websiteData.primary_color }}>
+                  <h3 className="font-bold text-base md:text-lg mb-2 transition-colors group-hover:opacity-80 line-clamp-2" style={{ color: websiteData.primary_color }}>
                     {post.title}
                   </h3>
                   <p className="text-xs md:text-sm mb-3 line-clamp-3" style={{ color: websiteData.text_color }}>
@@ -39,7 +41,7 @@ export default function RelatedPosts({ websiteData, posts }: RelatedPostsProps) 
                   </p>
                   {post.published_at && (
                     <div className="text-xs opacity-70" style={{ color: websiteData.text_color }}>
-                      {new Date(post.published_at).toLocaleDateString()}
+                      {new Date(post.published_at).toLocaleDateString('sv-SE', { year: 'numeric', month: 'short', day: 'numeric' })}
                     </div>
                   )}
                 </div>

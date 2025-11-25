@@ -6,19 +6,30 @@ interface PageProps {
   content: string;
 }
 
-// Page 5: Two Column Magazine Style
+// Page 5: Centered Hero - Large centered header with full-width content
 export default function Page5({ websiteData, title, content }: PageProps) {
   return (
-    <div className="container mx-auto px-4 py-12 max-w-6xl">
-      <header className="mb-12 text-center">
-        <div className="inline-block px-6 py-2 rounded-full mb-4 text-sm font-semibold" style={{ backgroundColor: websiteData.accent_color, color: 'white' }}>
-          {title}
+    <div className="py-10 md:py-16">
+      {/* Hero header */}
+      <header className="text-center mb-10 md:mb-14 px-4">
+        <div className="flex items-center justify-center gap-4 mb-6">
+          <div className="h-px w-8 md:w-16" style={{ backgroundColor: websiteData.secondary_color }} />
+          <div className="w-2 h-2 rounded-full" style={{ backgroundColor: websiteData.accent_color }} />
+          <div className="h-px w-8 md:w-16" style={{ backgroundColor: websiteData.secondary_color }} />
         </div>
-        <h1 className="text-6xl font-bold" style={{ color: websiteData.primary_color }}>
+        <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif font-bold leading-tight max-w-4xl mx-auto" style={{ color: websiteData.primary_color }}>
           {title}
         </h1>
       </header>
-      <div className="columns-1 md:columns-2 gap-12 prose prose-lg max-w-none" dangerouslySetInnerHTML={{ __html: content }} />
+
+      {/* Content */}
+      <div className="container mx-auto px-4 max-w-3xl">
+        <div
+          className="prose prose-lg max-w-none"
+          style={{ color: websiteData.text_color }}
+          dangerouslySetInnerHTML={{ __html: content }}
+        />
+      </div>
     </div>
   );
 }

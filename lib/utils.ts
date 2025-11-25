@@ -83,80 +83,47 @@ export function iconToUrl(iconIdentifier: string | null | undefined): string | n
 }
 
 /**
- * Simple in-memory cache for database queries
- * Disabled for localhost development
+ * Get contrasting text color (black or white) based on background color luminance
+ * @param hexColor - Hex color string (e.g., "#FF5733" or "FF5733")
+ * @returns 'white' or 'black' for optimal readability
  */
-interface CacheEntry<T> {
-  data: T;
-  expires: number;
+export function getContrastTextColor(hexColor: string): 'white' | 'black' {
+  // Remove # if present
+  const hex = hexColor.replace('#', '');
+
+  // Parse RGB values
+  const r = parseInt(hex.substring(0, 2), 16);
+  const g = parseInt(hex.substring(2, 4), 16);
+  const b = parseInt(hex.substring(4, 6), 16);
+
+  // Calculate relative luminance using WCAG formula
+  const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+
+  // Return black for light backgrounds, white for dark backgrounds
+  return luminance > 0.5 ? 'black' : 'white';
 }
 
-class SimpleCache {
-  private cache = new Map<string, CacheEntry<any>>();
+/**
+ * Adjust color brightness
+ * @param hexColor - Hex color string
+ * @param percent - Positive to lighten, negative to darken (-100 to 100)
+ */
+export function adjustColorBrightness(hexColor: string, percent: number): string {
+  const hex = hexColor.replace('#', '');
+  const r = parseInt(hex.substring(0, 2), 16);
+  const g = parseInt(hex.substring(2, 4), 16);
+  const b = parseInt(hex.substring(4, 6), 16);
 
-  /**
-   * Get or fetch data with caching (disabled for localhost)
-   * @param key - Unique cache key
-   * @param ttl - Time to live in seconds
-   * @param fetcher - Function to fetch data if not cached
-   * @param hostname - Current hostname (skip cache if localhost)
-   */
-  async get<T>(
-    key: string,
-    ttl: number,
-    fetcher: () => Promise<T>,
-    hostname?: string
-  ): Promise<T> {
-    // Skip cache for localhost
-    if (hostname?.includes('localhost') || hostname?.includes('127.0.0.1')) {
-      return fetcher();
-    }
+  const adjust = (color: number) => {
+    const adjusted = percent > 0
+      ? color + (255 - color) * (percent / 100)
+      : color + color * (percent / 100);
+    return Math.max(0, Math.min(255, Math.round(adjusted)));
+  };
 
-    const cached = this.cache.get(key);
-    const now = Date.now();
+  const rNew = adjust(r).toString(16).padStart(2, '0');
+  const gNew = adjust(g).toString(16).padStart(2, '0');
+  const bNew = adjust(b).toString(16).padStart(2, '0');
 
-    // Return cached data if still valid
-    if (cached && cached.expires > now) {
-      return cached.data as T;
-    }
-
-    // Fetch fresh data
-    const data = await fetcher();
-    this.cache.set(key, { data, expires: now + ttl * 1000 });
-
-    // Clean up expired entries periodically (every 100 cache sets)
-    if (Math.random() < 0.01) {
-      this.cleanup();
-    }
-
-    return data;
-  }
-
-  /**
-   * Clear specific cache entry
-   */
-  clear(key: string): void {
-    this.cache.delete(key);
-  }
-
-  /**
-   * Clear all cache entries
-   */
-  clearAll(): void {
-    this.cache.clear();
-  }
-
-  /**
-   * Remove expired entries
-   */
-  private cleanup(): void {
-    const now = Date.now();
-    for (const [key, entry] of this.cache.entries()) {
-      if (entry.expires <= now) {
-        this.cache.delete(key);
-      }
-    }
-  }
+  return `#${rNew}${gNew}${bNew}`;
 }
-
-export const cache = new SimpleCache();

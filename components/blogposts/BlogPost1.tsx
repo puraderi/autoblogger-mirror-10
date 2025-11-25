@@ -20,49 +20,74 @@ interface BlogPostProps {
   nextPost?: BlogPost | null;
 }
 
-// BlogPost 1: Classic Article Layout
+// BlogPost 1: Classic Article - Clean traditional blog layout with author inline
 export default function BlogPost1({ websiteData, post, relatedPosts = [], previousPost, nextPost }: BlogPostProps) {
   const currentUrl = typeof window !== 'undefined' ? window.location.href : '';
-
   const authorSlug = websiteData.author_slug || '';
 
   return (
     <>
       {websiteData.show_reading_progress_bar && <ReadingProgressBar websiteData={websiteData} />}
 
-      <article className={`${websiteData.container_width} mx-auto px-4 md:px-6 py-6 md:py-12`}>
+      <article className={`${websiteData.container_width} mx-auto px-4 md:px-6 py-8 md:py-16`}>
         {websiteData.show_breadcrumbs && (
-          <Breadcrumbs
-            websiteData={websiteData}
-            items={[
-              { label: 'Blogg', href: '/blogg' },
-              { label: post.title, href: `/blogg/${post.slug}` },
-            ]}
-          />
+          <div className="mb-6">
+            <Breadcrumbs
+              websiteData={websiteData}
+              items={[
+                { label: 'Blogg', href: '/blogg' },
+                { label: post.title, href: `/blogg/${post.slug}` },
+              ]}
+            />
+          </div>
         )}
 
-        <header className="mb-6 md:mb-8">
-          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-3 md:mb-4" style={{ color: websiteData.primary_color }}>
+        <header className="mb-8 md:mb-10">
+          {/* Category badge */}
+          {websiteData.show_tags_display && post.tags && post.tags.length > 0 && (
+            <div className="mb-4">
+              <span
+                className="inline-block px-3 py-1 text-xs font-semibold uppercase tracking-wider rounded-full"
+                style={{ backgroundColor: `${websiteData.accent_color}20`, color: websiteData.accent_color }}
+              >
+                {post.tags[0]}
+              </span>
+            </div>
+          )}
+
+          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-5 leading-tight" style={{ color: websiteData.primary_color }}>
             {post.title}
           </h1>
 
-          <div className="flex flex-wrap items-center gap-2 md:gap-4 mb-4 md:mb-6 text-sm md:text-base">
-            <span style={{ color: websiteData.text_color }}>
-              Av <Link href={`/${authorSlug}`} className="hover:underline">{websiteData.author_name}</Link>
-            </span>
-            {post.published_at && (
-              <span style={{ color: websiteData.text_color }}>
-                {formatSwedishDate(post.published_at)}
-              </span>
+          {/* Author line with avatar */}
+          <div className="flex items-center gap-3 mb-6">
+            {websiteData.author_image_url && (
+              <Image
+                src={websiteData.author_image_url}
+                alt={websiteData.author_name || ''}
+                width={44}
+                height={44}
+                className="rounded-full"
+              />
             )}
-            {websiteData.show_reading_time && <ReadingTime websiteData={websiteData} content={post.content} />}
-          </div>
-
-          {websiteData.show_tags_display && post.tags && post.tags.length > 0 && (
-            <div className="mb-4 md:mb-6">
-              <TagsDisplay websiteData={websiteData} tags={post.tags} />
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-gray-600">
+              <Link href={`/${authorSlug}`} className="font-medium hover:underline" style={{ color: websiteData.primary_color }}>
+                {websiteData.author_name}
+              </Link>
+              {post.published_at && (
+                <>
+                  <span className="text-gray-300">·</span>
+                  <span>{formatSwedishDate(post.published_at)}</span>
+                </>
+              )}
+              {websiteData.show_reading_time && (
+                <>
+                  <span className="text-gray-300">·</span>
+                  <ReadingTime websiteData={websiteData} content={post.content} />
+                </>
+              )}
             </div>
-          )}
+          </div>
 
           {post.image_url && (
             <Image
@@ -70,21 +95,32 @@ export default function BlogPost1({ websiteData, post, relatedPosts = [], previo
               alt={post.title}
               width={1200}
               height={600}
-              className={`w-full h-48 md:h-64 lg:h-96 object-cover ${websiteData.border_radius}`}
+              className={`w-full h-56 md:h-72 lg:h-[420px] object-cover ${websiteData.border_radius}`}
             />
           )}
         </header>
 
-        <div className="prose prose-sm md:prose-base lg:prose-lg max-w-none mb-8 md:mb-12" style={{ color: websiteData.text_color }} dangerouslySetInnerHTML={{ __html: post.content }} />
+        <div
+          className="prose prose-lg max-w-none mb-10 prose-headings:font-bold prose-a:underline prose-img:rounded-lg"
+          style={{ color: websiteData.text_color }}
+          dangerouslySetInnerHTML={{ __html: post.content }}
+        />
+
+        {/* Tags row */}
+        {websiteData.show_tags_display && post.tags && post.tags.length > 1 && (
+          <div className="mb-8 pb-8 border-b" style={{ borderColor: websiteData.secondary_color }}>
+            <TagsDisplay websiteData={websiteData} tags={post.tags} />
+          </div>
+        )}
 
         {websiteData.show_share_buttons && (
-          <div className="mb-8 md:mb-12 pb-6 md:pb-8 border-t pt-6 md:pt-8" style={{ borderColor: websiteData.secondary_color }}>
+          <div className="mb-10 pb-8 border-b" style={{ borderColor: websiteData.secondary_color }}>
             <ShareButtons websiteData={websiteData} title={post.title} url={currentUrl} />
           </div>
         )}
 
         {websiteData.show_author_box && (
-          <div className="mb-12">
+          <div className="mb-10">
             <AuthorBox
               websiteData={websiteData}
               authorName={websiteData.author_name}

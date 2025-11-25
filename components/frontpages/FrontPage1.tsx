@@ -8,34 +8,33 @@ interface FrontPageProps {
   blogPosts: BlogPost[];
 }
 
-// FrontPage 1: Hero with Grid Layout
+// FrontPage 1: Classic Grid - Hero section with 3-column post grid
 export default function FrontPage1({ websiteData, blogPosts }: FrontPageProps) {
   return (
     <>
-      {/* Hero Section - Always present */}
-      <div className={`${websiteData.container_width} mx-auto px-4 py-16`}>
+      {/* Hero Section */}
+      <div className={`${websiteData.container_width} mx-auto px-4 py-12 md:py-20`}>
         <div className="text-center max-w-4xl mx-auto">
           {websiteData.frontpage_hero_title && (
-            <h1 className="text-4xl md:text-5xl font-bold mb-6 break-words max-w-full" style={{ color: websiteData.primary_color }}>
+            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 leading-tight" style={{ color: websiteData.primary_color }}>
               {websiteData.frontpage_hero_title}
             </h1>
           )}
           {websiteData.frontpage_hero_text && (
-            <p className="text-xl mb-8" style={{ color: websiteData.text_color }}>
+            <p className="text-lg md:text-xl mb-8 text-gray-600 max-w-2xl mx-auto">
               {websiteData.frontpage_hero_text}
             </p>
           )}
         </div>
 
-        {/* Topic Image Below Text */}
         {websiteData.topic_image_landscape_16_9 && (
-          <div className="mt-8 max-w-4xl mx-auto">
+          <div className="mt-8 max-w-5xl mx-auto">
             <Image
               src={websiteData.topic_image_landscape_16_9}
               alt={websiteData.website_name}
               width={1200}
               height={675}
-              className={`w-full h-auto ${websiteData.border_radius}`}
+              className={`w-full h-auto shadow-lg ${websiteData.border_radius}`}
             />
           </div>
         )}
@@ -43,38 +42,54 @@ export default function FrontPage1({ websiteData, blogPosts }: FrontPageProps) {
 
       {/* Blog Posts Grid */}
       <div className={`${websiteData.container_width} mx-auto px-4 py-12`}>
-        <h2 className="text-3xl font-bold mb-8" style={{ color: websiteData.primary_color }}>Senaste inläggen</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+        <div className="flex items-center justify-between mb-8">
+          <h2 className="text-2xl md:text-3xl font-bold" style={{ color: websiteData.primary_color }}>
+            Senaste inläggen
+          </h2>
+          <Link href="/blogg" className="text-sm font-medium hover:underline" style={{ color: websiteData.accent_color }}>
+            Visa alla
+          </Link>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
           {blogPosts.map((post) => (
             <Link key={post.id} href={`/blogg/${post.slug}`} className="group">
-              <div className={`border ${websiteData.border_radius} overflow-hidden hover:shadow-lg transition-shadow`} style={{ borderColor: websiteData.secondary_color }}>
+              <article className={`border overflow-hidden transition-all hover:shadow-xl hover:-translate-y-1 ${websiteData.border_radius}`} style={{ borderColor: websiteData.secondary_color }}>
                 {post.image_url && (
-                  <Image
-                    src={post.image_url}
-                    alt={post.title}
-                    width={400}
-                    height={250}
-                    className="w-full h-48 object-cover"
-                  />
+                  <div className="overflow-hidden">
+                    <Image
+                      src={post.image_url}
+                      alt={post.title}
+                      width={400}
+                      height={250}
+                      className="w-full h-48 object-cover transition-transform group-hover:scale-105"
+                    />
+                  </div>
                 )}
-                <div className="p-6">
-                  <h3 className="text-xl font-bold mb-2 group-hover:opacity-80" style={{ color: websiteData.primary_color }}>
+                <div className="p-5">
+                  {post.tags && post.tags[0] && (
+                    <span className="text-xs font-medium uppercase tracking-wider" style={{ color: websiteData.accent_color }}>
+                      {post.tags[0]}
+                    </span>
+                  )}
+                  <h3 className="text-lg font-bold mt-2 mb-2 line-clamp-2 group-hover:opacity-80 transition-opacity" style={{ color: websiteData.primary_color }}>
                     {post.title}
                   </h3>
-                  <p className="text-sm mb-3" style={{ color: websiteData.text_color }}>{post.excerpt}</p>
-                  <div className="text-sm opacity-70" style={{ color: websiteData.text_color }}>Av {websiteData.author_name}</div>
+                  <p className="text-sm text-gray-600 line-clamp-2 mb-3">{post.excerpt}</p>
+                  <div className="text-xs text-gray-500">
+                    {websiteData.author_name}
+                  </div>
                 </div>
-              </div>
+              </article>
             </Link>
           ))}
         </div>
       </div>
 
-      {/* Outro Section - Always present */}
+      {/* Outro Section */}
       {websiteData.frontpage_outro_text && (
-        <div className={`${websiteData.container_width} mx-auto px-4 py-16`}>
-          <div className={`text-center max-w-3xl mx-auto p-8 ${websiteData.border_radius}`} style={{ backgroundColor: websiteData.secondary_color }}>
-            <div dangerouslySetInnerHTML={{ __html: websiteData.frontpage_outro_text }} style={{ color: websiteData.text_color }} />
+        <div className={`${websiteData.container_width} mx-auto px-4 py-12 md:py-16`}>
+          <div className={`text-center max-w-3xl mx-auto p-8 md:p-10 ${websiteData.border_radius}`} style={{ backgroundColor: `${websiteData.secondary_color}50` }}>
+            <div className="prose prose-lg max-w-none" dangerouslySetInnerHTML={{ __html: websiteData.frontpage_outro_text }} style={{ color: websiteData.text_color }} />
           </div>
         </div>
       )}

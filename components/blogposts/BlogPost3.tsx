@@ -19,19 +19,18 @@ interface BlogPostProps {
   nextPost?: BlogPost | null;
 }
 
-// BlogPost 3: Minimal Centered Layout
+// BlogPost 3: Editorial Centered - Elegant centered layout with serif typography
 export default function BlogPost3({ websiteData, post, relatedPosts = [], previousPost, nextPost }: BlogPostProps) {
   const currentUrl = typeof window !== 'undefined' ? window.location.href : '';
-
   const authorSlug = websiteData.author_slug || '';
 
   return (
     <>
       {websiteData.show_reading_progress_bar && <ReadingProgressBar websiteData={websiteData} />}
 
-      <article className={`${websiteData.container_width} mx-auto px-4 py-16 max-w-3xl`}>
+      <article className="max-w-3xl mx-auto px-4 py-12 md:py-20">
         {websiteData.show_breadcrumbs && (
-          <div className="mb-8">
+          <div className="mb-8 text-center">
             <Breadcrumbs
               websiteData={websiteData}
               items={[
@@ -42,69 +41,87 @@ export default function BlogPost3({ websiteData, post, relatedPosts = [], previo
           </div>
         )}
 
-        <header className="text-center mb-12">
+        <header className="text-center mb-10 md:mb-14">
+          {/* Category with decorative lines */}
           {post.tags && post.tags.length > 0 && (
-            <div className="mb-4">
-              <span className="text-xs font-semibold uppercase tracking-wide" style={{ color: websiteData.accent_color }}>
+            <div className="flex items-center justify-center gap-4 mb-6">
+              <div className="h-px w-12 bg-gray-300" />
+              <span className="text-xs font-semibold uppercase tracking-widest" style={{ color: websiteData.accent_color }}>
                 {post.tags[0]}
               </span>
+              <div className="h-px w-12 bg-gray-300" />
             </div>
           )}
 
-          <h1 className="text-6xl font-bold mb-6" style={{ color: websiteData.primary_color }}>
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif font-bold mb-8 leading-tight" style={{ color: websiteData.primary_color }}>
             {post.title}
           </h1>
 
-          <div className="flex items-center justify-center gap-4">
+          {/* Author centered */}
+          <div className="flex flex-col items-center gap-3">
             {websiteData.author_image_url && (
               <Image
                 src={websiteData.author_image_url}
-                alt={websiteData.author_name || "Author"}
-                width={48}
-                height={48}
-                className="rounded-full"
+                alt={websiteData.author_name || 'Författare'}
+                width={64}
+                height={64}
+                className="rounded-full border-2"
+                style={{ borderColor: websiteData.secondary_color }}
               />
             )}
-            <div className="text-left">
-              <Link href={`/${authorSlug}`} className="font-semibold hover:underline" style={{ color: websiteData.primary_color }}>{websiteData.author_name}</Link>
-              <div className="flex items-center gap-2 text-sm text-gray-500">
+            <div className="text-center">
+              <Link href={`/${authorSlug}`} className="font-semibold hover:underline block mb-1" style={{ color: websiteData.primary_color }}>
+                {websiteData.author_name}
+              </Link>
+              <div className="flex items-center justify-center gap-2 text-sm text-gray-500">
                 {post.published_at && (
-                  <span>
-                    {new Date(post.published_at).toLocaleDateString()}
-                  </span>
+                  <span>{new Date(post.published_at).toLocaleDateString('sv-SE', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
                 )}
-                {websiteData.show_reading_time && <ReadingTime websiteData={websiteData} content={post.content} />}
+                {websiteData.show_reading_time && (
+                  <>
+                    <span>·</span>
+                    <ReadingTime websiteData={websiteData} content={post.content} />
+                  </>
+                )}
               </div>
             </div>
           </div>
         </header>
 
         {post.image_url && (
-          <Image
-            src={post.image_url}
-            alt={post.title}
-            width={1200}
-            height={600}
-            className={`w-full h-96 object-cover mb-12 ${websiteData.border_radius}`}
-          />
+          <div className="mb-10 md:mb-14 -mx-4 md:mx-0">
+            <Image
+              src={post.image_url}
+              alt={post.title}
+              width={1200}
+              height={600}
+              className={`w-full h-64 md:h-80 lg:h-96 object-cover ${websiteData.border_radius}`}
+            />
+          </div>
         )}
 
-        <div className="prose prose-xl max-w-none mb-12" style={{ color: websiteData.text_color }} dangerouslySetInnerHTML={{ __html: post.content }} />
+        {/* Content with elegant prose styling */}
+        <div
+          className="prose prose-lg md:prose-xl max-w-none mb-12 prose-p:first-of-type:first-letter:text-5xl prose-p:first-of-type:first-letter:font-serif prose-p:first-of-type:first-letter:font-bold prose-p:first-of-type:first-letter:float-left prose-p:first-of-type:first-letter:mr-3 prose-p:first-of-type:first-letter:mt-1"
+          style={{ color: websiteData.text_color }}
+          dangerouslySetInnerHTML={{ __html: post.content }}
+        />
 
+        {/* Tags centered */}
         {websiteData.show_tags_display && post.tags && post.tags.length > 0 && (
-          <div className="mt-16 text-center">
+          <div className="flex justify-center mb-10 pt-8 border-t" style={{ borderColor: websiteData.secondary_color }}>
             <TagsDisplay websiteData={websiteData} tags={post.tags} />
           </div>
         )}
 
         {websiteData.show_share_buttons && (
-          <div className="mt-12 pt-8 border-t text-center" style={{ borderColor: websiteData.secondary_color }}>
+          <div className="mb-10 pb-8 border-b flex justify-center" style={{ borderColor: websiteData.secondary_color }}>
             <ShareButtons websiteData={websiteData} title={post.title} url={currentUrl} />
           </div>
         )}
 
         {websiteData.show_author_box && (
-          <div className="mt-12">
+          <div className="mb-10">
             <AuthorBox
               websiteData={websiteData}
               authorName={websiteData.author_name}
@@ -114,9 +131,7 @@ export default function BlogPost3({ websiteData, post, relatedPosts = [], previo
         )}
 
         {websiteData.show_post_navigation && (
-          <div className="mt-12">
-            <PostNavigation websiteData={websiteData} previousPost={previousPost} nextPost={nextPost} />
-          </div>
+          <PostNavigation websiteData={websiteData} previousPost={previousPost} nextPost={nextPost} />
         )}
       </article>
 

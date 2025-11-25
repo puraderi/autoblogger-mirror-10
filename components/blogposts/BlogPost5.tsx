@@ -19,17 +19,16 @@ interface BlogPostProps {
   nextPost?: BlogPost | null;
 }
 
-// BlogPost 5: Card Style with Accent
+// BlogPost 5: Card Elevated - Article in elevated card with accent border
 export default function BlogPost5({ websiteData, post, relatedPosts = [], previousPost, nextPost }: BlogPostProps) {
   const currentUrl = typeof window !== 'undefined' ? window.location.href : '';
-
   const authorSlug = websiteData.author_slug || '';
 
   return (
     <>
       {websiteData.show_reading_progress_bar && <ReadingProgressBar websiteData={websiteData} />}
 
-      <div className="py-12" style={{ backgroundColor: websiteData.secondary_color }}>
+      <div className="py-10 md:py-16 min-h-screen" style={{ backgroundColor: `${websiteData.secondary_color}40` }}>
         <article className={`${websiteData.container_width} mx-auto px-4 max-w-4xl`}>
           {websiteData.show_breadcrumbs && (
             <div className="mb-6">
@@ -43,26 +42,34 @@ export default function BlogPost5({ websiteData, post, relatedPosts = [], previo
             </div>
           )}
 
-          <div className={`bg-white shadow-xl overflow-hidden ${websiteData.border_radius}`}>
+          <div className={`bg-white shadow-2xl overflow-hidden border-t-4 ${websiteData.border_radius}`} style={{ borderColor: websiteData.accent_color }}>
             {post.image_url && (
               <Image
                 src={post.image_url}
                 alt={post.title}
                 width={1200}
                 height={500}
-                className="w-full h-80 object-cover"
+                className="w-full h-64 md:h-80 object-cover"
               />
             )}
 
-            <div className="p-12">
-              <header className="mb-8 pb-8 border-b-4" style={{ borderColor: websiteData.accent_color }}>
+            <div className="p-6 md:p-10 lg:p-12">
+              <header className="mb-8 pb-8 border-b" style={{ borderColor: websiteData.secondary_color }}>
                 {websiteData.show_tags_display && post.tags && post.tags.length > 0 && (
-                  <div className="mb-4">
-                    <TagsDisplay websiteData={websiteData} tags={post.tags} />
+                  <div className="mb-4 flex flex-wrap gap-2">
+                    {post.tags.slice(0, 3).map((tag) => (
+                      <span
+                        key={tag}
+                        className="inline-block px-3 py-1 text-xs font-medium rounded-full"
+                        style={{ backgroundColor: `${websiteData.accent_color}15`, color: websiteData.accent_color }}
+                      >
+                        {tag}
+                      </span>
+                    ))}
                   </div>
                 )}
 
-                <h1 className="text-5xl font-bold mb-6" style={{ color: websiteData.primary_color }}>
+                <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 leading-tight" style={{ color: websiteData.primary_color }}>
                   {post.title}
                 </h1>
 
@@ -70,39 +77,46 @@ export default function BlogPost5({ websiteData, post, relatedPosts = [], previo
                   {websiteData.author_image_url && (
                     <Image
                       src={websiteData.author_image_url}
-                      alt={websiteData.author_name || "Author"}
-                      width={56}
-                      height={56}
-                      className="rounded-full border-2"
-                      style={{ borderColor: websiteData.accent_color }}
+                      alt={websiteData.author_name || 'Författare'}
+                      width={52}
+                      height={52}
+                      className="rounded-full ring-2 ring-offset-2"
+                      style={{ ringColor: websiteData.accent_color } as React.CSSProperties}
                     />
                   )}
                   <div>
-                    <Link href={`/${authorSlug}`} className="font-bold text-lg hover:underline" style={{ color: websiteData.primary_color }}>
+                    <Link href={`/${authorSlug}`} className="font-bold hover:underline block" style={{ color: websiteData.primary_color }}>
                       {websiteData.author_name}
                     </Link>
-                    <div className="flex items-center gap-2 text-sm text-gray-600">
+                    <div className="flex items-center gap-2 text-sm text-gray-500">
                       {post.published_at && (
-                        <span>
-                          {new Date(post.published_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
-                        </span>
+                        <span>{new Date(post.published_at).toLocaleDateString('sv-SE', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
                       )}
-                      {websiteData.show_reading_time && <ReadingTime websiteData={websiteData} content={post.content} />}
+                      {websiteData.show_reading_time && (
+                        <>
+                          <span>·</span>
+                          <ReadingTime websiteData={websiteData} content={post.content} />
+                        </>
+                      )}
                     </div>
                   </div>
                 </div>
               </header>
 
-              <div className="prose prose-lg max-w-none mb-12" style={{ color: websiteData.text_color }} dangerouslySetInnerHTML={{ __html: post.content }} />
+              <div
+                className="prose prose-lg max-w-none mb-10"
+                style={{ color: websiteData.text_color }}
+                dangerouslySetInnerHTML={{ __html: post.content }}
+              />
 
               {websiteData.show_share_buttons && (
-                <div className="mb-12 pb-8 border-t pt-8" style={{ borderColor: websiteData.secondary_color }}>
+                <div className="mb-10 pb-8 border-t pt-8" style={{ borderColor: websiteData.secondary_color }}>
                   <ShareButtons websiteData={websiteData} title={post.title} url={currentUrl} />
                 </div>
               )}
 
               {websiteData.show_author_box && (
-                <div className="mb-12">
+                <div className="mb-10">
                   <AuthorBox
                     websiteData={websiteData}
                     authorName={websiteData.author_name}

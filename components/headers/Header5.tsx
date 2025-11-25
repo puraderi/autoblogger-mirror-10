@@ -11,85 +11,98 @@ interface HeaderProps {
   websiteData: WebsiteData;
 }
 
-// Header 5: Minimal Thin Header with Underline
+// Header 5: Minimal Pill Nav - Ultra-clean with pill-style nav and fullscreen mobile menu
 export default function Header5({ websiteData }: HeaderProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <header className="border-b-2" style={{ borderColor: websiteData.accent_color }}>
-      <div className="container mx-auto px-4 py-2">
-        <div className="flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2">
-            {websiteData.icon_identifier && iconToUrl(websiteData.icon_identifier) ? (
-              <img
-                src={iconToUrl(websiteData.icon_identifier)!}
-                alt=""
-                className="w-[30px] h-[30px]"
-              />
-            ) : websiteData.logo_url ? (
-              <Image
-                src={websiteData.logo_url}
-                alt={websiteData.website_name}
-                width={30}
-                height={30}
-                className="object-contain"
-              />
-            ) : null}
-            <span className="text-base md:text-lg font-semibold" style={{ color: websiteData.primary_color }}>
-              {websiteData.website_name}
-            </span>
-          </Link>
+    <>
+      <header className="py-4 relative z-50">
+        <div className="container mx-auto px-4">
+          <div className="flex items-center justify-between">
+            <Link href="/" className="flex items-center gap-2 group">
+              {websiteData.icon_identifier && iconToUrl(websiteData.icon_identifier) ? (
+                <img src={iconToUrl(websiteData.icon_identifier)!} alt="" className="w-7 h-7 transition-transform group-hover:scale-110" />
+              ) : websiteData.logo_url ? (
+                <Image src={websiteData.logo_url} alt={websiteData.website_name} width={28} height={28} className="object-contain transition-transform group-hover:scale-110" />
+              ) : null}
+              <span className="text-base font-semibold" style={{ color: websiteData.primary_color }}>
+                {websiteData.website_name}
+              </span>
+            </Link>
 
-          <button
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="md:hidden p-2"
-            style={{ color: websiteData.primary_color }}
-            aria-label="Toggle menu"
-          >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              {isMenuOpen ? (
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              ) : (
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-              )}
-            </svg>
-          </button>
+            <button
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className="md:hidden p-2 rounded-full transition-colors relative z-50"
+              style={{ color: isMenuOpen ? 'white' : websiteData.primary_color, backgroundColor: isMenuOpen ? 'transparent' : `${websiteData.secondary_color}50` }}
+              aria-label="Toggle menu"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                {isMenuOpen ? (
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                ) : (
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                )}
+              </svg>
+            </button>
 
-          {/* Desktop nav */}
-          <nav className="hidden md:flex items-center gap-4 text-sm">
-            <Link href="/" className="hover:opacity-80" style={{ color: websiteData.primary_color }}>
-              Hem
-            </Link>
-            <Link href="/blogg" className="hover:opacity-80" style={{ color: websiteData.primary_color }}>
-              Blogg
-            </Link>
-            <Link href="/om-oss" className="hover:opacity-80" style={{ color: websiteData.primary_color }}>
-              Om oss
-            </Link>
-            <Link href="/kontakt" className="hover:opacity-80" style={{ color: websiteData.primary_color }}>
-              Kontakt
-            </Link>
-          </nav>
+            {/* Desktop nav - pill style */}
+            <nav className="hidden md:flex items-center gap-1 p-1 rounded-full" style={{ backgroundColor: `${websiteData.secondary_color}30` }}>
+              <Link href="/" className="rounded-full text-sm font-medium transition-all hover:bg-white hover:shadow-sm" style={{ color: websiteData.primary_color, padding: '0.375rem 1rem' }}>
+                Hem
+              </Link>
+              <Link href="/blogg" className="rounded-full text-sm font-medium transition-all hover:bg-white hover:shadow-sm" style={{ color: websiteData.primary_color, padding: '0.375rem 1rem' }}>
+                Blogg
+              </Link>
+              <Link href="/om-oss" className="rounded-full text-sm font-medium transition-all hover:bg-white hover:shadow-sm" style={{ color: websiteData.primary_color, padding: '0.375rem 1rem' }}>
+                Om oss
+              </Link>
+              <Link href="/kontakt" className="rounded-full text-sm font-medium transition-all hover:bg-white hover:shadow-sm" style={{ color: websiteData.primary_color, padding: '0.375rem 1rem' }}>
+                Kontakt
+              </Link>
+            </nav>
+          </div>
         </div>
+      </header>
 
-        {/* Mobile nav */}
-        {isMenuOpen && (
-          <nav className="md:hidden flex flex-col gap-3 pt-3 mt-3 text-sm">
-            <Link href="/" className="hover:opacity-80 py-2" style={{ color: websiteData.primary_color }} onClick={() => setIsMenuOpen(false)}>
-              Hem
-            </Link>
-            <Link href="/blogg" className="hover:opacity-80 py-2" style={{ color: websiteData.primary_color }} onClick={() => setIsMenuOpen(false)}>
-              Blogg
-            </Link>
-            <Link href="/om-oss" className="hover:opacity-80 py-2" style={{ color: websiteData.primary_color }} onClick={() => setIsMenuOpen(false)}>
-              Om oss
-            </Link>
-            <Link href="/kontakt" className="hover:opacity-80 py-2" style={{ color: websiteData.primary_color }} onClick={() => setIsMenuOpen(false)}>
-              Kontakt
-            </Link>
-          </nav>
-        )}
+      {/* Fullscreen mobile menu overlay */}
+      <div
+        className={`fixed inset-0 z-40 md:hidden transition-all duration-500 ${
+          isMenuOpen ? 'opacity-100 visible' : 'opacity-0 invisible'
+        }`}
+        style={{ backgroundColor: websiteData.primary_color }}
+      >
+        <nav className="flex flex-col items-center justify-center h-full gap-6">
+          <Link
+            href="/"
+            className="text-3xl font-bold text-white opacity-90 hover:opacity-100 transition-all hover:scale-105"
+            onClick={() => setIsMenuOpen(false)}
+          >
+            Hem
+          </Link>
+          <Link
+            href="/blogg"
+            className="text-3xl font-bold text-white opacity-90 hover:opacity-100 transition-all hover:scale-105"
+            onClick={() => setIsMenuOpen(false)}
+          >
+            Blogg
+          </Link>
+          <Link
+            href="/om-oss"
+            className="text-3xl font-bold text-white opacity-90 hover:opacity-100 transition-all hover:scale-105"
+            onClick={() => setIsMenuOpen(false)}
+          >
+            Om oss
+          </Link>
+          <Link
+            href="/kontakt"
+            className="text-3xl font-bold text-white opacity-90 hover:opacity-100 transition-all hover:scale-105"
+            onClick={() => setIsMenuOpen(false)}
+          >
+            Kontakt
+          </Link>
+        </nav>
       </div>
-    </header>
+    </>
   );
 }

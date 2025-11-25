@@ -17,11 +17,36 @@ export async function generateMetadata(): Promise<Metadata> {
     ? iconToUrl(websiteData.icon_identifier)
     : websiteData?.favicon_url || "/favicon.ico";
 
+  const baseUrl = hostname.includes('localhost')
+    ? `http://${hostname}`
+    : `https://${hostname}`;
+
   return {
-    title: websiteData?.website_name || "Blog",
+    metadataBase: new URL(baseUrl),
+    title: {
+      default: websiteData?.website_name || "Blog",
+      template: `%s | ${websiteData?.website_name || "Blog"}`,
+    },
     description: websiteData?.meta_description || websiteData?.topic || "A blog website",
     icons: {
       icon: faviconUrl || "/favicon.ico",
+    },
+    openGraph: {
+      type: "website",
+      siteName: websiteData?.website_name,
+      locale: "sv_SE",
+    },
+    twitter: {
+      card: "summary_large_image",
+    },
+    other: {
+      "theme-color": websiteData?.primary_color || "#000000",
+    },
+    alternates: {
+      canonical: "/",
+      types: {
+        "application/rss+xml": "/feed.xml",
+      },
     },
   };
 }

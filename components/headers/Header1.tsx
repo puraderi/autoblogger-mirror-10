@@ -10,32 +10,33 @@ interface HeaderProps {
   websiteData: WebsiteData;
 }
 
-// Header 1: Logo Left, Horizontal Menu
+// Header 1: Classic - Logo left with underline hover nav
 export default function Header1({ websiteData }: HeaderProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
+  const navLinkClass = "relative py-1 transition-colors after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:transition-all after:duration-300 hover:after:w-full";
+
   return (
-    <header className="border-b" style={{ borderColor: websiteData.secondary_color }}>
-      <div className="container mx-auto px-4 py-4">
+    <header className="border-b-2" style={{ borderColor: websiteData.secondary_color }}>
+      <div className="container mx-auto px-4 py-5">
         <div className="flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2 md:gap-3">
+          <Link href="/" className="flex items-center gap-3 group">
             {websiteData.icon_identifier && iconToUrl(websiteData.icon_identifier) ? (
               <img
                 src={iconToUrl(websiteData.icon_identifier)!}
                 alt=""
-                className="w-8 h-8 md:w-10 md:h-10"
-                style={{ filter: `drop-shadow(0 0 0 ${websiteData.primary_color})` }}
+                className="w-9 h-9 md:w-11 md:h-11 transition-transform group-hover:scale-105"
               />
             ) : websiteData.logo_url ? (
               <Image
                 src={websiteData.logo_url}
                 alt={websiteData.website_name}
-                width={32}
-                height={32}
-                className="object-contain md:w-10 md:h-10"
+                width={36}
+                height={36}
+                className="object-contain md:w-11 md:h-11 transition-transform group-hover:scale-105"
               />
             ) : null}
-            <span className="text-lg md:text-xl font-bold" style={{ color: websiteData.primary_color }}>
+            <span className="text-xl md:text-2xl font-bold tracking-tight" style={{ color: websiteData.primary_color }}>
               {websiteData.website_name}
             </span>
           </Link>
@@ -43,7 +44,7 @@ export default function Header1({ websiteData }: HeaderProps) {
           {/* Hamburger button */}
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="md:hidden p-2"
+            className="md:hidden p-2 rounded-lg transition-colors"
             style={{ color: websiteData.primary_color }}
             aria-label="Toggle menu"
           >
@@ -57,39 +58,39 @@ export default function Header1({ websiteData }: HeaderProps) {
           </button>
 
           {/* Desktop nav */}
-          <nav className="hidden md:flex items-center gap-6">
-            <Link href="/" className="hover:opacity-80" style={{ color: websiteData.primary_color }}>
-              Hem
+          <nav className="hidden md:flex items-center gap-8">
+            <Link href="/" className={navLinkClass} style={{ color: websiteData.primary_color, '--tw-after-bg': websiteData.accent_color } as React.CSSProperties}>
+              <span className="after:bg-current">Hem</span>
             </Link>
-            <Link href="/blogg" className="hover:opacity-80" style={{ color: websiteData.primary_color }}>
-              Blogg
+            <Link href="/blogg" className={navLinkClass} style={{ color: websiteData.primary_color }}>
+              <span className="after:bg-current">Blogg</span>
             </Link>
-            <Link href="/om-oss" className="hover:opacity-80" style={{ color: websiteData.primary_color }}>
-              Om oss
+            <Link href="/om-oss" className={navLinkClass} style={{ color: websiteData.primary_color }}>
+              <span className="after:bg-current">Om oss</span>
             </Link>
-            <Link href="/kontakt" className="hover:opacity-80" style={{ color: websiteData.primary_color }}>
-              Kontakt
+            <Link href="/kontakt" className={navLinkClass} style={{ color: websiteData.primary_color }}>
+              <span className="after:bg-current">Kontakt</span>
             </Link>
           </nav>
         </div>
 
-        {/* Mobile nav */}
-        {isMenuOpen && (
-          <nav className="md:hidden flex flex-col gap-4 pt-4 mt-4 border-t" style={{ borderColor: websiteData.secondary_color }}>
-            <Link href="/" className="hover:opacity-80 py-2" style={{ color: websiteData.primary_color }} onClick={() => setIsMenuOpen(false)}>
+        {/* Mobile nav - slide down */}
+        <div className={`md:hidden overflow-hidden transition-all duration-300 ${isMenuOpen ? 'max-h-64 opacity-100' : 'max-h-0 opacity-0'}`}>
+          <nav className="flex flex-col gap-1 pt-4 mt-4 border-t" style={{ borderColor: websiteData.secondary_color }}>
+            <Link href="/" className="rounded-lg transition-colors hover:bg-gray-50" style={{ color: websiteData.primary_color, padding: '0.75rem 0.5rem' }} onClick={() => setIsMenuOpen(false)}>
               Hem
             </Link>
-            <Link href="/blogg" className="hover:opacity-80 py-2" style={{ color: websiteData.primary_color }} onClick={() => setIsMenuOpen(false)}>
+            <Link href="/blogg" className="rounded-lg transition-colors hover:bg-gray-50" style={{ color: websiteData.primary_color, padding: '0.75rem 0.5rem' }} onClick={() => setIsMenuOpen(false)}>
               Blogg
             </Link>
-            <Link href="/om-oss" className="hover:opacity-80 py-2" style={{ color: websiteData.primary_color }} onClick={() => setIsMenuOpen(false)}>
+            <Link href="/om-oss" className="rounded-lg transition-colors hover:bg-gray-50" style={{ color: websiteData.primary_color, padding: '0.75rem 0.5rem' }} onClick={() => setIsMenuOpen(false)}>
               Om oss
             </Link>
-            <Link href="/kontakt" className="hover:opacity-80 py-2" style={{ color: websiteData.primary_color }} onClick={() => setIsMenuOpen(false)}>
+            <Link href="/kontakt" className="rounded-lg transition-colors hover:bg-gray-50" style={{ color: websiteData.primary_color, padding: '0.75rem 0.5rem' }} onClick={() => setIsMenuOpen(false)}>
               Kontakt
             </Link>
           </nav>
-        )}
+        </div>
       </div>
     </header>
   );
