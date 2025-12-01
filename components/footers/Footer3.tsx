@@ -2,6 +2,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { WebsiteData } from '@/lib/services/website';
 import { iconToUrl } from '@/lib/utils';
+import { getLanguageConfig } from '@/lib/languages';
 
 interface FooterProps {
   websiteData: WebsiteData;
@@ -9,6 +10,7 @@ interface FooterProps {
 
 // Footer 3: Minimal Inline - Single row compact footer
 export default function Footer3({ websiteData }: FooterProps) {
+  const lang = getLanguageConfig(websiteData.language);
   return (
     <footer className="mt-auto py-4">
       <div className="container mx-auto px-4">
@@ -27,15 +29,15 @@ export default function Footer3({ websiteData }: FooterProps) {
 
           {/* Center: Nav links with dots */}
           <nav className="flex items-center gap-2 text-gray-500">
-            <Link href="/" className="hover:text-gray-900 transition-colors">Hem</Link>
+            <Link href="/" className="hover:text-gray-900 transition-colors">{lang.labels.home}</Link>
             <span className="text-gray-300">·</span>
-            <Link href="/blogg" className="hover:text-gray-900 transition-colors">Blogg</Link>
+            <Link href={`/${lang.slugs.blog}`} className="hover:text-gray-900 transition-colors">{lang.labels.blog}</Link>
             <span className="text-gray-300">·</span>
-            <Link href="/om-oss" className="hover:text-gray-900 transition-colors">Om oss</Link>
+            <Link href={`/${lang.slugs.about}`} className="hover:text-gray-900 transition-colors">{lang.labels.about}</Link>
             <span className="text-gray-300">·</span>
-            <Link href="/kontakt" className="hover:text-gray-900 transition-colors">Kontakt</Link>
+            <Link href={`/${lang.slugs.contact}`} className="hover:text-gray-900 transition-colors">{lang.labels.contact}</Link>
             <span className="text-gray-300">·</span>
-            <Link href="/sitemap.xml" className="hover:text-gray-900 transition-colors">Sitemap</Link>
+            <Link href="/sitemap.xml" className="hover:text-gray-900 transition-colors">{lang.labels.sitemap}</Link>
           </nav>
 
           {/* Right: Social icons */}

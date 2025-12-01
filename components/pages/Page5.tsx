@@ -1,4 +1,5 @@
 import { WebsiteData } from '@/lib/services/website';
+import { getLanguageConfig } from '@/lib/languages';
 
 interface PageProps {
   websiteData: WebsiteData;
@@ -8,6 +9,7 @@ interface PageProps {
 
 // Page 5: Centered Hero - Large centered header with full-width content
 export default function Page5({ websiteData, title, content }: PageProps) {
+  const lang = getLanguageConfig(websiteData.language);
   return (
     <div className="py-10 md:py-16">
       {/* Hero header */}

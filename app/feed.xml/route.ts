@@ -2,6 +2,7 @@ import { headers } from 'next/headers';
 import { getWebsiteDataByHostname } from '@/lib/services/website';
 import { getAllBlogPosts } from '@/lib/services/blog';
 import { normalizeHostname } from '@/lib/utils';
+import { getLanguageConfig } from '@/lib/languages';
 
 export const revalidate = 3600; // Revalidate every hour
 
@@ -14,6 +15,7 @@ export async function GET() {
     return new Response('Website not found', { status: 404 });
   }
 
+  const lang = getLanguageConfig(websiteData.language);
   const blogPosts = await getAllBlogPosts(websiteData.id);
   const baseUrl = `https://${hostname}`;
 
@@ -37,8 +39,8 @@ export async function GET() {
       return `
     <item>
       <title>${escapeXml(post.title)}</title>
-      <link>${baseUrl}/blogg/${post.slug}</link>
-      <guid isPermaLink="true">${baseUrl}/blogg/${post.slug}</guid>
+      <link>${baseUrl}/${lang.slugs.blog}/${post.slug}</link>
+      <guid isPermaLink="true">${baseUrl}/${lang.slugs.blog}/${post.slug}</guid>
       <description>${escapeXml(post.excerpt || '')}</description>
       <pubDate>${pubDate}</pubDate>
       ${post.author_name ? `<author>${escapeXml(post.author_name)}</author>` : ''}
@@ -54,7 +56,7 @@ export async function GET() {
     <title>${escapeXml(websiteData.website_name)}</title>
     <link>${baseUrl}</link>
     <description>${escapeXml(websiteData.meta_description || websiteData.topic || '')}</description>
-    <language>sv</language>
+    <language>${lang.code}</language>
     <lastBuildDate>${new Date().toUTCString()}</lastBuildDate>
     <atom:link href="${baseUrl}/feed.xml" rel="self" type="application/rss+xml" />
     ${websiteData.logo_url ? `<image>

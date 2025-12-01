@@ -2,6 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { WebsiteData } from '@/lib/services/website';
 import { BlogPost } from '@/lib/services/blog';
+import { getLanguageConfig } from '@/lib/languages';
 import Breadcrumbs from '@/components/blogcomponents/Breadcrumbs';
 import ShareButtons from '@/components/blogcomponents/ShareButtons';
 import TagsDisplay from '@/components/blogcomponents/TagsDisplay';
@@ -22,6 +23,7 @@ interface BlogPostProps {
 
 // BlogPost 1: Classic Article - Clean traditional blog layout with author inline
 export default function BlogPost1({ websiteData, post, relatedPosts = [], previousPost, nextPost }: BlogPostProps) {
+  const lang = getLanguageConfig(websiteData.language);
   const currentUrl = typeof window !== 'undefined' ? window.location.href : '';
   const authorSlug = websiteData.author_slug || '';
 
@@ -35,8 +37,8 @@ export default function BlogPost1({ websiteData, post, relatedPosts = [], previo
             <Breadcrumbs
               websiteData={websiteData}
               items={[
-                { label: 'Blogg', href: '/blogg' },
-                { label: post.title, href: `/blogg/${post.slug}` },
+                { label: lang.labels.blog, href: `/${lang.slugs.blog}` },
+                { label: post.title, href: `/${lang.slugs.blog}/${post.slug}` },
               ]}
             />
           </div>

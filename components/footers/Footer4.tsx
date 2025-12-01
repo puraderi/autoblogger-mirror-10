@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { WebsiteData } from '@/lib/services/website';
 import { getContrastTextColor } from '@/lib/utils';
+import { getLanguageConfig } from '@/lib/languages';
 
 interface FooterProps {
   websiteData: WebsiteData;
@@ -8,6 +9,7 @@ interface FooterProps {
 
 // Footer 4: Newsletter Focus - Two column with prominent newsletter signup
 export default function Footer4({ websiteData }: FooterProps) {
+  const lang = getLanguageConfig(websiteData.language);
   return (
     <footer className="mt-auto">
       {/* Newsletter section */}
@@ -15,13 +17,13 @@ export default function Footer4({ websiteData }: FooterProps) {
         <div className="container mx-auto px-4">
           <div className="max-w-2xl mx-auto text-center">
             <h3 className="text-2xl font-bold mb-2" style={{ color: websiteData.primary_color }}>
-              Prenumerera på vårt nyhetsbrev
+              {lang.labels.subscribeToNewsletter}
             </h3>
-            <p className="text-gray-600 mb-6">Få de senaste artiklarna direkt i din inkorg</p>
+            <p className="text-gray-600 mb-6">{lang.labels.getLatestArticles}</p>
             <form className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
               <input
                 type="email"
-                placeholder="Din e-postadress"
+                placeholder={lang.labels.email}
                 className="flex-1 rounded-lg border-2 text-sm focus:outline-none focus:ring-2 transition-all"
                 style={{ borderColor: `${websiteData.primary_color}30`, focusRing: websiteData.primary_color, padding: '0.75rem 1rem' } as React.CSSProperties}
               />
@@ -30,7 +32,7 @@ export default function Footer4({ websiteData }: FooterProps) {
                 className="rounded-lg font-medium text-sm transition-all hover:opacity-90 hover:shadow-lg"
                 style={{ backgroundColor: websiteData.accent_color, color: getContrastTextColor(websiteData.accent_color), padding: '0.75rem 1.5rem' }}
               >
-                Prenumerera
+                {lang.labels.subscribe}
               </button>
             </form>
           </div>
@@ -74,22 +76,22 @@ export default function Footer4({ websiteData }: FooterProps) {
             {/* Right: Navigation */}
             <div className="flex flex-wrap gap-x-12 gap-y-4 md:justify-end">
               <nav className="flex flex-col gap-2 text-sm">
-                <Link href="/" className="text-gray-600 hover:text-gray-900 transition-colors">Hem</Link>
-                <Link href="/blogg" className="text-gray-600 hover:text-gray-900 transition-colors">Blogg</Link>
+                <Link href="/" className="text-gray-600 hover:text-gray-900 transition-colors">{lang.labels.home}</Link>
+                <Link href={`/${lang.slugs.blog}`} className="text-gray-600 hover:text-gray-900 transition-colors">{lang.labels.blog}</Link>
               </nav>
               <nav className="flex flex-col gap-2 text-sm">
-                <Link href="/om-oss" className="text-gray-600 hover:text-gray-900 transition-colors">Om oss</Link>
-                <Link href="/kontakt" className="text-gray-600 hover:text-gray-900 transition-colors">Kontakt</Link>
+                <Link href={`/${lang.slugs.about}`} className="text-gray-600 hover:text-gray-900 transition-colors">{lang.labels.about}</Link>
+                <Link href={`/${lang.slugs.contact}`} className="text-gray-600 hover:text-gray-900 transition-colors">{lang.labels.contact}</Link>
               </nav>
               <nav className="flex flex-col gap-2 text-sm">
-                <Link href="/sitemap.xml" className="text-gray-600 hover:text-gray-900 transition-colors">Sitemap</Link>
+                <Link href="/sitemap.xml" className="text-gray-600 hover:text-gray-900 transition-colors">{lang.labels.sitemap}</Link>
               </nav>
             </div>
           </div>
 
           {/* Bottom copyright */}
           <div className="mt-8 pt-6 border-t text-center text-sm text-gray-500" style={{ borderColor: websiteData.secondary_color }}>
-            © {new Date().getFullYear()} {websiteData.website_name}. Alla rättigheter förbehållna.
+            © {new Date().getFullYear()} {websiteData.website_name}. {lang.labels.allRightsReserved}
           </div>
         </div>
       </div>

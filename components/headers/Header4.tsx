@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { WebsiteData } from '@/lib/services/website';
 import { useState, useEffect } from 'react';
 import { iconToUrl, getContrastTextColor } from '@/lib/utils';
+import { getLanguageConfig } from '@/lib/languages';
 
 interface HeaderProps {
   websiteData: WebsiteData;
@@ -15,6 +16,7 @@ export default function Header4({ websiteData }: HeaderProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const lang = getLanguageConfig(websiteData.language);
 
   useEffect(() => {
     setMounted(true);
@@ -80,28 +82,28 @@ export default function Header4({ websiteData }: HeaderProps) {
                 className="text-sm font-medium rounded-lg transition-all hover:bg-gray-100"
                 style={{ color: websiteData.primary_color, padding: '0.5rem 1rem' }}
               >
-                Hem
+                {lang.labels.home}
               </Link>
               <Link
-                href="/blogg"
+                href={`/${lang.slugs.blog}`}
                 className="text-sm font-medium rounded-lg transition-all hover:bg-gray-100"
                 style={{ color: websiteData.primary_color, padding: '0.5rem 1rem' }}
               >
-                Blogg
+                {lang.labels.blog}
               </Link>
               <Link
-                href="/om-oss"
+                href={`/${lang.slugs.about}`}
                 className="text-sm font-medium rounded-lg transition-all hover:bg-gray-100"
                 style={{ color: websiteData.primary_color, padding: '0.5rem 1rem' }}
               >
-                Om oss
+                {lang.labels.about}
               </Link>
               <Link
-                href="/kontakt"
+                href={`/${lang.slugs.contact}`}
                 className="ml-2 text-sm font-medium rounded-lg transition-all hover:opacity-90 hover:shadow-md"
                 style={{ backgroundColor: websiteData.accent_color, color: getContrastTextColor(websiteData.accent_color), padding: '0.5rem 1.25rem' }}
               >
-                Kontakt
+                {lang.labels.contact}
               </Link>
             </nav>
 
@@ -169,31 +171,31 @@ export default function Header4({ websiteData }: HeaderProps) {
               style={{ color: websiteData.primary_color, padding: '0.75rem 1rem' }}
               onClick={() => setIsMenuOpen(false)}
             >
-              Hem
+              {lang.labels.home}
             </Link>
             <Link
-              href="/blogg"
+              href={`/${lang.slugs.blog}`}
               className="rounded-lg text-base font-medium transition-all hover:bg-gray-100"
               style={{ color: websiteData.primary_color, padding: '0.75rem 1rem' }}
               onClick={() => setIsMenuOpen(false)}
             >
-              Blogg
+              {lang.labels.blog}
             </Link>
             <Link
-              href="/om-oss"
+              href={`/${lang.slugs.about}`}
               className="rounded-lg text-base font-medium transition-all hover:bg-gray-100"
               style={{ color: websiteData.primary_color, padding: '0.75rem 1rem' }}
               onClick={() => setIsMenuOpen(false)}
             >
-              Om oss
+              {lang.labels.about}
             </Link>
             <Link
-              href="/kontakt"
+              href={`/${lang.slugs.contact}`}
               className="mt-4 rounded-lg text-base font-medium text-center transition-all hover:opacity-90"
               style={{ backgroundColor: websiteData.accent_color, color: getContrastTextColor(websiteData.accent_color), padding: '0.75rem 1rem' }}
               onClick={() => setIsMenuOpen(false)}
             >
-              Kontakt
+              {lang.labels.contact}
             </Link>
           </nav>
         </div>

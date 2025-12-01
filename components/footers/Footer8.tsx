@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { WebsiteData } from '@/lib/services/website';
 import { getContrastTextColor } from '@/lib/utils';
+import { getLanguageConfig } from '@/lib/languages';
 
 interface FooterProps {
   websiteData: WebsiteData;
@@ -8,6 +9,7 @@ interface FooterProps {
 
 // Footer 8: Dotted Pattern - Secondary color with dotted pattern overlay
 export default function Footer8({ websiteData }: FooterProps) {
+  const lang = getLanguageConfig(websiteData.language);
   const textColor = getContrastTextColor(websiteData.secondary_color);
   const mutedText = textColor === 'white' ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.6)';
   const accentTextColor = getContrastTextColor(websiteData.accent_color);
@@ -61,12 +63,12 @@ export default function Footer8({ websiteData }: FooterProps) {
 
           {/* Links columns */}
           <div className="lg:col-span-3">
-            <h4 className="font-semibold mb-4 text-sm uppercase tracking-wider" style={{ color: textColor }}>Sidor</h4>
+            <h4 className="font-semibold mb-4 text-sm uppercase tracking-wider" style={{ color: textColor }}>{lang.labels.pages}</h4>
             <nav className="flex flex-col gap-3 text-sm">
-              <Link href="/" className="transition-opacity hover:opacity-80" style={{ color: mutedText }}>Hem</Link>
-              <Link href="/blogg" className="transition-opacity hover:opacity-80" style={{ color: mutedText }}>Blogg</Link>
-              <Link href="/om-oss" className="transition-opacity hover:opacity-80" style={{ color: mutedText }}>Om oss</Link>
-              <Link href="/kontakt" className="transition-opacity hover:opacity-80" style={{ color: mutedText }}>Kontakt</Link>
+              <Link href="/" className="transition-opacity hover:opacity-80" style={{ color: mutedText }}>{lang.labels.home}</Link>
+              <Link href={`/${lang.slugs.blog}`} className="transition-opacity hover:opacity-80" style={{ color: mutedText }}>{lang.labels.blog}</Link>
+              <Link href={`/${lang.slugs.about}`} className="transition-opacity hover:opacity-80" style={{ color: mutedText }}>{lang.labels.about}</Link>
+              <Link href={`/${lang.slugs.contact}`} className="transition-opacity hover:opacity-80" style={{ color: mutedText }}>{lang.labels.contact}</Link>
             </nav>
           </div>
 
@@ -74,13 +76,13 @@ export default function Footer8({ websiteData }: FooterProps) {
           <div className="lg:col-span-4">
             <div className="p-6 rounded-xl" style={{ backgroundColor: websiteData.primary_color }}>
               <h4 className="font-bold text-lg mb-2" style={{ color: getContrastTextColor(websiteData.primary_color) }}>
-                Håll kontakten
+                {lang.labels.stayInTouch}
               </h4>
               <p className="text-sm mb-4" style={{ color: getContrastTextColor(websiteData.primary_color) === 'white' ? 'rgba(255,255,255,0.8)' : 'rgba(0,0,0,0.7)' }}>
-                Har du frågor? Vi finns här för att hjälpa.
+                {lang.labels.haveQuestions} {lang.labels.hereToHelp}
               </p>
               <Link
-                href="/kontakt"
+                href={`/${lang.slugs.contact}`}
                 className="inline-block text-sm font-medium rounded-lg transition-all hover:scale-105"
                 style={{
                   backgroundColor: getContrastTextColor(websiteData.primary_color) === 'white' ? 'white' : 'black',
@@ -88,7 +90,7 @@ export default function Footer8({ websiteData }: FooterProps) {
                   padding: '0.625rem 1.25rem'
                 }}
               >
-                Kontakta oss →
+                {lang.labels.contact} →
               </Link>
             </div>
           </div>
@@ -97,7 +99,7 @@ export default function Footer8({ websiteData }: FooterProps) {
         {/* Bottom */}
         <div className="mt-12 pt-6 border-t flex flex-col md:flex-row items-center justify-between gap-4 text-sm" style={{ borderColor: `${textColor === 'white' ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.1)'}`, color: mutedText }}>
           <p>© {new Date().getFullYear()} {websiteData.website_name}</p>
-          <Link href="/sitemap.xml" className="transition-opacity hover:opacity-80">Sitemap</Link>
+          <Link href="/sitemap.xml" className="transition-opacity hover:opacity-80">{lang.labels.sitemap}</Link>
         </div>
       </div>
     </footer>

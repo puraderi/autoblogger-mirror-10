@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { WebsiteData } from '@/lib/services/website';
+import { getLanguageConfig } from '@/lib/languages';
 
 interface TableOfContentsProps {
   websiteData: WebsiteData;
@@ -15,6 +16,7 @@ interface Heading {
 }
 
 export default function TableOfContents({ websiteData, content }: TableOfContentsProps) {
+  const lang = getLanguageConfig(websiteData.language);
   const [headings, setHeadings] = useState<Heading[]>([]);
   const [activeId, setActiveId] = useState<string>('');
 
@@ -59,7 +61,7 @@ export default function TableOfContents({ websiteData, content }: TableOfContent
   return (
     <nav className={`p-6 ${websiteData.border_radius} sticky top-4`} style={{ backgroundColor: websiteData.secondary_color }}>
       <h3 className="text-lg font-bold mb-4" style={{ color: websiteData.primary_color }}>
-        Innehållsförteckning
+        {lang.labels.tableOfContents}
       </h3>
       <ul className="space-y-2">
         {headings.map((heading) => (

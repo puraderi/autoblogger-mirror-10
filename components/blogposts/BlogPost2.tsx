@@ -2,6 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { WebsiteData } from '@/lib/services/website';
 import { BlogPost } from '@/lib/services/blog';
+import { getLanguageConfig } from '@/lib/languages';
 import Breadcrumbs from '@/components/blogcomponents/Breadcrumbs';
 import ShareButtons from '@/components/blogcomponents/ShareButtons';
 import TagsDisplay from '@/components/blogcomponents/TagsDisplay';
@@ -22,6 +23,7 @@ interface BlogPostProps {
 
 // BlogPost 2: Magazine Sidebar - Content with sticky info sidebar
 export default function BlogPost2({ websiteData, post, relatedPosts = [], previousPost, nextPost }: BlogPostProps) {
+  const lang = getLanguageConfig(websiteData.language);
   const currentUrl = typeof window !== 'undefined' ? window.location.href : '';
   const authorSlug = websiteData.author_slug || '';
 
@@ -35,8 +37,8 @@ export default function BlogPost2({ websiteData, post, relatedPosts = [], previo
             <Breadcrumbs
               websiteData={websiteData}
               items={[
-                { label: 'Blogg', href: '/blogg' },
-                { label: post.title, href: `/blogg/${post.slug}` },
+                { label: lang.labels.blog, href: `/${lang.slugs.blog}` },
+                { label: post.title, href: `/${lang.slugs.blog}/${post.slug}` },
               ]}
             />
           </div>
@@ -61,7 +63,7 @@ export default function BlogPost2({ websiteData, post, relatedPosts = [], previo
 
             {/* Mobile-only meta info */}
             <div className="lg:hidden flex flex-wrap items-center gap-3 mb-6 text-sm text-gray-600">
-              <span>Av <Link href={`/${authorSlug}`} className="hover:underline font-medium">{websiteData.author_name}</Link></span>
+              <span><Link href={`/${authorSlug}`} className="hover:underline font-medium">{websiteData.author_name}</Link></span>
               {post.published_at && (
                 <>
                   <span>·</span>
@@ -112,14 +114,14 @@ export default function BlogPost2({ websiteData, post, relatedPosts = [], previo
                   {websiteData.author_image_url && (
                     <Image
                       src={websiteData.author_image_url}
-                      alt={websiteData.author_name || 'Författare'}
+                      alt={websiteData.author_name || lang.labels.author}
                       width={48}
                       height={48}
                       className="rounded-full"
                     />
                   )}
                   <div>
-                    <p className="text-xs uppercase tracking-wider text-gray-500 mb-0.5">Författare</p>
+                    <p className="text-xs uppercase tracking-wider text-gray-500 mb-0.5">{lang.labels.author}</p>
                     <Link href={`/${authorSlug}`} className="font-semibold hover:underline" style={{ color: websiteData.primary_color }}>
                       {websiteData.author_name}
                     </Link>
@@ -131,7 +133,7 @@ export default function BlogPost2({ websiteData, post, relatedPosts = [], previo
               <div className="p-5 rounded-xl border" style={{ borderColor: websiteData.secondary_color }}>
                 {post.published_at && (
                   <div className="mb-4">
-                    <p className="text-xs uppercase tracking-wider text-gray-500 mb-1">Publicerad</p>
+                    <p className="text-xs uppercase tracking-wider text-gray-500 mb-1">{lang.labels.publishedAt}</p>
                     <p className="font-medium" style={{ color: websiteData.primary_color }}>
                       {formatSwedishDate(post.published_at)}
                     </p>
@@ -139,7 +141,7 @@ export default function BlogPost2({ websiteData, post, relatedPosts = [], previo
                 )}
                 {websiteData.show_reading_time && (
                   <div>
-                    <p className="text-xs uppercase tracking-wider text-gray-500 mb-1">Lästid</p>
+                    <p className="text-xs uppercase tracking-wider text-gray-500 mb-1">{lang.labels.readingTime}</p>
                     <ReadingTime websiteData={websiteData} content={post.content} />
                   </div>
                 )}
@@ -148,7 +150,6 @@ export default function BlogPost2({ websiteData, post, relatedPosts = [], previo
               {/* Tags */}
               {websiteData.show_tags_display && post.tags && post.tags.length > 0 && (
                 <div className="p-5 rounded-xl border" style={{ borderColor: websiteData.secondary_color }}>
-                  <p className="text-xs uppercase tracking-wider text-gray-500 mb-3">Taggar</p>
                   <TagsDisplay websiteData={websiteData} tags={post.tags} />
                 </div>
               )}

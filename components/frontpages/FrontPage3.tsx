@@ -2,6 +2,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { WebsiteData } from '@/lib/services/website';
 import { BlogPost } from '@/lib/services/blog';
+import { getLanguageConfig } from '@/lib/languages';
 
 interface FrontPageProps {
   websiteData: WebsiteData;
@@ -10,6 +11,7 @@ interface FrontPageProps {
 
 // FrontPage 3: Magazine Style Layout
 export default function FrontPage3({ websiteData, blogPosts }: FrontPageProps) {
+  const lang = getLanguageConfig(websiteData.language);
   return (
     <>
       {/* Hero Section - Always present */}
@@ -43,14 +45,14 @@ export default function FrontPage3({ websiteData, blogPosts }: FrontPageProps) {
 
       <div className={`${websiteData.container_width} mx-auto px-4 py-12`}>
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl font-bold" style={{ color: websiteData.primary_color }}>Senaste nytt</h2>
-          <Link href="/blogg" className="text-sm font-medium hover:underline" style={{ color: websiteData.accent_color }}>
-            Visa alla inlägg →
+          <h2 className="text-2xl font-bold" style={{ color: websiteData.primary_color }}>{lang.labels.latestPosts}</h2>
+          <Link href={`/${lang.slugs.blog}`} className="text-sm font-medium hover:underline" style={{ color: websiteData.accent_color }}>
+            {lang.labels.viewAll}
           </Link>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
           {blogPosts.slice(0, 2).map((post) => (
-            <Link key={post.id} href={`/blogg/${post.slug}`} className="group">
+            <Link key={post.id} href={`/${lang.slugs.blog}/${post.slug}`} className="group">
               <div className={`relative h-96 overflow-hidden ${websiteData.border_radius}`}>
                 {post.image_url && (
                   <Image
@@ -78,7 +80,7 @@ export default function FrontPage3({ websiteData, blogPosts }: FrontPageProps) {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 mb-16">
           {blogPosts.slice(2, 6).map((post) => (
-            <Link key={post.id} href={`/blogg/${post.slug}`} className="group">
+            <Link key={post.id} href={`/${lang.slugs.blog}/${post.slug}`} className="group">
               <div className="border-t-4 pt-4 transition-all duration-200 hover:-translate-y-1" style={{ borderColor: websiteData.accent_color }}>
                 {post.image_url && (
                   <div className="overflow-hidden mb-3">
@@ -99,7 +101,7 @@ export default function FrontPage3({ websiteData, blogPosts }: FrontPageProps) {
                   {post.published_at && (
                     <>
                       <span className="opacity-50">·</span>
-                      <span className="opacity-70">{new Date(post.published_at).toLocaleDateString('sv-SE')}</span>
+                      <span className="opacity-70">{new Date(post.published_at).toLocaleDateString(lang.locale)}</span>
                     </>
                   )}
                 </div>

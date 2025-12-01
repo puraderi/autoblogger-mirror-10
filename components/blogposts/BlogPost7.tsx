@@ -2,6 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { WebsiteData } from '@/lib/services/website';
 import { BlogPost } from '@/lib/services/blog';
+import { getLanguageConfig } from '@/lib/languages';
 import Breadcrumbs from '@/components/blogcomponents/Breadcrumbs';
 import ShareButtons from '@/components/blogcomponents/ShareButtons';
 import TagsDisplay from '@/components/blogcomponents/TagsDisplay';
@@ -22,6 +23,7 @@ interface BlogPostProps {
 
 // BlogPost 7: Gradient Hero - Gradient background with centered title
 export default function BlogPost7({ websiteData, post, relatedPosts = [], previousPost, nextPost }: BlogPostProps) {
+  const lang = getLanguageConfig(websiteData.language);
   const currentUrl = typeof window !== 'undefined' ? window.location.href : '';
   const authorSlug = websiteData.author_slug || '';
   const heroTextColor = getContrastTextColor(websiteData.accent_color);
@@ -47,8 +49,8 @@ export default function BlogPost7({ websiteData, post, relatedPosts = [], previo
               <Breadcrumbs
                 websiteData={{ ...websiteData, text_color: heroTextColor, primary_color: heroTextColor }}
                 items={[
-                  { label: 'Blogg', href: '/blogg' },
-                  { label: post.title, href: `/blogg/${post.slug}` },
+                  { label: lang.labels.blog, href: `/${lang.slugs.blog}` },
+                  { label: post.title, href: `/${lang.slugs.blog}/${post.slug}` },
                 ]}
               />
             </div>

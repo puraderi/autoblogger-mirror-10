@@ -3,6 +3,7 @@ import Image from 'next/image';
 import { WebsiteData } from '@/lib/services/website';
 import { BlogPost } from '@/lib/services/blog';
 import { getContrastTextColor } from '@/lib/utils';
+import { getLanguageConfig } from '@/lib/languages';
 
 interface FrontPageProps {
   websiteData: WebsiteData;
@@ -11,6 +12,7 @@ interface FrontPageProps {
 
 // FrontPage 8: Split Tone - Two-tone design with dotted pattern
 export default function FrontPage8({ websiteData, blogPosts }: FrontPageProps) {
+  const lang = getLanguageConfig(websiteData.language);
   const secondaryTextColor = getContrastTextColor(websiteData.secondary_color);
   const accentTextColor = getContrastTextColor(websiteData.accent_color);
 
@@ -48,18 +50,18 @@ export default function FrontPage8({ websiteData, blogPosts }: FrontPageProps) {
               )}
               <div className="flex flex-wrap gap-4">
                 <Link
-                  href="/blogg"
+                  href={`/${lang.slugs.blog}`}
                   className="font-semibold rounded-lg transition-all hover:scale-105"
                   style={{ backgroundColor: websiteData.accent_color, color: accentTextColor, padding: '0.75rem 1.5rem' }}
                 >
-                  Utforska bloggen
+                  {lang.labels.exploreBlog}
                 </Link>
                 <Link
-                  href="/om-oss"
+                  href={`/${lang.slugs.about}`}
                   className="font-semibold rounded-lg transition-all hover:opacity-80"
                   style={{ backgroundColor: `${secondaryTextColor === 'white' ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.1)'}`, color: secondaryTextColor, padding: '0.75rem 1.5rem' }}
                 >
-                  Läs mer om oss
+                  {lang.labels.about}
                 </Link>
               </div>
             </div>
@@ -86,17 +88,17 @@ export default function FrontPage8({ websiteData, blogPosts }: FrontPageProps) {
           <div>
             <div className="w-12 h-1 rounded-full mb-4" style={{ backgroundColor: websiteData.accent_color }} />
             <h2 className="text-2xl md:text-3xl font-bold" style={{ color: websiteData.primary_color }}>
-              Senaste från bloggen
+              {lang.labels.latestPosts}
             </h2>
           </div>
-          <Link href="/blogg" className="text-sm font-medium hover:underline" style={{ color: websiteData.accent_color }}>
-            Visa alla →
+          <Link href={`/${lang.slugs.blog}`} className="text-sm font-medium hover:underline" style={{ color: websiteData.accent_color }}>
+            {lang.labels.viewAll}
           </Link>
         </div>
 
         {/* First post - large */}
         {blogPosts[0] && (
-          <Link href={`/blogg/${blogPosts[0].slug}`} className="group block mb-10">
+          <Link href={`/${lang.slugs.blog}/${blogPosts[0].slug}`} className="group block mb-10">
             <article className={`grid grid-cols-1 lg:grid-cols-2 gap-8 p-6 transition-all duration-300 hover:shadow-lg ${websiteData.border_radius}`} style={{ backgroundColor: websiteData.secondary_color }}>
               {blogPosts[0].image_url && (
                 <div className="overflow-hidden rounded-lg">
@@ -120,7 +122,7 @@ export default function FrontPage8({ websiteData, blogPosts }: FrontPageProps) {
                 </h3>
                 <p className="mb-4 line-clamp-3" style={{ color: secondaryTextColor, opacity: 0.8 }}>{blogPosts[0].excerpt}</p>
                 <span className="text-sm font-medium" style={{ color: websiteData.accent_color }}>
-                  Läs mer →
+                  {lang.labels.readMore} →
                 </span>
               </div>
             </article>
@@ -130,7 +132,7 @@ export default function FrontPage8({ websiteData, blogPosts }: FrontPageProps) {
         {/* Grid of remaining posts */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {blogPosts.slice(1, 4).map((post) => (
-            <Link key={post.id} href={`/blogg/${post.slug}`} className="group">
+            <Link key={post.id} href={`/${lang.slugs.blog}/${post.slug}`} className="group">
               <article className={`border overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1 ${websiteData.border_radius}`} style={{ borderColor: websiteData.secondary_color }}>
                 {post.image_url && (
                   <div className="overflow-hidden">

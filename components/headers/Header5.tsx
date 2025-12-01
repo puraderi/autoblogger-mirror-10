@@ -6,6 +6,7 @@ import { WebsiteData } from '@/lib/services/website';
 import { useState } from 'react';
 
 import { iconToUrl } from '@/lib/utils';
+import { getLanguageConfig } from '@/lib/languages';
 
 interface HeaderProps {
   websiteData: WebsiteData;
@@ -14,6 +15,7 @@ interface HeaderProps {
 // Header 5: Minimal Pill Nav - Ultra-clean with pill-style nav and fullscreen mobile menu
 export default function Header5({ websiteData }: HeaderProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const lang = getLanguageConfig(websiteData.language);
 
   return (
     <>
@@ -49,16 +51,16 @@ export default function Header5({ websiteData }: HeaderProps) {
             {/* Desktop nav - pill style */}
             <nav className="hidden md:flex items-center gap-1 p-1 rounded-full" style={{ backgroundColor: `${websiteData.secondary_color}30` }}>
               <Link href="/" className="rounded-full text-sm font-medium transition-all hover:bg-white hover:shadow-sm" style={{ color: websiteData.primary_color, padding: '0.375rem 1rem' }}>
-                Hem
+                {lang.labels.home}
               </Link>
-              <Link href="/blogg" className="rounded-full text-sm font-medium transition-all hover:bg-white hover:shadow-sm" style={{ color: websiteData.primary_color, padding: '0.375rem 1rem' }}>
-                Blogg
+              <Link href={`/${lang.slugs.blog}`} className="rounded-full text-sm font-medium transition-all hover:bg-white hover:shadow-sm" style={{ color: websiteData.primary_color, padding: '0.375rem 1rem' }}>
+                {lang.labels.blog}
               </Link>
-              <Link href="/om-oss" className="rounded-full text-sm font-medium transition-all hover:bg-white hover:shadow-sm" style={{ color: websiteData.primary_color, padding: '0.375rem 1rem' }}>
-                Om oss
+              <Link href={`/${lang.slugs.about}`} className="rounded-full text-sm font-medium transition-all hover:bg-white hover:shadow-sm" style={{ color: websiteData.primary_color, padding: '0.375rem 1rem' }}>
+                {lang.labels.about}
               </Link>
-              <Link href="/kontakt" className="rounded-full text-sm font-medium transition-all hover:bg-white hover:shadow-sm" style={{ color: websiteData.primary_color, padding: '0.375rem 1rem' }}>
-                Kontakt
+              <Link href={`/${lang.slugs.contact}`} className="rounded-full text-sm font-medium transition-all hover:bg-white hover:shadow-sm" style={{ color: websiteData.primary_color, padding: '0.375rem 1rem' }}>
+                {lang.labels.contact}
               </Link>
             </nav>
           </div>
@@ -78,28 +80,28 @@ export default function Header5({ websiteData }: HeaderProps) {
             className="text-3xl font-bold text-white opacity-90 hover:opacity-100 transition-all hover:scale-105"
             onClick={() => setIsMenuOpen(false)}
           >
-            Hem
+            {lang.labels.home}
           </Link>
           <Link
-            href="/blogg"
+            href={`/${lang.slugs.blog}`}
             className="text-3xl font-bold text-white opacity-90 hover:opacity-100 transition-all hover:scale-105"
             onClick={() => setIsMenuOpen(false)}
           >
-            Blogg
+            {lang.labels.blog}
           </Link>
           <Link
-            href="/om-oss"
+            href={`/${lang.slugs.about}`}
             className="text-3xl font-bold text-white opacity-90 hover:opacity-100 transition-all hover:scale-105"
             onClick={() => setIsMenuOpen(false)}
           >
-            Om oss
+            {lang.labels.about}
           </Link>
           <Link
-            href="/kontakt"
+            href={`/${lang.slugs.contact}`}
             className="text-3xl font-bold text-white opacity-90 hover:opacity-100 transition-all hover:scale-105"
             onClick={() => setIsMenuOpen(false)}
           >
-            Kontakt
+            {lang.labels.contact}
           </Link>
         </nav>
       </div>

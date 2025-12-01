@@ -1,4 +1,5 @@
 import { WebsiteData } from '@/lib/services/website';
+import { getLanguageConfig } from '@/lib/languages';
 import { getContrastTextColor } from '@/lib/utils';
 
 interface PageProps {
@@ -9,6 +10,7 @@ interface PageProps {
 
 // Page 8: Dotted Pattern - Secondary color background with dotted overlay
 export default function Page8({ websiteData, title, content }: PageProps) {
+  const lang = getLanguageConfig(websiteData.language);
   const headerTextColor = getContrastTextColor(websiteData.secondary_color);
   const accentTextColor = getContrastTextColor(websiteData.accent_color);
 

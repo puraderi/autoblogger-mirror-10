@@ -2,6 +2,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { WebsiteData } from '@/lib/services/website';
 import { BlogPost } from '@/lib/services/blog';
+import { getLanguageConfig } from '@/lib/languages';
 
 interface FrontPageProps {
   websiteData: WebsiteData;
@@ -10,6 +11,7 @@ interface FrontPageProps {
 
 // FrontPage 2: Featured Post with Sidebar (uses serif heading font & light background)
 export default function FrontPage2({ websiteData, blogPosts }: FrontPageProps) {
+  const lang = getLanguageConfig(websiteData.language);
   const [featured, ...rest] = blogPosts;
 
   return (
@@ -48,7 +50,7 @@ export default function FrontPage2({ websiteData, blogPosts }: FrontPageProps) {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2">
           {featured && (
-            <Link href={`/blogg/${featured.slug}`} className="group block mb-8">
+            <Link href={`/${lang.slugs.blog}/${featured.slug}`} className="group block mb-8">
               <div className="border-2 rounded-lg overflow-hidden" style={{ borderColor: websiteData.accent_color }}>
                 {featured.image_url && (
                   <Image
@@ -60,7 +62,7 @@ export default function FrontPage2({ websiteData, blogPosts }: FrontPageProps) {
                   />
                 )}
                 <div className="p-8">
-                  <div className="text-xs font-semibold uppercase tracking-wider mb-2" style={{ color: websiteData.accent_color }}>Utvalt inlägg</div>
+                  <div className="text-xs font-semibold uppercase tracking-wider mb-2" style={{ color: websiteData.accent_color }}>{lang.labels.featuredPost}</div>
                   <h2 className="text-3xl font-bold mb-3 transition-colors group-hover:opacity-80" style={{ color: websiteData.primary_color }}>
                     {featured.title}
                   </h2>
@@ -74,13 +76,13 @@ export default function FrontPage2({ websiteData, blogPosts }: FrontPageProps) {
 
         <div className="space-y-6">
           <div className="flex items-center justify-between">
-            <h3 className="text-xl font-bold" style={{ color: websiteData.primary_color }}>Senaste inläggen</h3>
-            <Link href="/blogg" className="text-sm font-medium hover:underline" style={{ color: websiteData.accent_color }}>
-              Visa alla →
+            <h3 className="text-xl font-bold" style={{ color: websiteData.primary_color }}>{lang.labels.latestPosts}</h3>
+            <Link href={`/${lang.slugs.blog}`} className="text-sm font-medium hover:underline" style={{ color: websiteData.accent_color }}>
+              {lang.labels.viewAll}
             </Link>
           </div>
           {rest.slice(0, 5).map((post) => (
-            <Link key={post.id} href={`/blogg/${post.slug}`} className="group block">
+            <Link key={post.id} href={`/${lang.slugs.blog}/${post.slug}`} className="group block">
               <div className="border-l-4 pl-4 hover:bg-gray-50 transition-all duration-200 py-2 hover:pl-5" style={{ borderColor: websiteData.secondary_color }}>
                 <h4 className="font-semibold mb-1 transition-colors group-hover:opacity-80" style={{ color: websiteData.primary_color }}>
                   {post.title}
@@ -90,7 +92,7 @@ export default function FrontPage2({ websiteData, blogPosts }: FrontPageProps) {
                   {post.published_at && (
                     <>
                       <span>·</span>
-                      <span>{new Date(post.published_at).toLocaleDateString('sv-SE')}</span>
+                      <span>{new Date(post.published_at).toLocaleDateString(lang.locale)}</span>
                     </>
                   )}
                 </div>

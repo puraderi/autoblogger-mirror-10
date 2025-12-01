@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { WebsiteData } from '@/lib/services/website';
+import { getLanguageConfig } from '@/lib/languages';
 
 interface BreadcrumbsProps {
   websiteData: WebsiteData;
@@ -7,6 +8,7 @@ interface BreadcrumbsProps {
 }
 
 export default function Breadcrumbs({ websiteData, items }: BreadcrumbsProps) {
+  const lang = getLanguageConfig(websiteData.language);
   return (
     <nav className="py-2 md:py-3 px-2 md:px-4 mb-4 md:mb-6" aria-label="Breadcrumb">
       <ol className="flex items-center flex-wrap gap-x-2 gap-y-1 text-xs md:text-sm">
@@ -16,7 +18,7 @@ export default function Breadcrumbs({ websiteData, items }: BreadcrumbsProps) {
             className="hover:underline transition-colors"
             style={{ color: websiteData.text_color }}
           >
-            Hem
+            {lang.labels.home}
           </Link>
         </li>
         {items.map((item, index) => (

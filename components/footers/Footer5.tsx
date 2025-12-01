@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { WebsiteData } from '@/lib/services/website';
 import { getContrastTextColor } from '@/lib/utils';
+import { getLanguageConfig } from '@/lib/languages';
 
 interface FooterProps {
   websiteData: WebsiteData;
@@ -8,6 +9,7 @@ interface FooterProps {
 
 // Footer 5: Accent Bar - Bold accent stripe with compact layout
 export default function Footer5({ websiteData }: FooterProps) {
+  const lang = getLanguageConfig(websiteData.language);
   const accentTextColor = getContrastTextColor(websiteData.accent_color);
 
   return (
@@ -33,10 +35,10 @@ export default function Footer5({ websiteData }: FooterProps) {
 
             {/* Center: Nav */}
             <nav className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm">
-              <Link href="/" className="text-gray-600 hover:text-gray-900 transition-colors font-medium">Hem</Link>
-              <Link href="/blogg" className="text-gray-600 hover:text-gray-900 transition-colors font-medium">Blogg</Link>
-              <Link href="/om-oss" className="text-gray-600 hover:text-gray-900 transition-colors font-medium">Om oss</Link>
-              <Link href="/kontakt" className="text-gray-600 hover:text-gray-900 transition-colors font-medium">Kontakt</Link>
+              <Link href="/" className="text-gray-600 hover:text-gray-900 transition-colors font-medium">{lang.labels.home}</Link>
+              <Link href={`/${lang.slugs.blog}`} className="text-gray-600 hover:text-gray-900 transition-colors font-medium">{lang.labels.blog}</Link>
+              <Link href={`/${lang.slugs.about}`} className="text-gray-600 hover:text-gray-900 transition-colors font-medium">{lang.labels.about}</Link>
+              <Link href={`/${lang.slugs.contact}`} className="text-gray-600 hover:text-gray-900 transition-colors font-medium">{lang.labels.contact}</Link>
             </nav>
 
             {/* Right: Social */}
@@ -71,7 +73,7 @@ export default function Footer5({ websiteData }: FooterProps) {
         <div className="container mx-auto px-4 flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4">
           <span>© {new Date().getFullYear()} {websiteData.website_name}</span>
           <span className="hidden sm:inline">·</span>
-          <Link href="/sitemap.xml" className="hover:text-gray-700 transition-colors">Sitemap</Link>
+          <Link href="/sitemap.xml" className="hover:text-gray-700 transition-colors">{lang.labels.sitemap}</Link>
         </div>
       </div>
     </footer>

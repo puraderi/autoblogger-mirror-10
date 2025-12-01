@@ -1,4 +1,5 @@
 import { WebsiteData } from '@/lib/services/website';
+import { getLanguageConfig } from '@/lib/languages';
 
 interface PageProps {
   websiteData: WebsiteData;
@@ -8,6 +9,7 @@ interface PageProps {
 
 // Page 2: Sidebar Title - Sticky title sidebar with main content
 export default function Page2({ websiteData, title, content }: PageProps) {
+  const lang = getLanguageConfig(websiteData.language);
   return (
     <div className="container mx-auto px-4 py-10 md:py-16">
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">

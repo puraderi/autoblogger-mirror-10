@@ -2,6 +2,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { WebsiteData } from '@/lib/services/website';
 import { BlogPost } from '@/lib/services/blog';
+import { getLanguageConfig } from '@/lib/languages';
 
 interface RelatedPostsProps {
   websiteData: WebsiteData;
@@ -9,17 +10,18 @@ interface RelatedPostsProps {
 }
 
 export default function RelatedPosts({ websiteData, posts }: RelatedPostsProps) {
+  const lang = getLanguageConfig(websiteData.language);
   if (!posts || posts.length === 0) return null;
 
   return (
     <div className="py-8 md:py-12 px-4" style={{ backgroundColor: websiteData.secondary_color }}>
       <div className={`${websiteData.container_width} mx-auto`}>
         <h2 className="text-2xl md:text-3xl font-bold mb-6 md:mb-8" style={{ color: websiteData.primary_color }}>
-          Du kanske också gillar
+          {lang.labels.relatedPosts}
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
           {posts.slice(0, 3).map((post) => (
-            <Link key={post.id} href={`/blogg/${post.slug}`} className="group">
+            <Link key={post.id} href={`/${lang.slugs.blog}/${post.slug}`} className="group">
               <div className={`bg-white overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 ${websiteData.border_radius}`}>
                 {post.image_url && (
                   <div className="overflow-hidden">
@@ -41,7 +43,7 @@ export default function RelatedPosts({ websiteData, posts }: RelatedPostsProps) 
                   </p>
                   {post.published_at && (
                     <div className="text-xs opacity-70" style={{ color: websiteData.text_color }}>
-                      {new Date(post.published_at).toLocaleDateString('sv-SE', { year: 'numeric', month: 'short', day: 'numeric' })}
+                      {new Date(post.published_at).toLocaleDateString(lang.locale, { year: 'numeric', month: 'short', day: 'numeric' })}
                     </div>
                   )}
                 </div>

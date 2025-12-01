@@ -3,6 +3,7 @@ import Image from 'next/image';
 import { WebsiteData } from '@/lib/services/website';
 import { BlogPost } from '@/lib/services/blog';
 import { getContrastTextColor } from '@/lib/utils';
+import { getLanguageConfig } from '@/lib/languages';
 
 interface FrontPageProps {
   websiteData: WebsiteData;
@@ -11,6 +12,7 @@ interface FrontPageProps {
 
 // FrontPage 5: Card Masonry Style
 export default function FrontPage5({ websiteData, blogPosts }: FrontPageProps) {
+  const lang = getLanguageConfig(websiteData.language);
   return (
     <>
       {/* Hero Section */}
@@ -32,14 +34,14 @@ export default function FrontPage5({ websiteData, blogPosts }: FrontPageProps) {
       <div className="py-12" style={{ backgroundColor: websiteData.secondary_color }}>
         <div className={`${websiteData.container_width} mx-auto px-4`}>
           <div className="flex items-center justify-between mb-8">
-            <h2 className="text-2xl font-bold" style={{ color: websiteData.primary_color }}>Senaste inläggen</h2>
-            <Link href="/blogg" className="text-sm font-medium hover:underline" style={{ color: websiteData.accent_color }}>
-              Visa alla →
+            <h2 className="text-2xl font-bold" style={{ color: websiteData.primary_color }}>{lang.labels.latestPosts}</h2>
+            <Link href={`/${lang.slugs.blog}`} className="text-sm font-medium hover:underline" style={{ color: websiteData.accent_color }}>
+              {lang.labels.viewAll}
             </Link>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {blogPosts.map((post, idx) => (
-              <Link key={post.id} href={`/blogg/${post.slug}`} className={`group ${idx === 0 ? 'md:col-span-2 lg:col-span-2' : ''}`}>
+              <Link key={post.id} href={`/${lang.slugs.blog}/${post.slug}`} className={`group ${idx === 0 ? 'md:col-span-2 lg:col-span-2' : ''}`}>
                 <div className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 h-full">
                   {post.image_url && (
                     <div className="overflow-hidden">
@@ -54,7 +56,7 @@ export default function FrontPage5({ websiteData, blogPosts }: FrontPageProps) {
                   )}
                   <div className="p-6">
                     <div className="inline-block px-3 py-1 rounded-full text-xs font-semibold mb-3" style={{ backgroundColor: websiteData.accent_color, color: getContrastTextColor(websiteData.accent_color) }}>
-                      {post.tags?.[0] || 'Inlägg'}
+                      {post.tags?.[0] || lang.labels.post}
                     </div>
                     <h2 className={`font-bold mb-2 transition-colors group-hover:opacity-80 line-clamp-2 ${idx === 0 ? 'text-2xl' : 'text-xl'}`} style={{ color: websiteData.primary_color }}>
                       {post.title}
@@ -64,7 +66,7 @@ export default function FrontPage5({ websiteData, blogPosts }: FrontPageProps) {
                       {websiteData.author_image_url && (
                         <Image
                           src={websiteData.author_image_url}
-                          alt={websiteData.author_name || 'Författare'}
+                          alt={websiteData.author_name || lang.labels.author}
                           width={32}
                           height={32}
                           className="rounded-full"
@@ -74,7 +76,7 @@ export default function FrontPage5({ websiteData, blogPosts }: FrontPageProps) {
                         <div className="font-semibold" style={{ color: websiteData.primary_color }}>{websiteData.author_name}</div>
                         {post.published_at && (
                           <div className="text-gray-500 text-xs">
-                            {new Date(post.published_at).toLocaleDateString('sv-SE', { year: 'numeric', month: 'short', day: 'numeric' })}
+                            {new Date(post.published_at).toLocaleDateString(lang.locale, { year: 'numeric', month: 'short', day: 'numeric' })}
                           </div>
                         )}
                       </div>

@@ -4,6 +4,7 @@ import { getAllBlogPosts } from "@/lib/services/blog";
 import Link from "next/link";
 import Image from "next/image";
 import { normalizeHostname } from "@/lib/utils";
+import { getLanguageConfig } from "@/lib/languages";
 
 // Revalidate every 60 seconds (skip for localhost in production check)
 export const revalidate = 60;
@@ -17,6 +18,7 @@ export default async function BlogListPage() {
     return null;
   }
 
+  const lang = getLanguageConfig(websiteData.language);
   const blogPosts = await getAllBlogPosts(websiteData.id);
 
   return (
@@ -26,19 +28,19 @@ export default async function BlogListPage() {
         <div className="relative h-[300px] w-full mb-12">
           <Image
             src={websiteData.topic_image_landscape_16_9}
-            alt="Blogg"
+            alt={lang.labels.blog}
             fill
             className="object-cover"
             priority
           />
           <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-            <h1 className="text-5xl font-bold text-white">Alla blogginlägg</h1>
+            <h1 className="text-5xl font-bold text-white">{lang.labels.allPosts}</h1>
           </div>
         </div>
       ) : (
         <div className="container mx-auto px-4 pt-12">
           <h1 className="text-5xl font-bold mb-12" style={{ color: websiteData.primary_color }}>
-            Alla blogginlägg
+            {lang.labels.allPosts}
           </h1>
         </div>
       )}
@@ -46,7 +48,7 @@ export default async function BlogListPage() {
       <div className="container mx-auto px-4 pb-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {blogPosts.map((post) => (
-          <Link key={post.id} href={`/blogg/${post.slug}`} className="group">
+          <Link key={post.id} href={`/${lang.slugs.blog}/${post.slug}`} className="group">
             <article className="border rounded-lg overflow-hidden hover:shadow-lg transition-shadow" style={{ borderColor: websiteData.secondary_color }}>
               {post.image_url && (
                 <Image
@@ -72,7 +74,7 @@ export default async function BlogListPage() {
                 <div className="flex items-center justify-between text-sm text-gray-500">
                   <span>{websiteData.author_name}</span>
                   {post.published_at && (
-                    <span>{new Date(post.published_at).toLocaleDateString()}</span>
+                    <span>{new Date(post.published_at).toLocaleDateString(lang.locale)}</span>
                   )}
                 </div>
               </div>
@@ -83,7 +85,7 @@ export default async function BlogListPage() {
 
         {blogPosts.length === 0 && (
           <div className="text-center py-12">
-            <p className="text-gray-600 text-lg">Inga blogginlägg hittades.</p>
+            <p className="text-gray-600 text-lg">{lang.labels.noPosts}</p>
           </div>
         )}
       </div>

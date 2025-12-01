@@ -1,4 +1,5 @@
 import { WebsiteData } from '@/lib/services/website';
+import { getLanguageConfig } from '@/lib/languages';
 
 interface PageProps {
   websiteData: WebsiteData;
@@ -8,6 +9,7 @@ interface PageProps {
 
 // Page 4: Minimal Bold - Clean design with bold top accent
 export default function Page4({ websiteData, title, content }: PageProps) {
+  const lang = getLanguageConfig(websiteData.language);
   return (
     <div className="container mx-auto px-4 py-12 md:py-20 max-w-3xl">
       <header className="mb-10 md:mb-14">

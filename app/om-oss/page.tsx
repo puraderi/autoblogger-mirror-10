@@ -2,6 +2,7 @@ import { headers } from "next/headers";
 import { getWebsiteDataByHostname } from "@/lib/services/website";
 import PageTemplate from "@/components/pages";
 import { normalizeHostname } from "@/lib/utils";
+import { getLanguageConfig } from "@/lib/languages";
 
 // Revalidate every hour (skip for localhost in production check)
 export const revalidate = 3600;
@@ -15,10 +16,12 @@ export default async function AboutPage() {
     return null;
   }
 
+  const lang = getLanguageConfig(websiteData.language);
+
   return (
     <PageTemplate
       websiteData={websiteData}
-      title="Om oss"
+      title={lang.labels.about}
       content={websiteData.about_us}
     />
   );

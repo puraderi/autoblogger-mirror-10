@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { WebsiteData } from '@/lib/services/website';
+import { getLanguageConfig } from '@/lib/languages';
 
 interface FooterProps {
   websiteData: WebsiteData;
@@ -7,6 +8,7 @@ interface FooterProps {
 
 // Footer 1: Classic Three Column - Clean organized layout
 export default function Footer1({ websiteData }: FooterProps) {
+  const lang = getLanguageConfig(websiteData.language);
   return (
     <footer className="mt-auto border-t-2 pt-12 pb-8" style={{ borderColor: websiteData.secondary_color }}>
       <div className="container mx-auto px-4">
@@ -44,22 +46,22 @@ export default function Footer1({ websiteData }: FooterProps) {
 
           {/* Quick links */}
           <div>
-            <h4 className="font-semibold mb-4 text-sm uppercase tracking-wider" style={{ color: websiteData.primary_color }}>Snabblänkar</h4>
+            <h4 className="font-semibold mb-4 text-sm uppercase tracking-wider" style={{ color: websiteData.primary_color }}>{lang.labels.quickLinks}</h4>
             <nav className="flex flex-col gap-3 text-sm">
-              <Link href="/" className="text-gray-600 hover:translate-x-1 transition-transform inline-block">Hem</Link>
-              <Link href="/blogg" className="text-gray-600 hover:translate-x-1 transition-transform inline-block">Blogg</Link>
-              <Link href="/om-oss" className="text-gray-600 hover:translate-x-1 transition-transform inline-block">Om oss</Link>
-              <Link href="/kontakt" className="text-gray-600 hover:translate-x-1 transition-transform inline-block">Kontakt</Link>
+              <Link href="/" className="text-gray-600 hover:translate-x-1 transition-transform inline-block">{lang.labels.home}</Link>
+              <Link href={`/${lang.slugs.blog}`} className="text-gray-600 hover:translate-x-1 transition-transform inline-block">{lang.labels.blog}</Link>
+              <Link href={`/${lang.slugs.about}`} className="text-gray-600 hover:translate-x-1 transition-transform inline-block">{lang.labels.about}</Link>
+              <Link href={`/${lang.slugs.contact}`} className="text-gray-600 hover:translate-x-1 transition-transform inline-block">{lang.labels.contact}</Link>
             </nav>
           </div>
 
           {/* Contact info */}
           <div>
-            <h4 className="font-semibold mb-4 text-sm uppercase tracking-wider" style={{ color: websiteData.primary_color }}>Kontakt</h4>
+            <h4 className="font-semibold mb-4 text-sm uppercase tracking-wider" style={{ color: websiteData.primary_color }}>{lang.labels.contact}</h4>
             <div className="text-sm text-gray-600 space-y-2">
-              <p>Har du frågor?</p>
-              <Link href="/kontakt" className="inline-flex items-center gap-2 font-medium transition-colors" style={{ color: websiteData.accent_color }}>
-                Kontakta oss
+              <p>{lang.labels.haveQuestions}</p>
+              <Link href={`/${lang.slugs.contact}`} className="inline-flex items-center gap-2 font-medium transition-colors" style={{ color: websiteData.accent_color }}>
+                {lang.labels.contact}
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
               </Link>
             </div>
@@ -68,8 +70,8 @@ export default function Footer1({ websiteData }: FooterProps) {
 
         {/* Bottom bar */}
         <div className="mt-10 pt-6 border-t flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-gray-500" style={{ borderColor: websiteData.secondary_color }}>
-          <p>© {new Date().getFullYear()} {websiteData.website_name}. Alla rättigheter förbehållna.</p>
-          <Link href="/sitemap.xml" className="hover:underline">Sitemap</Link>
+          <p>© {new Date().getFullYear()} {websiteData.website_name}. {lang.labels.allRightsReserved}</p>
+          <Link href="/sitemap.xml" className="hover:underline">{lang.labels.sitemap}</Link>
         </div>
       </div>
     </footer>

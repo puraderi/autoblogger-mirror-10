@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { WebsiteData } from '@/lib/services/website';
 import { useState } from 'react';
 import { iconToUrl, getContrastTextColor } from '@/lib/utils';
+import { getLanguageConfig } from '@/lib/languages';
 
 interface HeaderProps {
   websiteData: WebsiteData;
@@ -15,6 +16,7 @@ export default function Header6({ websiteData }: HeaderProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const textColor = getContrastTextColor(websiteData.primary_color);
   const hoverBg = textColor === 'white' ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.1)';
+  const lang = getLanguageConfig(websiteData.language);
 
   return (
     <header style={{ backgroundColor: websiteData.primary_color }}>
@@ -51,28 +53,28 @@ export default function Header6({ websiteData }: HeaderProps) {
               onMouseEnter={(e) => e.currentTarget.style.backgroundColor = hoverBg}
               onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
             >
-              Hem
+              {lang.labels.home}
             </Link>
             <Link
-              href="/blogg"
+              href={`/${lang.slugs.blog}`}
               className="text-sm font-medium rounded-lg transition-all"
               style={{ color: textColor, padding: '0.5rem 1rem' }}
               onMouseEnter={(e) => e.currentTarget.style.backgroundColor = hoverBg}
               onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
             >
-              Blogg
+              {lang.labels.blog}
             </Link>
             <Link
-              href="/om-oss"
+              href={`/${lang.slugs.about}`}
               className="text-sm font-medium rounded-lg transition-all"
               style={{ color: textColor, padding: '0.5rem 1rem' }}
               onMouseEnter={(e) => e.currentTarget.style.backgroundColor = hoverBg}
               onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
             >
-              Om oss
+              {lang.labels.about}
             </Link>
             <Link
-              href="/kontakt"
+              href={`/${lang.slugs.contact}`}
               className="ml-2 text-sm font-medium rounded-lg transition-all hover:opacity-90 hover:shadow-md"
               style={{
                 backgroundColor: textColor === 'white' ? 'white' : 'black',
@@ -80,7 +82,7 @@ export default function Header6({ websiteData }: HeaderProps) {
                 padding: '0.625rem 1.5rem'
               }}
             >
-              Kontakt
+              {lang.labels.contact}
             </Link>
           </nav>
 
@@ -110,31 +112,31 @@ export default function Header6({ websiteData }: HeaderProps) {
               style={{ color: textColor, padding: '0.75rem' }}
               onClick={() => setIsMenuOpen(false)}
             >
-              Hem
+              {lang.labels.home}
             </Link>
             <Link
-              href="/blogg"
+              href={`/${lang.slugs.blog}`}
               className="rounded-lg text-base font-medium transition-colors"
               style={{ color: textColor, padding: '0.75rem' }}
               onClick={() => setIsMenuOpen(false)}
             >
-              Blogg
+              {lang.labels.blog}
             </Link>
             <Link
-              href="/om-oss"
+              href={`/${lang.slugs.about}`}
               className="rounded-lg text-base font-medium transition-colors"
               style={{ color: textColor, padding: '0.75rem' }}
               onClick={() => setIsMenuOpen(false)}
             >
-              Om oss
+              {lang.labels.about}
             </Link>
             <Link
-              href="/kontakt"
+              href={`/${lang.slugs.contact}`}
               className="rounded-lg text-base font-medium transition-colors"
               style={{ color: textColor, padding: '0.75rem' }}
               onClick={() => setIsMenuOpen(false)}
             >
-              Kontakt
+              {lang.labels.contact}
             </Link>
           </nav>
         </div>

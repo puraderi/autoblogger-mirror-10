@@ -3,6 +3,7 @@ import Image from 'next/image';
 import { WebsiteData } from '@/lib/services/website';
 import { BlogPost } from '@/lib/services/blog';
 import { getContrastTextColor } from '@/lib/utils';
+import { getLanguageConfig } from '@/lib/languages';
 
 interface FrontPageProps {
   websiteData: WebsiteData;
@@ -11,6 +12,7 @@ interface FrontPageProps {
 
 // FrontPage 7: Gradient Hero - Clean gradient with modern card grid
 export default function FrontPage7({ websiteData, blogPosts }: FrontPageProps) {
+  const lang = getLanguageConfig(websiteData.language);
   const heroTextColor = getContrastTextColor(websiteData.accent_color);
 
   return (
@@ -39,7 +41,7 @@ export default function FrontPage7({ websiteData, blogPosts }: FrontPageProps) {
               </p>
             )}
             <Link
-              href="/blogg"
+              href={`/${lang.slugs.blog}`}
               className="inline-block text-base font-semibold rounded-full transition-all hover:scale-105 hover:shadow-lg"
               style={{
                 backgroundColor: heroTextColor === 'white' ? 'white' : 'black',
@@ -47,7 +49,7 @@ export default function FrontPage7({ websiteData, blogPosts }: FrontPageProps) {
                 padding: '1rem 2rem'
               }}
             >
-              Läs bloggen
+              {lang.labels.exploreBlog}
             </Link>
           </div>
         </div>
@@ -56,7 +58,7 @@ export default function FrontPage7({ websiteData, blogPosts }: FrontPageProps) {
       {/* Featured Post - Overlapping */}
       {blogPosts[0] && (
         <div className={`${websiteData.container_width} mx-auto px-4 -mt-16 relative z-20`}>
-          <Link href={`/blogg/${blogPosts[0].slug}`} className="group block">
+          <Link href={`/${lang.slugs.blog}/${blogPosts[0].slug}`} className="group block">
             <article className={`bg-white shadow-2xl overflow-hidden ${websiteData.border_radius}`}>
               <div className="grid grid-cols-1 lg:grid-cols-2">
                 {blogPosts[0].image_url && (
@@ -72,14 +74,14 @@ export default function FrontPage7({ websiteData, blogPosts }: FrontPageProps) {
                 )}
                 <div className="p-8 lg:p-10 flex flex-col justify-center">
                   <span className="text-xs font-semibold uppercase tracking-wider mb-3" style={{ color: websiteData.accent_color }}>
-                    Utvalt inlägg
+                    {lang.labels.featuredPost}
                   </span>
                   <h2 className="text-2xl lg:text-3xl font-bold mb-4 transition-colors group-hover:opacity-80" style={{ color: websiteData.primary_color }}>
                     {blogPosts[0].title}
                   </h2>
                   <p className="text-gray-600 mb-4 line-clamp-3">{blogPosts[0].excerpt}</p>
                   <span className="text-sm font-medium" style={{ color: websiteData.accent_color }}>
-                    Läs mer →
+                    {lang.labels.readMore} →
                   </span>
                 </div>
               </div>
@@ -92,16 +94,16 @@ export default function FrontPage7({ websiteData, blogPosts }: FrontPageProps) {
       <div className={`${websiteData.container_width} mx-auto px-4 py-16`}>
         <div className="flex items-center justify-between mb-10">
           <h2 className="text-2xl md:text-3xl font-bold" style={{ color: websiteData.primary_color }}>
-            Fler inlägg
+            {lang.labels.latestPosts}
           </h2>
-          <Link href="/blogg" className="text-sm font-medium hover:underline" style={{ color: websiteData.accent_color }}>
-            Visa alla →
+          <Link href={`/${lang.slugs.blog}`} className="text-sm font-medium hover:underline" style={{ color: websiteData.accent_color }}>
+            {lang.labels.viewAll}
           </Link>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {blogPosts.slice(1).map((post) => (
-            <Link key={post.id} href={`/blogg/${post.slug}`} className="group">
+            <Link key={post.id} href={`/${lang.slugs.blog}/${post.slug}`} className="group">
               <article className={`bg-white border overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 ${websiteData.border_radius}`} style={{ borderColor: websiteData.secondary_color }}>
                 {post.image_url && (
                   <div className="overflow-hidden">

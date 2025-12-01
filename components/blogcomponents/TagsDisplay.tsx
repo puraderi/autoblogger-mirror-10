@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { WebsiteData } from '@/lib/services/website';
 import { getContrastTextColor } from '@/lib/utils';
+import { getLanguageConfig } from '@/lib/languages';
 
 interface TagsDisplayProps {
   websiteData: WebsiteData;
@@ -8,6 +9,7 @@ interface TagsDisplayProps {
 }
 
 export default function TagsDisplay({ websiteData, tags }: TagsDisplayProps) {
+  const lang = getLanguageConfig(websiteData.language);
   if (!tags || tags.length === 0) return null;
 
   return (
@@ -19,7 +21,7 @@ export default function TagsDisplay({ websiteData, tags }: TagsDisplayProps) {
         {tags.map((tag) => (
           <Link
             key={tag}
-            href={`/blogg?tag=${encodeURIComponent(tag)}`}
+            href={`/${lang.slugs.blog}?tag=${encodeURIComponent(tag)}`}
             className={`px-2.5 md:px-3 py-1 ${websiteData.border_radius} text-xs font-medium transition-opacity hover:opacity-80`}
             style={{ backgroundColor: websiteData.accent_color, color: getContrastTextColor(websiteData.accent_color) }}
           >

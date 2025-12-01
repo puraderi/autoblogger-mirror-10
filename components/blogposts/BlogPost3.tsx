@@ -2,6 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { WebsiteData } from '@/lib/services/website';
 import { BlogPost } from '@/lib/services/blog';
+import { getLanguageConfig } from '@/lib/languages';
 import Breadcrumbs from '@/components/blogcomponents/Breadcrumbs';
 import ShareButtons from '@/components/blogcomponents/ShareButtons';
 import TagsDisplay from '@/components/blogcomponents/TagsDisplay';
@@ -21,6 +22,7 @@ interface BlogPostProps {
 
 // BlogPost 3: Editorial Centered - Elegant centered layout with serif typography
 export default function BlogPost3({ websiteData, post, relatedPosts = [], previousPost, nextPost }: BlogPostProps) {
+  const lang = getLanguageConfig(websiteData.language);
   const currentUrl = typeof window !== 'undefined' ? window.location.href : '';
   const authorSlug = websiteData.author_slug || '';
 
@@ -34,8 +36,8 @@ export default function BlogPost3({ websiteData, post, relatedPosts = [], previo
             <Breadcrumbs
               websiteData={websiteData}
               items={[
-                { label: 'Blogg', href: '/blogg' },
-                { label: post.title, href: `/blogg/${post.slug}` },
+                { label: lang.labels.blog, href: `/${lang.slugs.blog}` },
+                { label: post.title, href: `/${lang.slugs.blog}/${post.slug}` },
               ]}
             />
           </div>
@@ -62,7 +64,7 @@ export default function BlogPost3({ websiteData, post, relatedPosts = [], previo
             {websiteData.author_image_url && (
               <Image
                 src={websiteData.author_image_url}
-                alt={websiteData.author_name || 'Författare'}
+                alt={websiteData.author_name || lang.labels.author}
                 width={64}
                 height={64}
                 className="rounded-full border-2"
@@ -75,7 +77,7 @@ export default function BlogPost3({ websiteData, post, relatedPosts = [], previo
               </Link>
               <div className="flex items-center justify-center gap-2 text-sm text-gray-500">
                 {post.published_at && (
-                  <span>{new Date(post.published_at).toLocaleDateString('sv-SE', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+                  <span>{new Date(post.published_at).toLocaleDateString(lang.locale, { year: 'numeric', month: 'long', day: 'numeric' })}</span>
                 )}
                 {websiteData.show_reading_time && (
                   <>

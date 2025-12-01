@@ -1,4 +1,5 @@
 import { WebsiteData } from '@/lib/services/website';
+import { getLanguageConfig } from '@/lib/languages';
 
 interface PageProps {
   websiteData: WebsiteData;
@@ -8,6 +9,7 @@ interface PageProps {
 
 // Page 3: Card Elevated - White card on colored background
 export default function Page3({ websiteData, title, content }: PageProps) {
+  const lang = getLanguageConfig(websiteData.language);
   return (
     <div className="py-10 md:py-16 min-h-screen" style={{ backgroundColor: `${websiteData.secondary_color}50` }}>
       <div className="container mx-auto px-4 max-w-4xl">

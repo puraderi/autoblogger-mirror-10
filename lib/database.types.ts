@@ -18,6 +18,7 @@ export interface Database {
           topic: string
           about_us: string
           contact_us: string
+          language: string
           frontpage_hero_title: string | null
           frontpage_hero_text: string | null
           frontpage_outro_text: string | null
@@ -70,6 +71,7 @@ export interface Database {
           topic: string
           about_us: string
           contact_us: string
+          language?: string
           template_header: number
           template_footer: number
           template_blog_post: number
@@ -118,6 +120,7 @@ export interface Database {
           topic?: string
           about_us?: string
           contact_us?: string
+          language?: string
           template_header?: number
           template_footer?: number
           template_blog_post?: number

@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { WebsiteData } from '@/lib/services/website';
 import { getContrastTextColor } from '@/lib/utils';
+import { getLanguageConfig } from '@/lib/languages';
 
 interface FooterProps {
   websiteData: WebsiteData;
@@ -8,6 +9,7 @@ interface FooterProps {
 
 // Footer 2: Bold Centered - Full-width colored with stacked elements
 export default function Footer2({ websiteData }: FooterProps) {
+  const lang = getLanguageConfig(websiteData.language);
   const textColor = getContrastTextColor(websiteData.primary_color);
   const textMuted = textColor === 'white' ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.7)';
   const textSubtle = textColor === 'white' ? 'rgba(255,255,255,0.6)' : 'rgba(0,0,0,0.6)';
@@ -24,10 +26,10 @@ export default function Footer2({ websiteData }: FooterProps) {
 
         {/* Nav links */}
         <nav className="flex flex-wrap items-center justify-center gap-x-8 gap-y-3 mb-8">
-          <Link href="/" className="hover:underline underline-offset-4 transition-all">Hem</Link>
-          <Link href="/blogg" className="hover:underline underline-offset-4 transition-all">Blogg</Link>
-          <Link href="/om-oss" className="hover:underline underline-offset-4 transition-all">Om oss</Link>
-          <Link href="/kontakt" className="hover:underline underline-offset-4 transition-all">Kontakt</Link>
+          <Link href="/" className="hover:underline underline-offset-4 transition-all">{lang.labels.home}</Link>
+          <Link href={`/${lang.slugs.blog}`} className="hover:underline underline-offset-4 transition-all">{lang.labels.blog}</Link>
+          <Link href={`/${lang.slugs.about}`} className="hover:underline underline-offset-4 transition-all">{lang.labels.about}</Link>
+          <Link href={`/${lang.slugs.contact}`} className="hover:underline underline-offset-4 transition-all">{lang.labels.contact}</Link>
         </nav>
 
         {/* Social icons */}
@@ -58,8 +60,8 @@ export default function Footer2({ websiteData }: FooterProps) {
         <div className="h-px max-w-xs mx-auto mb-6" style={{ backgroundColor: bgSubtleHover }} />
 
         {/* Copyright */}
-        <p className="text-sm" style={{ color: textSubtle }}>© {new Date().getFullYear()} {websiteData.website_name}. Alla rättigheter förbehållna.</p>
-        <Link href="/sitemap.xml" className="text-xs mt-2 inline-block hover:opacity-80 transition-opacity" style={{ color: textFaint }}>Sitemap</Link>
+        <p className="text-sm" style={{ color: textSubtle }}>© {new Date().getFullYear()} {websiteData.website_name}. {lang.labels.allRightsReserved}</p>
+        <Link href="/sitemap.xml" className="text-xs mt-2 inline-block hover:opacity-80 transition-opacity" style={{ color: textFaint }}>{lang.labels.sitemap}</Link>
       </div>
     </footer>
   );

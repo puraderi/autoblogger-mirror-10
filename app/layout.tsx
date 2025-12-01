@@ -6,6 +6,7 @@ import Header from "@/components/headers";
 import Footer from "@/components/footers";
 import { getFontVariable, getCSSFontFamily } from "@/lib/fonts";
 import { normalizeHostname, iconToUrl } from "@/lib/utils";
+import { getLanguageConfig } from "@/lib/languages";
 
 export async function generateMetadata(): Promise<Metadata> {
   const headersList = await headers();
@@ -21,6 +22,9 @@ export async function generateMetadata(): Promise<Metadata> {
     ? `http://${hostname}`
     : `https://${hostname}`;
 
+  const langConfig = getLanguageConfig(websiteData?.language);
+  const ogLocale = langConfig.locale.replace('-', '_'); // sv-SE -> sv_SE
+
   return {
     metadataBase: new URL(baseUrl),
     title: {
@@ -34,7 +38,7 @@ export async function generateMetadata(): Promise<Metadata> {
     openGraph: {
       type: "website",
       siteName: websiteData?.website_name,
-      locale: "sv_SE",
+      locale: ogLocale,
     },
     twitter: {
       card: "summary_large_image",
@@ -78,9 +82,10 @@ export default async function RootLayout({
 
   const bodyFont = getFontVariable(websiteData.font_body);
   const headingFont = getFontVariable(websiteData.font_heading);
+  const langConfig = getLanguageConfig(websiteData.language);
 
   return (
-    <html lang="sv">
+    <html lang={langConfig.code}>
       <head>
         <style dangerouslySetInnerHTML={{
           __html: `

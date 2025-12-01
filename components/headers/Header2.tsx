@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { WebsiteData } from '@/lib/services/website';
 import { useState } from 'react';
 import { iconToUrl } from '@/lib/utils';
+import { getLanguageConfig } from '@/lib/languages';
 
 interface HeaderProps {
   websiteData: WebsiteData;
@@ -13,6 +14,7 @@ interface HeaderProps {
 // Header 2: Elegant Centered - Large logo with decorative dividers
 export default function Header2({ websiteData }: HeaderProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const lang = getLanguageConfig(websiteData.language);
 
   return (
     <header className="py-6 md:py-8">
@@ -68,16 +70,16 @@ export default function Header2({ websiteData }: HeaderProps) {
           {/* Desktop nav */}
           <nav className="flex items-center justify-center gap-10 text-sm uppercase tracking-widest">
             <Link href="/" className="py-2 transition-colors hover:opacity-70" style={{ color: websiteData.primary_color }}>
-              Hem
+              {lang.labels.home}
             </Link>
-            <Link href="/blogg" className="py-2 transition-colors hover:opacity-70" style={{ color: websiteData.primary_color }}>
-              Blogg
+            <Link href={`/${lang.slugs.blog}`} className="py-2 transition-colors hover:opacity-70" style={{ color: websiteData.primary_color }}>
+              {lang.labels.blog}
             </Link>
-            <Link href="/om-oss" className="py-2 transition-colors hover:opacity-70" style={{ color: websiteData.primary_color }}>
-              Om oss
+            <Link href={`/${lang.slugs.about}`} className="py-2 transition-colors hover:opacity-70" style={{ color: websiteData.primary_color }}>
+              {lang.labels.about}
             </Link>
-            <Link href="/kontakt" className="py-2 transition-colors hover:opacity-70" style={{ color: websiteData.primary_color }}>
-              Kontakt
+            <Link href={`/${lang.slugs.contact}`} className="py-2 transition-colors hover:opacity-70" style={{ color: websiteData.primary_color }}>
+              {lang.labels.contact}
             </Link>
           </nav>
         </div>
@@ -97,16 +99,16 @@ export default function Header2({ websiteData }: HeaderProps) {
             </button>
             <nav className="flex flex-col items-center gap-6 text-xl">
               <Link href="/" className="py-2 uppercase tracking-widest" style={{ color: websiteData.primary_color }} onClick={() => setIsMenuOpen(false)}>
-                Hem
+                {lang.labels.home}
               </Link>
-              <Link href="/blogg" className="py-2 uppercase tracking-widest" style={{ color: websiteData.primary_color }} onClick={() => setIsMenuOpen(false)}>
-                Blogg
+              <Link href={`/${lang.slugs.blog}`} className="py-2 uppercase tracking-widest" style={{ color: websiteData.primary_color }} onClick={() => setIsMenuOpen(false)}>
+                {lang.labels.blog}
               </Link>
-              <Link href="/om-oss" className="py-2 uppercase tracking-widest" style={{ color: websiteData.primary_color }} onClick={() => setIsMenuOpen(false)}>
-                Om oss
+              <Link href={`/${lang.slugs.about}`} className="py-2 uppercase tracking-widest" style={{ color: websiteData.primary_color }} onClick={() => setIsMenuOpen(false)}>
+                {lang.labels.about}
               </Link>
-              <Link href="/kontakt" className="py-2 uppercase tracking-widest" style={{ color: websiteData.primary_color }} onClick={() => setIsMenuOpen(false)}>
-                Kontakt
+              <Link href={`/${lang.slugs.contact}`} className="py-2 uppercase tracking-widest" style={{ color: websiteData.primary_color }} onClick={() => setIsMenuOpen(false)}>
+                {lang.labels.contact}
               </Link>
             </nav>
           </div>

@@ -36,8 +36,8 @@ async function fetchWebsiteDataById(id: string): Promise<WebsiteData | null> {
   return data;
 }
 
-// Cached version - revalidates every hour, tagged for on-demand revalidation
-export const getWebsiteDataByHostname = unstable_cache(
+// Cached versions - revalidates every hour, tagged for on-demand revalidation
+const cachedGetWebsiteDataByHostname = unstable_cache(
   fetchWebsiteDataByHostname,
   ['website-by-hostname'],
   {
@@ -46,7 +46,7 @@ export const getWebsiteDataByHostname = unstable_cache(
   }
 );
 
-export const getWebsiteDataById = unstable_cache(
+const cachedGetWebsiteDataById = unstable_cache(
   fetchWebsiteDataById,
   ['website-by-id'],
   {
@@ -54,3 +54,14 @@ export const getWebsiteDataById = unstable_cache(
     tags: ['website'],
   }
 );
+
+// In development, bypass cache for instant updates
+const isDev = process.env.NODE_ENV === 'development';
+
+export const getWebsiteDataByHostname = isDev
+  ? fetchWebsiteDataByHostname
+  : cachedGetWebsiteDataByHostname;
+
+export const getWebsiteDataById = isDev
+  ? fetchWebsiteDataById
+  : cachedGetWebsiteDataById;

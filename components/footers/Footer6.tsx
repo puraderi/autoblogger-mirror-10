@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { WebsiteData } from '@/lib/services/website';
 import { getContrastTextColor } from '@/lib/utils';
+import { getLanguageConfig } from '@/lib/languages';
 
 interface FooterProps {
   websiteData: WebsiteData;
@@ -8,6 +9,7 @@ interface FooterProps {
 
 // Footer 6: Bold Primary Background - Full primary color with contrast text
 export default function Footer6({ websiteData }: FooterProps) {
+  const lang = getLanguageConfig(websiteData.language);
   const textColor = getContrastTextColor(websiteData.primary_color);
   const mutedText = textColor === 'white' ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.6)';
   const borderColor = textColor === 'white' ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.1)';
@@ -51,21 +53,21 @@ export default function Footer6({ websiteData }: FooterProps) {
 
           {/* Quick links */}
           <div>
-            <h4 className="font-semibold mb-4 text-sm uppercase tracking-wider" style={{ color: textColor }}>Navigation</h4>
+            <h4 className="font-semibold mb-4 text-sm uppercase tracking-wider" style={{ color: textColor }}>{lang.labels.navigation}</h4>
             <nav className="flex flex-col gap-3 text-sm">
-              <Link href="/" className="transition-opacity hover:opacity-80" style={{ color: mutedText }}>Hem</Link>
-              <Link href="/blogg" className="transition-opacity hover:opacity-80" style={{ color: mutedText }}>Blogg</Link>
-              <Link href="/om-oss" className="transition-opacity hover:opacity-80" style={{ color: mutedText }}>Om oss</Link>
-              <Link href="/kontakt" className="transition-opacity hover:opacity-80" style={{ color: mutedText }}>Kontakt</Link>
+              <Link href="/" className="transition-opacity hover:opacity-80" style={{ color: mutedText }}>{lang.labels.home}</Link>
+              <Link href={`/${lang.slugs.blog}`} className="transition-opacity hover:opacity-80" style={{ color: mutedText }}>{lang.labels.blog}</Link>
+              <Link href={`/${lang.slugs.about}`} className="transition-opacity hover:opacity-80" style={{ color: mutedText }}>{lang.labels.about}</Link>
+              <Link href={`/${lang.slugs.contact}`} className="transition-opacity hover:opacity-80" style={{ color: mutedText }}>{lang.labels.contact}</Link>
             </nav>
           </div>
 
           {/* CTA */}
           <div>
-            <h4 className="font-semibold mb-4 text-sm uppercase tracking-wider" style={{ color: textColor }}>Kontakta oss</h4>
-            <p className="text-sm mb-4" style={{ color: mutedText }}>Har du frågor eller vill samarbeta?</p>
+            <h4 className="font-semibold mb-4 text-sm uppercase tracking-wider" style={{ color: textColor }}>{lang.labels.contact}</h4>
+            <p className="text-sm mb-4" style={{ color: mutedText }}>{lang.labels.haveQuestions}</p>
             <Link
-              href="/kontakt"
+              href={`/${lang.slugs.contact}`}
               className="inline-block text-sm font-medium rounded-lg transition-all hover:scale-105"
               style={{
                 backgroundColor: textColor === 'white' ? 'white' : 'black',
@@ -73,7 +75,7 @@ export default function Footer6({ websiteData }: FooterProps) {
                 padding: '0.75rem 1.5rem'
               }}
             >
-              Skicka meddelande
+              {lang.labels.sendMessage}
             </Link>
           </div>
         </div>
@@ -81,7 +83,7 @@ export default function Footer6({ websiteData }: FooterProps) {
         {/* Bottom */}
         <div className="mt-12 pt-6 border-t flex flex-col md:flex-row items-center justify-between gap-4 text-sm" style={{ borderColor, color: mutedText }}>
           <p>© {new Date().getFullYear()} {websiteData.website_name}</p>
-          <Link href="/sitemap.xml" className="transition-opacity hover:opacity-80">Sitemap</Link>
+          <Link href="/sitemap.xml" className="transition-opacity hover:opacity-80">{lang.labels.sitemap}</Link>
         </div>
       </div>
     </footer>

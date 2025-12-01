@@ -1,4 +1,5 @@
 import { WebsiteData } from '@/lib/services/website';
+import { getLanguageConfig } from '@/lib/languages';
 import { getContrastTextColor } from '@/lib/utils';
 
 interface PageProps {
@@ -9,6 +10,7 @@ interface PageProps {
 
 // Page 6: Bold Header - Primary color header with content below
 export default function Page6({ websiteData, title, content }: PageProps) {
+  const lang = getLanguageConfig(websiteData.language);
   const headerTextColor = getContrastTextColor(websiteData.primary_color);
 
   return (

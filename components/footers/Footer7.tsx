@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { WebsiteData } from '@/lib/services/website';
 import { getContrastTextColor } from '@/lib/utils';
+import { getLanguageConfig } from '@/lib/languages';
 
 interface FooterProps {
   websiteData: WebsiteData;
@@ -8,6 +9,7 @@ interface FooterProps {
 
 // Footer 7: Gradient Wave - Gradient background with wave pattern
 export default function Footer7({ websiteData }: FooterProps) {
+  const lang = getLanguageConfig(websiteData.language);
   const textColor = getContrastTextColor(websiteData.accent_color);
   const mutedText = textColor === 'white' ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.6)';
 
@@ -45,10 +47,10 @@ export default function Footer7({ websiteData }: FooterProps) {
 
           {/* Nav links horizontal */}
           <nav className="flex flex-wrap items-center justify-center gap-6 mb-10">
-            <Link href="/" className="text-sm font-medium transition-opacity hover:opacity-80" style={{ color: textColor }}>Hem</Link>
-            <Link href="/blogg" className="text-sm font-medium transition-opacity hover:opacity-80" style={{ color: textColor }}>Blogg</Link>
-            <Link href="/om-oss" className="text-sm font-medium transition-opacity hover:opacity-80" style={{ color: textColor }}>Om oss</Link>
-            <Link href="/kontakt" className="text-sm font-medium transition-opacity hover:opacity-80" style={{ color: textColor }}>Kontakt</Link>
+            <Link href="/" className="text-sm font-medium transition-opacity hover:opacity-80" style={{ color: textColor }}>{lang.labels.home}</Link>
+            <Link href={`/${lang.slugs.blog}`} className="text-sm font-medium transition-opacity hover:opacity-80" style={{ color: textColor }}>{lang.labels.blog}</Link>
+            <Link href={`/${lang.slugs.about}`} className="text-sm font-medium transition-opacity hover:opacity-80" style={{ color: textColor }}>{lang.labels.about}</Link>
+            <Link href={`/${lang.slugs.contact}`} className="text-sm font-medium transition-opacity hover:opacity-80" style={{ color: textColor }}>{lang.labels.contact}</Link>
           </nav>
 
           {/* Social icons */}
@@ -77,7 +79,7 @@ export default function Footer7({ websiteData }: FooterProps) {
 
           {/* Bottom */}
           <div className="text-center text-sm" style={{ color: mutedText }}>
-            <p>© {new Date().getFullYear()} {websiteData.website_name}. Alla rättigheter förbehållna.</p>
+            <p>© {new Date().getFullYear()} {websiteData.website_name}. {lang.labels.allRightsReserved}</p>
           </div>
         </div>
       </div>

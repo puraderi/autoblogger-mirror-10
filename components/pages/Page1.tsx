@@ -1,4 +1,5 @@
 import { WebsiteData } from '@/lib/services/website';
+import { getLanguageConfig } from '@/lib/languages';
 import Image from 'next/image';
 
 interface PageProps {
@@ -9,6 +10,7 @@ interface PageProps {
 
 // Page 1: Classic with Image - Content left, optional portrait image right
 export default function Page1({ websiteData, title, content }: PageProps) {
+  const lang = getLanguageConfig(websiteData.language);
   const hasImage = websiteData.topic_image_portrait_2_3;
 
   return (

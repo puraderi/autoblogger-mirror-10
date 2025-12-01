@@ -4,20 +4,22 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { WebsiteData } from '@/lib/services/website';
 import { getContrastTextColor } from '@/lib/utils';
+import { getLanguageConfig } from '@/lib/languages';
 
 interface SearchBarProps {
   websiteData: WebsiteData;
   placeholder?: string;
 }
 
-export default function SearchBar({ websiteData, placeholder = 'Sök artiklar...' }: SearchBarProps) {
+export default function SearchBar({ websiteData, placeholder }: SearchBarProps) {
+  const lang = getLanguageConfig(websiteData.language);
   const [query, setQuery] = useState('');
   const router = useRouter();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (query.trim()) {
-      router.push(`/blogg?search=${encodeURIComponent(query.trim())}`);
+      router.push(`/${lang.slugs.blog}?search=${encodeURIComponent(query.trim())}`);
     }
   };
 
@@ -33,7 +35,7 @@ export default function SearchBar({ websiteData, placeholder = 'Sök artiklar...
           type="text"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder={placeholder}
+          placeholder={placeholder || lang.labels.searchPlaceholder}
           className={`w-full pl-10 pr-20 md:pr-24 py-2 md:py-3 text-sm md:text-base ${websiteData.border_radius} border-2 transition-all duration-200 focus:outline-none`}
           style={{
             borderColor: websiteData.secondary_color,
@@ -47,7 +49,7 @@ export default function SearchBar({ websiteData, placeholder = 'Sök artiklar...
           className={`absolute right-1 md:right-2 top-1/2 -translate-y-1/2 px-3 md:px-4 py-1.5 md:py-2 text-xs md:text-sm ${websiteData.border_radius} transition-all duration-200 hover:opacity-80 hover:scale-105 whitespace-nowrap`}
           style={{ backgroundColor: websiteData.primary_color, color: getContrastTextColor(websiteData.primary_color) }}
         >
-          Sök
+          {lang.labels.searchPlaceholder.split(' ')[0]}
         </button>
       </div>
     </form>

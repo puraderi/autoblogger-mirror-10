@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { WebsiteData } from '@/lib/services/website';
+import { getLanguageConfig } from '@/lib/languages';
 
 interface AuthorBoxProps {
   websiteData: WebsiteData;
@@ -10,9 +11,10 @@ interface AuthorBoxProps {
 }
 
 export default function AuthorBox({ websiteData, authorName, authorAvatar, authorBio }: AuthorBoxProps) {
+  const lang = getLanguageConfig(websiteData.language);
   if (!authorName) return null;
 
-  const defaultBio = `${authorName} är en skribent för ${websiteData.website_name}.`;
+  const defaultBio = `${authorName} ${lang.labels.author.toLowerCase()} ${websiteData.website_name}.`;
   const authorSlug = websiteData.author_slug;
 
   const content = (
@@ -37,7 +39,7 @@ export default function AuthorBox({ websiteData, authorName, authorAvatar, autho
         </p>
         {authorSlug && (
           <span className="text-sm font-medium hover:underline" style={{ color: websiteData.accent_color }}>
-            Läs mer om {authorName} →
+            {lang.labels.readMore} {authorName} →
           </span>
         )}
       </div>

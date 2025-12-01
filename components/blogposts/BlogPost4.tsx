@@ -2,6 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { WebsiteData } from '@/lib/services/website';
 import { BlogPost } from '@/lib/services/blog';
+import { getLanguageConfig } from '@/lib/languages';
 import { getContrastTextColor } from '@/lib/utils';
 import Breadcrumbs from '@/components/blogcomponents/Breadcrumbs';
 import ShareButtons from '@/components/blogcomponents/ShareButtons';
@@ -22,6 +23,7 @@ interface BlogPostProps {
 
 // BlogPost 4: Hero Cover - Full-width immersive hero with overlay text
 export default function BlogPost4({ websiteData, post, relatedPosts = [], previousPost, nextPost }: BlogPostProps) {
+  const lang = getLanguageConfig(websiteData.language);
   const currentUrl = typeof window !== 'undefined' ? window.location.href : '';
   const authorSlug = websiteData.author_slug || '';
 
@@ -48,8 +50,8 @@ export default function BlogPost4({ websiteData, post, relatedPosts = [], previo
                     <Breadcrumbs
                       websiteData={websiteData}
                       items={[
-                        { label: 'Blogg', href: '/blogg' },
-                        { label: post.title, href: `/blogg/${post.slug}` },
+                        { label: lang.labels.blog, href: `/${lang.slugs.blog}` },
+                        { label: post.title, href: `/${lang.slugs.blog}/${post.slug}` },
                       ]}
                     />
                   </div>
@@ -76,7 +78,7 @@ export default function BlogPost4({ websiteData, post, relatedPosts = [], previo
                   {post.published_at && (
                     <>
                       <span className="opacity-60">·</span>
-                      <span>{new Date(post.published_at).toLocaleDateString('sv-SE', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+                      <span>{new Date(post.published_at).toLocaleDateString(lang.locale, { year: 'numeric', month: 'long', day: 'numeric' })}</span>
                     </>
                   )}
                   {websiteData.show_reading_time && (
@@ -98,17 +100,17 @@ export default function BlogPost4({ websiteData, post, relatedPosts = [], previo
                   <Breadcrumbs
                     websiteData={websiteData}
                     items={[
-                      { label: 'Blogg', href: '/blogg' },
-                      { label: post.title, href: `/blogg/${post.slug}` },
+                      { label: lang.labels.blog, href: `/${lang.slugs.blog}` },
+                      { label: post.title, href: `/${lang.slugs.blog}/${post.slug}` },
                     ]}
                   />
                 </div>
               )}
               <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold mb-4 max-w-4xl">{post.title}</h1>
               <div className="flex items-center gap-4 flex-wrap opacity-90">
-                <span>Av <Link href={`/${authorSlug}`} className="hover:underline">{websiteData.author_name}</Link></span>
+                <span><Link href={`/${authorSlug}`} className="hover:underline">{websiteData.author_name}</Link></span>
                 {post.published_at && (
-                  <span>{new Date(post.published_at).toLocaleDateString('sv-SE', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+                  <span>{new Date(post.published_at).toLocaleDateString(lang.locale, { year: 'numeric', month: 'long', day: 'numeric' })}</span>
                 )}
                 {websiteData.show_reading_time && <ReadingTime websiteData={websiteData} content={post.content} />}
               </div>

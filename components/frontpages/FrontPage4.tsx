@@ -2,6 +2,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { WebsiteData } from '@/lib/services/website';
 import { BlogPost } from '@/lib/services/blog';
+import { getLanguageConfig } from '@/lib/languages';
 
 interface FrontPageProps {
   websiteData: WebsiteData;
@@ -10,6 +11,7 @@ interface FrontPageProps {
 
 // FrontPage 4: Minimal List Style
 export default function FrontPage4({ websiteData, blogPosts }: FrontPageProps) {
+  const lang = getLanguageConfig(websiteData.language);
   return (
     <>
       {/* Hero Section */}
@@ -30,14 +32,14 @@ export default function FrontPage4({ websiteData, blogPosts }: FrontPageProps) {
 
       <div className={`${websiteData.container_width} mx-auto px-4 py-16`}>
         <div className="flex items-center justify-between mb-10">
-          <h2 className="text-xl font-medium uppercase tracking-wider" style={{ color: websiteData.text_color }}>Alla inlägg</h2>
-          <Link href="/blogg" className="text-sm font-medium hover:underline" style={{ color: websiteData.accent_color }}>
-            Visa alla →
+          <h2 className="text-xl font-medium uppercase tracking-wider" style={{ color: websiteData.text_color }}>{lang.labels.latestPosts}</h2>
+          <Link href={`/${lang.slugs.blog}`} className="text-sm font-medium hover:underline" style={{ color: websiteData.accent_color }}>
+            {lang.labels.viewAll}
           </Link>
         </div>
         <div className="space-y-0 mb-16">
           {blogPosts.map((post, idx) => (
-            <Link key={post.id} href={`/blogg/${post.slug}`} className="group block">
+            <Link key={post.id} href={`/${lang.slugs.blog}/${post.slug}`} className="group block">
               <article className="border-b py-8 transition-all duration-200 hover:bg-gray-50/50 -mx-4 px-4" style={{ borderColor: websiteData.secondary_color }}>
                 <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
                   <div className="md:col-span-1 text-4xl font-bold opacity-20" style={{ color: websiteData.primary_color }}>
@@ -66,7 +68,7 @@ export default function FrontPage4({ websiteData, blogPosts }: FrontPageProps) {
                       {post.published_at && (
                         <>
                           <span>·</span>
-                          <span>{new Date(post.published_at).toLocaleDateString('sv-SE', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+                          <span>{new Date(post.published_at).toLocaleDateString(lang.locale, { year: 'numeric', month: 'long', day: 'numeric' })}</span>
                         </>
                       )}
                     </div>

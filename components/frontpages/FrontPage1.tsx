@@ -2,6 +2,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { WebsiteData } from '@/lib/services/website';
 import { BlogPost } from '@/lib/services/blog';
+import { getLanguageConfig } from '@/lib/languages';
 
 interface FrontPageProps {
   websiteData: WebsiteData;
@@ -10,6 +11,7 @@ interface FrontPageProps {
 
 // FrontPage 1: Classic Grid - Hero section with 3-column post grid
 export default function FrontPage1({ websiteData, blogPosts }: FrontPageProps) {
+  const lang = getLanguageConfig(websiteData.language);
   return (
     <>
       {/* Hero Section */}
@@ -44,15 +46,15 @@ export default function FrontPage1({ websiteData, blogPosts }: FrontPageProps) {
       <div className={`${websiteData.container_width} mx-auto px-4 py-12`}>
         <div className="flex items-center justify-between mb-8">
           <h2 className="text-2xl md:text-3xl font-bold" style={{ color: websiteData.primary_color }}>
-            Senaste inläggen
+            {lang.labels.latestPosts}
           </h2>
-          <Link href="/blogg" className="text-sm font-medium hover:underline" style={{ color: websiteData.accent_color }}>
-            Visa alla
+          <Link href={`/${lang.slugs.blog}`} className="text-sm font-medium hover:underline" style={{ color: websiteData.accent_color }}>
+            {lang.labels.viewAll}
           </Link>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
           {blogPosts.map((post) => (
-            <Link key={post.id} href={`/blogg/${post.slug}`} className="group">
+            <Link key={post.id} href={`/${lang.slugs.blog}/${post.slug}`} className="group">
               <article className={`border overflow-hidden transition-all hover:shadow-xl hover:-translate-y-1 ${websiteData.border_radius}`} style={{ borderColor: websiteData.secondary_color }}>
                 {post.image_url && (
                   <div className="overflow-hidden">

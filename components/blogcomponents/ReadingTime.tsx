@@ -1,4 +1,5 @@
 import { WebsiteData } from '@/lib/services/website';
+import { getLanguageConfig } from '@/lib/languages';
 
 interface ReadingTimeProps {
   websiteData: WebsiteData;
@@ -6,6 +7,7 @@ interface ReadingTimeProps {
 }
 
 export default function ReadingTime({ websiteData, content }: ReadingTimeProps) {
+  const lang = getLanguageConfig(websiteData.language);
   // Calculate reading time (average 200 words per minute)
   const wordCount = content.trim().split(/\s+/).length;
   const readingTime = Math.ceil(wordCount / 200);
@@ -27,7 +29,7 @@ export default function ReadingTime({ websiteData, content }: ReadingTimeProps) 
         />
       </svg>
       <span style={{ color: websiteData.text_color }}>
-        {readingTime} min läsning
+        {readingTime} {lang.labels.minutes}
       </span>
     </div>
   );

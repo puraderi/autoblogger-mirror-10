@@ -1,4 +1,5 @@
 import { WebsiteData } from '@/lib/services/website';
+import { getLanguageConfig } from '@/lib/languages';
 import { getContrastTextColor } from '@/lib/utils';
 
 interface PageProps {
@@ -9,6 +10,7 @@ interface PageProps {
 
 // Page 7: Gradient Hero - Clean gradient background
 export default function Page7({ websiteData, title, content }: PageProps) {
+  const lang = getLanguageConfig(websiteData.language);
   const heroTextColor = getContrastTextColor(websiteData.accent_color);
 
   return (

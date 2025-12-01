@@ -61,7 +61,7 @@ async function fetchAllBlogPosts(websiteId: string): Promise<BlogPost[]> {
 }
 
 // Cached versions with appropriate TTLs and tags for on-demand revalidation
-export const getBlogPosts = unstable_cache(
+const cachedGetBlogPosts = unstable_cache(
   fetchBlogPosts,
   ['blog-posts'],
   {
@@ -70,7 +70,7 @@ export const getBlogPosts = unstable_cache(
   }
 );
 
-export const getBlogPostBySlug = unstable_cache(
+const cachedGetBlogPostBySlug = unstable_cache(
   fetchBlogPostBySlug,
   ['blog-post-by-slug'],
   {
@@ -79,7 +79,7 @@ export const getBlogPostBySlug = unstable_cache(
   }
 );
 
-export const getAllBlogPosts = unstable_cache(
+const cachedGetAllBlogPosts = unstable_cache(
   fetchAllBlogPosts,
   ['all-blog-posts'],
   {
@@ -87,3 +87,10 @@ export const getAllBlogPosts = unstable_cache(
     tags: ['posts'],
   }
 );
+
+// In development, bypass cache for instant updates
+const isDev = process.env.NODE_ENV === 'development';
+
+export const getBlogPosts = isDev ? fetchBlogPosts : cachedGetBlogPosts;
+export const getBlogPostBySlug = isDev ? fetchBlogPostBySlug : cachedGetBlogPostBySlug;
+export const getAllBlogPosts = isDev ? fetchAllBlogPosts : cachedGetAllBlogPosts;

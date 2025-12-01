@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { WebsiteData } from '@/lib/services/website';
 import { useState } from 'react';
 import { iconToUrl } from '@/lib/utils';
+import { getLanguageConfig } from '@/lib/languages';
 
 interface HeaderProps {
   websiteData: WebsiteData;
@@ -13,6 +14,7 @@ interface HeaderProps {
 // Header 1: Classic - Logo left with underline hover nav
 export default function Header1({ websiteData }: HeaderProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const lang = getLanguageConfig(websiteData.language);
 
   const navLinkClass = "relative py-1 transition-colors after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:transition-all after:duration-300 hover:after:w-full";
 
@@ -60,16 +62,16 @@ export default function Header1({ websiteData }: HeaderProps) {
           {/* Desktop nav */}
           <nav className="hidden md:flex items-center gap-8">
             <Link href="/" className={navLinkClass} style={{ color: websiteData.primary_color, '--tw-after-bg': websiteData.accent_color } as React.CSSProperties}>
-              <span className="after:bg-current">Hem</span>
+              <span className="after:bg-current">{lang.labels.home}</span>
             </Link>
-            <Link href="/blogg" className={navLinkClass} style={{ color: websiteData.primary_color }}>
-              <span className="after:bg-current">Blogg</span>
+            <Link href={`/${lang.slugs.blog}`} className={navLinkClass} style={{ color: websiteData.primary_color }}>
+              <span className="after:bg-current">{lang.labels.blog}</span>
             </Link>
-            <Link href="/om-oss" className={navLinkClass} style={{ color: websiteData.primary_color }}>
-              <span className="after:bg-current">Om oss</span>
+            <Link href={`/${lang.slugs.about}`} className={navLinkClass} style={{ color: websiteData.primary_color }}>
+              <span className="after:bg-current">{lang.labels.about}</span>
             </Link>
-            <Link href="/kontakt" className={navLinkClass} style={{ color: websiteData.primary_color }}>
-              <span className="after:bg-current">Kontakt</span>
+            <Link href={`/${lang.slugs.contact}`} className={navLinkClass} style={{ color: websiteData.primary_color }}>
+              <span className="after:bg-current">{lang.labels.contact}</span>
             </Link>
           </nav>
         </div>
@@ -78,16 +80,16 @@ export default function Header1({ websiteData }: HeaderProps) {
         <div className={`md:hidden overflow-hidden transition-all duration-300 ${isMenuOpen ? 'max-h-64 opacity-100' : 'max-h-0 opacity-0'}`}>
           <nav className="flex flex-col gap-1 pt-4 mt-4 border-t" style={{ borderColor: websiteData.secondary_color }}>
             <Link href="/" className="rounded-lg transition-colors hover:bg-gray-50" style={{ color: websiteData.primary_color, padding: '0.75rem 0.5rem' }} onClick={() => setIsMenuOpen(false)}>
-              Hem
+              {lang.labels.home}
             </Link>
-            <Link href="/blogg" className="rounded-lg transition-colors hover:bg-gray-50" style={{ color: websiteData.primary_color, padding: '0.75rem 0.5rem' }} onClick={() => setIsMenuOpen(false)}>
-              Blogg
+            <Link href={`/${lang.slugs.blog}`} className="rounded-lg transition-colors hover:bg-gray-50" style={{ color: websiteData.primary_color, padding: '0.75rem 0.5rem' }} onClick={() => setIsMenuOpen(false)}>
+              {lang.labels.blog}
             </Link>
-            <Link href="/om-oss" className="rounded-lg transition-colors hover:bg-gray-50" style={{ color: websiteData.primary_color, padding: '0.75rem 0.5rem' }} onClick={() => setIsMenuOpen(false)}>
-              Om oss
+            <Link href={`/${lang.slugs.about}`} className="rounded-lg transition-colors hover:bg-gray-50" style={{ color: websiteData.primary_color, padding: '0.75rem 0.5rem' }} onClick={() => setIsMenuOpen(false)}>
+              {lang.labels.about}
             </Link>
-            <Link href="/kontakt" className="rounded-lg transition-colors hover:bg-gray-50" style={{ color: websiteData.primary_color, padding: '0.75rem 0.5rem' }} onClick={() => setIsMenuOpen(false)}>
-              Kontakt
+            <Link href={`/${lang.slugs.contact}`} className="rounded-lg transition-colors hover:bg-gray-50" style={{ color: websiteData.primary_color, padding: '0.75rem 0.5rem' }} onClick={() => setIsMenuOpen(false)}>
+              {lang.labels.contact}
             </Link>
           </nav>
         </div>
