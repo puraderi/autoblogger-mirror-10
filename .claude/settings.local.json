@@ -30,7 +30,8 @@
       "Bash(head -10 \"$file\")",
       "Bash(done)",
       "Bash(find:*)",
-      "Bash(mkdir:*)"
+      "Bash(mkdir:*)",
+      "Bash(npm install:*)"
     ],
     "deny": [],
     "ask": []
