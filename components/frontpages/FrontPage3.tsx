@@ -115,7 +115,7 @@ export default function FrontPage3({ websiteData, blogPosts }: FrontPageProps) {
       {websiteData.frontpage_outro_text && (
         <div className={`${websiteData.container_width} mx-auto px-4 py-16`}>
           <div className={`max-w-4xl mx-auto p-10 ${websiteData.border_radius}`} style={{ backgroundColor: websiteData.secondary_color }}>
-            <div dangerouslySetInnerHTML={{ __html: websiteData.frontpage_outro_text }} style={{ color: websiteData.text_color }} />
+            <div className="prose prose-lg max-w-none" dangerouslySetInnerHTML={{ __html: websiteData.frontpage_outro_text }} style={{ color: websiteData.text_color }} />
           </div>
         </div>
       )}
