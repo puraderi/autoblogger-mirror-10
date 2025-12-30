@@ -15,6 +15,8 @@ export default function FrontPage8({ websiteData, blogPosts }: FrontPageProps) {
   const lang = getLanguageConfig(websiteData.language);
   const secondaryTextColor = getContrastTextColor(websiteData.secondary_color);
   const accentTextColor = getContrastTextColor(websiteData.accent_color);
+  const contactEmail = websiteData.contact_email || 'nordicblogs@gmail.com';
+  const outroText = websiteData.frontpage_outro_text?.replace(/\{\{CONTACT_EMAIL\}\}/g, contactEmail);
 
   return (
     <>
@@ -163,11 +165,11 @@ export default function FrontPage8({ websiteData, blogPosts }: FrontPageProps) {
       </div>
 
       {/* Outro */}
-      {websiteData.frontpage_outro_text && (
+      {outroText && (
         <div style={{ backgroundColor: websiteData.accent_color }}>
           <div className={`${websiteData.container_width} mx-auto px-4 py-16`}>
             <div className="max-w-3xl mx-auto text-center">
-              <div className="prose prose-lg max-w-none" dangerouslySetInnerHTML={{ __html: websiteData.frontpage_outro_text }} style={{ color: accentTextColor }} />
+              <div className="prose prose-lg max-w-none" dangerouslySetInnerHTML={{ __html: outroText }} style={{ color: accentTextColor }} />
             </div>
           </div>
         </div>

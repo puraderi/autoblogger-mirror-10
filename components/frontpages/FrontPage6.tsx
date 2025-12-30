@@ -15,6 +15,8 @@ export default function FrontPage6({ websiteData, blogPosts }: FrontPageProps) {
   const lang = getLanguageConfig(websiteData.language);
   const heroTextColor = getContrastTextColor(websiteData.primary_color);
   const heroMuted = heroTextColor === 'white' ? 'rgba(255,255,255,0.8)' : 'rgba(0,0,0,0.7)';
+  const contactEmail = websiteData.contact_email || 'nordicblogs@gmail.com';
+  const outroText = websiteData.frontpage_outro_text?.replace(/\{\{CONTACT_EMAIL\}\}/g, contactEmail);
 
   return (
     <>
@@ -105,11 +107,11 @@ export default function FrontPage6({ websiteData, blogPosts }: FrontPageProps) {
       </div>
 
       {/* Outro Section */}
-      {websiteData.frontpage_outro_text && (
+      {outroText && (
         <div style={{ backgroundColor: websiteData.secondary_color }}>
           <div className={`${websiteData.container_width} mx-auto px-4 py-16`}>
             <div className="max-w-3xl mx-auto text-center">
-              <div className="prose prose-lg max-w-none" dangerouslySetInnerHTML={{ __html: websiteData.frontpage_outro_text }} style={{ color: getContrastTextColor(websiteData.secondary_color) }} />
+              <div className="prose prose-lg max-w-none" dangerouslySetInnerHTML={{ __html: outroText }} style={{ color: getContrastTextColor(websiteData.secondary_color) }} />
             </div>
           </div>
         </div>

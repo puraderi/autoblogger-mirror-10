@@ -12,6 +12,8 @@ interface FrontPageProps {
 // FrontPage 1: Classic Grid - Hero section with 3-column post grid
 export default function FrontPage1({ websiteData, blogPosts }: FrontPageProps) {
   const lang = getLanguageConfig(websiteData.language);
+  const contactEmail = websiteData.contact_email || 'nordicblogs@gmail.com';
+  const outroText = websiteData.frontpage_outro_text?.replace(/\{\{CONTACT_EMAIL\}\}/g, contactEmail);
   return (
     <>
       {/* Hero Section */}
@@ -88,10 +90,10 @@ export default function FrontPage1({ websiteData, blogPosts }: FrontPageProps) {
       </div>
 
       {/* Outro Section */}
-      {websiteData.frontpage_outro_text && (
+      {outroText && (
         <div className={`${websiteData.container_width} mx-auto px-4 py-12 md:py-16`}>
           <div className={`text-center max-w-3xl mx-auto p-8 md:p-10 ${websiteData.border_radius}`} style={{ backgroundColor: `${websiteData.secondary_color}50` }}>
-            <div className="prose prose-lg max-w-none" dangerouslySetInnerHTML={{ __html: websiteData.frontpage_outro_text }} style={{ color: websiteData.text_color }} />
+            <div className="prose prose-lg max-w-none" dangerouslySetInnerHTML={{ __html: outroText }} style={{ color: websiteData.text_color }} />
           </div>
         </div>
       )}

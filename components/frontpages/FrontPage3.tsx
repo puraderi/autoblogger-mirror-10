@@ -12,6 +12,8 @@ interface FrontPageProps {
 // FrontPage 3: Magazine Style Layout
 export default function FrontPage3({ websiteData, blogPosts }: FrontPageProps) {
   const lang = getLanguageConfig(websiteData.language);
+  const contactEmail = websiteData.contact_email || 'nordicblogs@gmail.com';
+  const outroText = websiteData.frontpage_outro_text?.replace(/\{\{CONTACT_EMAIL\}\}/g, contactEmail);
   return (
     <>
       {/* Hero Section - Always present */}
@@ -112,10 +114,10 @@ export default function FrontPage3({ websiteData, blogPosts }: FrontPageProps) {
       </div>
 
       {/* Outro Section */}
-      {websiteData.frontpage_outro_text && (
+      {outroText && (
         <div className={`${websiteData.container_width} mx-auto px-4 py-16`}>
           <div className={`max-w-4xl mx-auto p-10 ${websiteData.border_radius}`} style={{ backgroundColor: websiteData.secondary_color }}>
-            <div className="prose prose-lg max-w-none" dangerouslySetInnerHTML={{ __html: websiteData.frontpage_outro_text }} style={{ color: websiteData.text_color }} />
+            <div className="prose prose-lg max-w-none" dangerouslySetInnerHTML={{ __html: outroText }} style={{ color: websiteData.text_color }} />
           </div>
         </div>
       )}

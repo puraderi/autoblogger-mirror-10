@@ -13,6 +13,8 @@ interface FrontPageProps {
 // FrontPage 5: Card Masonry Style
 export default function FrontPage5({ websiteData, blogPosts }: FrontPageProps) {
   const lang = getLanguageConfig(websiteData.language);
+  const contactEmail = websiteData.contact_email || 'nordicblogs@gmail.com';
+  const outroText = websiteData.frontpage_outro_text?.replace(/\{\{CONTACT_EMAIL\}\}/g, contactEmail);
   return (
     <>
       {/* Hero Section */}
@@ -90,10 +92,10 @@ export default function FrontPage5({ websiteData, blogPosts }: FrontPageProps) {
       </div>
 
       {/* Outro Section */}
-      {websiteData.frontpage_outro_text && (
+      {outroText && (
         <div className={`${websiteData.container_width} mx-auto px-4 py-16`}>
           <div className="text-center max-w-3xl mx-auto">
-            <div className="prose prose-lg max-w-none" dangerouslySetInnerHTML={{ __html: websiteData.frontpage_outro_text }} style={{ color: websiteData.text_color }} />
+            <div className="prose prose-lg max-w-none" dangerouslySetInnerHTML={{ __html: outroText }} style={{ color: websiteData.text_color }} />
           </div>
         </div>
       )}
