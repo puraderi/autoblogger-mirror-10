@@ -47,3 +47,23 @@ jobs:
 
           # Mirror 5
           git push https://$PAT_TOKEN@github.com/puraderi/autoblogger-mirror-5.git HEAD:main --force
+          sleep 30
+
+          # Mirror 6
+          git push https://$PAT_TOKEN@github.com/puraderi/autoblogger-mirror-6.git HEAD:main --force
+          sleep 30
+
+          # Mirror 7
+          git push https://$PAT_TOKEN@github.com/puraderi/autoblogger-mirror-7.git HEAD:main --force
+          sleep 30
+
+          # Mirror 8
+          git push https://$PAT_TOKEN@github.com/puraderi/autoblogger-mirror-8.git HEAD:main --force
+          sleep 30
+
+          # Mirror 9
+          git push https://$PAT_TOKEN@github.com/puraderi/autoblogger-mirror-9.git HEAD:main --force
+          sleep 30
+
+          # Mirror 10
+          git push https://$PAT_TOKEN@github.com/puraderi/autoblogger-mirror-10.git HEAD:main --force
