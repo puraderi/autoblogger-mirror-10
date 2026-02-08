@@ -32,7 +32,10 @@
       "Bash(find:*)",
       "Bash(mkdir:*)",
       "Bash(npm install:*)",
-      "Bash(gh repo view:*)"
+      "Bash(gh repo view:*)",
+      "Bash(dir:*)",
+      "Bash(cd:*)",
+      "Bash(npx next build:*)"
     ],
     "deny": [],
     "ask": []

@@ -11,6 +11,8 @@ import AuthorBox from '@/components/blogcomponents/AuthorBox';
 import PostNavigation from '@/components/blogcomponents/PostNavigation';
 import RelatedPosts from '@/components/blogcomponents/RelatedPosts';
 import ReadingProgressBar from '@/components/blogcomponents/ReadingProgressBar';
+import AIDisclaimer from '@/components/blogcomponents/AIDisclaimer';
+import AIDisclaimerCTA from '@/components/blogcomponents/AIDisclaimerCTA';
 import { formatSwedishDate } from '@/lib/utils';
 
 interface BlogPostProps {
@@ -76,6 +78,7 @@ export default function BlogPost2({ websiteData, post, relatedPosts = [], previo
                   <ReadingTime websiteData={websiteData} content={post.content} />
                 </>
               )}
+              <AIDisclaimerCTA websiteData={websiteData} />
             </div>
 
             <div
@@ -83,6 +86,10 @@ export default function BlogPost2({ websiteData, post, relatedPosts = [], previo
               style={{ color: websiteData.text_color }}
               dangerouslySetInnerHTML={{ __html: post.content }}
             />
+
+            <div className="mb-10">
+              <AIDisclaimer websiteData={websiteData} />
+            </div>
 
             {websiteData.show_share_buttons && (
               <div className="mb-10 pb-8 border-t pt-8" style={{ borderColor: websiteData.secondary_color }}>

@@ -11,6 +11,8 @@ import AuthorBox from '@/components/blogcomponents/AuthorBox';
 import PostNavigation from '@/components/blogcomponents/PostNavigation';
 import RelatedPosts from '@/components/blogcomponents/RelatedPosts';
 import ReadingProgressBar from '@/components/blogcomponents/ReadingProgressBar';
+import AIDisclaimer from '@/components/blogcomponents/AIDisclaimer';
+import AIDisclaimerCTA from '@/components/blogcomponents/AIDisclaimerCTA';
 import { formatSwedishDate, getContrastTextColor } from '@/lib/utils';
 
 interface BlogPostProps {
@@ -121,11 +123,19 @@ export default function BlogPost8({ websiteData, post, relatedPosts = [], previo
 
       <article className={`${websiteData.container_width} mx-auto px-4 md:px-6 py-10 md:py-16`}>
         <div className="max-w-3xl mx-auto">
+          <div className="mb-4">
+            <AIDisclaimerCTA websiteData={websiteData} />
+          </div>
+
           <div
             className="prose prose-lg max-w-none mb-10 prose-headings:font-bold prose-a:underline prose-img:rounded-lg"
             style={{ color: websiteData.text_color }}
             dangerouslySetInnerHTML={{ __html: post.content }}
           />
+
+          <div className="mb-10">
+            <AIDisclaimer websiteData={websiteData} />
+          </div>
 
           {websiteData.show_tags_display && post.tags && post.tags.length > 1 && (
             <div className="mb-8 pb-8 border-b" style={{ borderColor: websiteData.secondary_color }}>

@@ -11,6 +11,8 @@ import AuthorBox from '@/components/blogcomponents/AuthorBox';
 import PostNavigation from '@/components/blogcomponents/PostNavigation';
 import RelatedPosts from '@/components/blogcomponents/RelatedPosts';
 import ReadingProgressBar from '@/components/blogcomponents/ReadingProgressBar';
+import AIDisclaimer from '@/components/blogcomponents/AIDisclaimer';
+import AIDisclaimerCTA from '@/components/blogcomponents/AIDisclaimerCTA';
 import { formatSwedishDate } from '@/lib/utils';
 
 interface BlogPostProps {
@@ -89,6 +91,7 @@ export default function BlogPost1({ websiteData, post, relatedPosts = [], previo
                 </>
               )}
             </div>
+            <AIDisclaimerCTA websiteData={websiteData} />
           </div>
 
           {post.image_url && (
@@ -107,6 +110,10 @@ export default function BlogPost1({ websiteData, post, relatedPosts = [], previo
           style={{ color: websiteData.text_color }}
           dangerouslySetInnerHTML={{ __html: post.content }}
         />
+
+        <div className="mb-10">
+          <AIDisclaimer websiteData={websiteData} />
+        </div>
 
         {/* Tags row */}
         {websiteData.show_tags_display && post.tags && post.tags.length > 1 && (

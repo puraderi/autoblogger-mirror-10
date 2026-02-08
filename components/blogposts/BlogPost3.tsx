@@ -11,6 +11,8 @@ import AuthorBox from '@/components/blogcomponents/AuthorBox';
 import PostNavigation from '@/components/blogcomponents/PostNavigation';
 import RelatedPosts from '@/components/blogcomponents/RelatedPosts';
 import ReadingProgressBar from '@/components/blogcomponents/ReadingProgressBar';
+import AIDisclaimer from '@/components/blogcomponents/AIDisclaimer';
+import AIDisclaimerCTA from '@/components/blogcomponents/AIDisclaimerCTA';
 
 interface BlogPostProps {
   websiteData: WebsiteData;
@@ -87,6 +89,9 @@ export default function BlogPost3({ websiteData, post, relatedPosts = [], previo
                 )}
               </div>
             </div>
+            <div className="mt-4">
+              <AIDisclaimerCTA websiteData={websiteData} />
+            </div>
           </div>
         </header>
 
@@ -108,6 +113,10 @@ export default function BlogPost3({ websiteData, post, relatedPosts = [], previo
           style={{ color: websiteData.text_color }}
           dangerouslySetInnerHTML={{ __html: post.content }}
         />
+
+        <div className="mb-10">
+          <AIDisclaimer websiteData={websiteData} />
+        </div>
 
         {/* Tags centered */}
         {websiteData.show_tags_display && post.tags && post.tags.length > 0 && (

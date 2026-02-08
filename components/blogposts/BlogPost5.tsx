@@ -11,6 +11,8 @@ import AuthorBox from '@/components/blogcomponents/AuthorBox';
 import PostNavigation from '@/components/blogcomponents/PostNavigation';
 import RelatedPosts from '@/components/blogcomponents/RelatedPosts';
 import ReadingProgressBar from '@/components/blogcomponents/ReadingProgressBar';
+import AIDisclaimer from '@/components/blogcomponents/AIDisclaimer';
+import AIDisclaimerCTA from '@/components/blogcomponents/AIDisclaimerCTA';
 
 interface BlogPostProps {
   websiteData: WebsiteData;
@@ -103,6 +105,9 @@ export default function BlogPost5({ websiteData, post, relatedPosts = [], previo
                     </div>
                   </div>
                 </div>
+                <div className="mt-4">
+                  <AIDisclaimerCTA websiteData={websiteData} />
+                </div>
               </header>
 
               <div
@@ -110,6 +115,10 @@ export default function BlogPost5({ websiteData, post, relatedPosts = [], previo
                 style={{ color: websiteData.text_color }}
                 dangerouslySetInnerHTML={{ __html: post.content }}
               />
+
+              <div className="mb-10">
+                <AIDisclaimer websiteData={websiteData} />
+              </div>
 
               {websiteData.show_share_buttons && (
                 <div className="mb-10 pb-8 border-t pt-8" style={{ borderColor: websiteData.secondary_color }}>
