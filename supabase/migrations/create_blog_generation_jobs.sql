@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS blog_generation_jobs (
   completed_at TIMESTAMPTZ
 );
 
--- Create index for efficient querying
+-- Create index for efficient queryingg
 CREATE INDEX idx_blog_jobs_status ON blog_generation_jobs(status);
 CREATE INDEX idx_blog_jobs_website_id ON blog_generation_jobs(website_id);
 CREATE INDEX idx_blog_jobs_created_at ON blog_generation_jobs(created_at DESC);

@@ -24,26 +24,84 @@ jobs:
         run: |
           set -e  # Exit on any error
 
+          TOTAL_MIRRORS=10
+          DELAY_SECONDS=600  # 10 minutes between pushes
+          PROJECTS_PER_MIRROR=60
+
+          echo "╔════════════════════════════════════════════════════════════════╗"
+          echo "║              MIRROR DEPLOYMENT WORKFLOW STARTED                ║"
+          echo "╠════════════════════════════════════════════════════════════════╣"
+          echo "║ Total mirrors: $TOTAL_MIRRORS"
+          echo "║ Projects per mirror: ~$PROJECTS_PER_MIRROR"
+          echo "║ Delay between mirrors: $((DELAY_SECONDS / 60)) minutes"
+          echo "║ Estimated total time: $(((TOTAL_MIRRORS - 1) * DELAY_SECONDS / 60)) minutes"
+          echo "║ Start time: $(date '+%Y-%m-%d %H:%M:%S UTC')"
+          echo "╚════════════════════════════════════════════════════════════════╝"
+          echo ""
+
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
           # Remove workflow files from mirror (they don't need them)
+          echo "[$(date '+%H:%M:%S')] Preparing commit (removing workflow files from mirrors)..."
           git rm -r --cached .github/workflows || true
           git commit -m "Remove workflows for mirror" --allow-empty
 
-          for i in {1..10}; do
-            echo "========== Pushing to mirror-$i =========="
-            if git push https://$PAT_TOKEN@github.com/puraderi/autoblogger-mirror-$i.git HEAD:main --force; then
-              echo "✓ Mirror $i pushed successfully"
+          COMMIT_SHA=$(git rev-parse --short HEAD)
+          echo "[$(date '+%H:%M:%S')] Commit SHA: $COMMIT_SHA"
+          echo ""
+
+          SUCCESS_COUNT=0
+          FAIL_COUNT=0
+
+          for i in $(seq 1 $TOTAL_MIRRORS); do
+            echo "┌────────────────────────────────────────────────────────────────┐"
+            echo "│ MIRROR $i/$TOTAL_MIRRORS - autoblogger-mirror-$i"
+            echo "│ Time: $(date '+%Y-%m-%d %H:%M:%S UTC')"
+            echo "└────────────────────────────────────────────────────────────────┘"
+
+            PUSH_START=$(date +%s)
+
+            if git push https://$PAT_TOKEN@github.com/puraderi/autoblogger-mirror-$i.git HEAD:main --force 2>&1; then
+              PUSH_END=$(date +%s)
+              PUSH_DURATION=$((PUSH_END - PUSH_START))
+              echo "✅ Mirror $i pushed successfully (took ${PUSH_DURATION}s)"
+              echo "   → This triggers ~$PROJECTS_PER_MIRROR Vercel deployments"
+              SUCCESS_COUNT=$((SUCCESS_COUNT + 1))
             else
-              echo "✗ Mirror $i FAILED"
-              exit 1
+              PUSH_END=$(date +%s)
+              PUSH_DURATION=$((PUSH_END - PUSH_START))
+              echo "❌ Mirror $i FAILED after ${PUSH_DURATION}s"
+              FAIL_COUNT=$((FAIL_COUNT + 1))
+              echo ""
+              echo "⚠️  Continuing to next mirror despite failure..."
+              # Don't exit, try remaining mirrors
             fi
 
-            if [ $i -lt 10 ]; then
-              echo "Sleeping 90 seconds before next mirror..."
-              sleep 90
+            if [ $i -lt $TOTAL_MIRRORS ]; then
+              REMAINING=$((TOTAL_MIRRORS - i))
+              REMAINING_TIME=$(((REMAINING - 1) * DELAY_SECONDS / 60 + DELAY_SECONDS / 60))
+              echo ""
+              echo "⏳ Waiting $((DELAY_SECONDS / 60)) minutes before mirror $((i + 1))..."
+              echo "   Remaining: $REMAINING mirrors (~${REMAINING_TIME} min)"
+              echo "   Resume at: $(date -d "+${DELAY_SECONDS} seconds" '+%H:%M:%S UTC' 2>/dev/null || date -v+${DELAY_SECONDS}S '+%H:%M:%S UTC' 2>/dev/null || echo "~$((DELAY_SECONDS / 60)) min from now")"
+              echo ""
+              sleep $DELAY_SECONDS
             fi
           done
 
-          echo "========== All mirrors updated =========="
+          echo ""
+          echo "╔════════════════════════════════════════════════════════════════╗"
+          echo "║                    WORKFLOW COMPLETE                           ║"
+          echo "╠════════════════════════════════════════════════════════════════╣"
+          echo "║ End time: $(date '+%Y-%m-%d %H:%M:%S UTC')"
+          echo "║ Successful: $SUCCESS_COUNT/$TOTAL_MIRRORS mirrors"
+          echo "║ Failed: $FAIL_COUNT/$TOTAL_MIRRORS mirrors"
+          echo "║ Commit: $COMMIT_SHA"
+          echo "╚════════════════════════════════════════════════════════════════╝"
+
+          if [ $FAIL_COUNT -gt 0 ]; then
+            echo ""
+            echo "⚠️  Some mirrors failed! Check logs above for details."
+            exit 1
+          fi
