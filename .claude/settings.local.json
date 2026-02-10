@@ -35,7 +35,12 @@
       "Bash(gh repo view:*)",
       "Bash(dir:*)",
       "Bash(cd:*)",
-      "Bash(npx next build:*)"
+      "Bash(npx next build:*)",
+      "Bash(claude mcp add:*)",
+      "mcp__vercel__list_teams",
+      "mcp__vercel__get_project",
+      "mcp__vercel__list_deployments",
+      "mcp__vercel__list_projects"
     ],
     "deny": [],
     "ask": []
