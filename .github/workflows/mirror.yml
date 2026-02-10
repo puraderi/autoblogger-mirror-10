@@ -41,7 +41,7 @@ jobs:
             fi
 
             if [ $i -lt 10 ]; then
-              echo "Sleeping 90 seconds before next push..."
+              echo "Sleeping 90 seconds before next mirror..."
               sleep 90
             fi
           done
