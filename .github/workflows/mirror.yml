@@ -22,6 +22,8 @@ jobs:
         env:
           PAT_TOKEN: ${{ secrets.MIRROR_REPO_TOKEN }}
         run: |
+          set -e  # Exit on any error
+
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
@@ -29,41 +31,19 @@ jobs:
           git rm -r --cached .github/workflows || true
           git commit -m "Remove workflows for mirror" --allow-empty
 
-          # Mirror 1
-          git push https://$PAT_TOKEN@github.com/puraderi/autoblogger-mirror-1.git HEAD:main --force
-          sleep 300
+          for i in {1..10}; do
+            echo "========== Pushing to mirror-$i =========="
+            if git push https://$PAT_TOKEN@github.com/puraderi/autoblogger-mirror-$i.git HEAD:main --force; then
+              echo "✓ Mirror $i pushed successfully"
+            else
+              echo "✗ Mirror $i FAILED"
+              exit 1
+            fi
 
-          # Mirror 2
-          git push https://$PAT_TOKEN@github.com/puraderi/autoblogger-mirror-2.git HEAD:main --force
-          sleep 300
+            if [ $i -lt 10 ]; then
+              echo "Sleeping 90 seconds before next push..."
+              sleep 90
+            fi
+          done
 
-          # Mirror 3
-          git push https://$PAT_TOKEN@github.com/puraderi/autoblogger-mirror-3.git HEAD:main --force
-          sleep 300
-
-          # Mirror 4
-          git push https://$PAT_TOKEN@github.com/puraderi/autoblogger-mirror-4.git HEAD:main --force
-          sleep 300
-
-          # Mirror 5
-          git push https://$PAT_TOKEN@github.com/puraderi/autoblogger-mirror-5.git HEAD:main --force
-          sleep 300
-
-          # Mirror 6
-          git push https://$PAT_TOKEN@github.com/puraderi/autoblogger-mirror-6.git HEAD:main --force
-          sleep 300
-
-          # Mirror 7
-          git push https://$PAT_TOKEN@github.com/puraderi/autoblogger-mirror-7.git HEAD:main --force
-          sleep 300
-
-          # Mirror 8
-          git push https://$PAT_TOKEN@github.com/puraderi/autoblogger-mirror-8.git HEAD:main --force
-          sleep 300
-
-          # Mirror 9
-          git push https://$PAT_TOKEN@github.com/puraderi/autoblogger-mirror-9.git HEAD:main --force
-          sleep 300
-
-          # Mirror 10
-          git push https://$PAT_TOKEN@github.com/puraderi/autoblogger-mirror-10.git HEAD:main --force
+          echo "========== All mirrors updated =========="
