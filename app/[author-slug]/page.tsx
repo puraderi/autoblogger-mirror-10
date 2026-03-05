@@ -7,6 +7,8 @@ import { getBlogPosts } from '@/lib/services/blog';
 import { Metadata } from 'next';
 import { normalizeHostname } from '@/lib/utils';
 
+export const revalidate = 3600;
+
 interface AuthorPageProps {
   params: Promise<{
     'author-slug': string;
@@ -96,6 +98,7 @@ export default async function AuthorPage({ params }: AuthorPageProps) {
                       alt={post.title}
                       width={400}
                       height={250}
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                       className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
                     />
                   )}

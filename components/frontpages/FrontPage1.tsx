@@ -38,6 +38,7 @@ export default function FrontPage1({ websiteData, blogPosts }: FrontPageProps) {
               alt={websiteData.website_name}
               width={1200}
               height={675}
+              sizes="(max-width: 1280px) 100vw, 1200px"
               className={`w-full h-auto shadow-lg ${websiteData.border_radius}`}
             />
           </div>
@@ -65,6 +66,7 @@ export default function FrontPage1({ websiteData, blogPosts }: FrontPageProps) {
                       alt={post.title}
                       width={400}
                       height={250}
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                       className="w-full h-48 object-cover transition-transform group-hover:scale-105"
                     />
                   </div>

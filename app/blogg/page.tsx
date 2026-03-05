@@ -6,8 +6,8 @@ import Image from "next/image";
 import { normalizeHostname } from "@/lib/utils";
 import { getLanguageConfig } from "@/lib/languages";
 
-// Revalidate every 60 seconds (skip for localhost in production check)
-export const revalidate = 60;
+// Revalidate every hour — blog list rarely changes
+export const revalidate = 3600;
 
 export default async function BlogListPage() {
   const headersList = await headers();
@@ -30,6 +30,7 @@ export default async function BlogListPage() {
             src={websiteData.topic_image_landscape_16_9}
             alt={lang.labels.blog}
             fill
+            sizes="100vw"
             className="object-cover"
             priority
           />
@@ -56,6 +57,7 @@ export default async function BlogListPage() {
                   alt={post.title}
                   width={400}
                   height={250}
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                   className="w-full h-48 object-cover"
                 />
               )}

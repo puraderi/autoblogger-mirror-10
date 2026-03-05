@@ -17,8 +17,8 @@ const nextConfig: NextConfig = {
       },
     ],
     // Reduce image variants to lower transformation costs
-    deviceSizes: [640, 828, 1200], // Default: [640, 750, 828, 1080, 1200, 1920, 2048, 3840]
-    imageSizes: [16, 32, 64, 128, 256], // Default: [16, 32, 48, 64, 96, 128, 256, 384]
+    deviceSizes: [640, 1200], // Default: [640, 750, 828, 1080, 1200, 1920, 2048, 3840]
+    imageSizes: [16, 64, 256], // Default: [16, 32, 48, 64, 96, 128, 256, 384]
     // Cache optimized images longer (default 60 seconds)
     minimumCacheTTL: 2592000, // 30 days!
   },

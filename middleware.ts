@@ -24,8 +24,15 @@ for (const config of Object.values(languages)) {
   if (config.slugs.blog !== 'blogg') blogPrefixes.add(config.slugs.blog);
 }
 
+// In-memory cache for hostname → language (persists within Edge function instance)
+const languageCache = new Map<string, { language: string | null; expires: number }>();
+const LANGUAGE_CACHE_TTL = 3600_000; // 1 hour in ms
+
 // Lightweight function to get just the language for a hostname
 async function getLanguageForHostname(hostname: string): Promise<string | null> {
+  const cached = languageCache.get(hostname);
+  if (cached && cached.expires > Date.now()) return cached.language;
+
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
   if (!supabaseUrl || !supabaseKey) return null;
@@ -37,7 +44,9 @@ async function getLanguageForHostname(hostname: string): Promise<string | null> 
     .eq('host_name', hostname)
     .single();
 
-  return data?.language || null;
+  const language = data?.language || null;
+  languageCache.set(hostname, { language, expires: Date.now() + LANGUAGE_CACHE_TTL });
+  return language;
 }
 
 // Normalize hostname - keep port for localhost, strip for production

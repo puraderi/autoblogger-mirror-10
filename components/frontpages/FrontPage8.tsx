@@ -143,6 +143,7 @@ export default function FrontPage8({ websiteData, blogPosts }: FrontPageProps) {
                       alt={post.title}
                       width={400}
                       height={250}
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                       className="w-full h-44 object-cover transition-transform duration-500 group-hover:scale-105"
                     />
                   </div>

@@ -1,6 +1,6 @@
 import { headers } from "next/headers";
 import { getWebsiteDataByHostname } from "@/lib/services/website";
-import { getBlogPostBySlug, getAllBlogPosts } from "@/lib/services/blog";
+import { getBlogPostBySlug, getRelatedPosts, getSurroundingPosts } from "@/lib/services/blog";
 import BlogPostTemplate from "@/components/blogposts";
 import StructuredData from "@/components/StructuredData";
 import { notFound } from "next/navigation";
@@ -85,26 +85,11 @@ export default async function BlogPostPage({
     return notFound();
   }
 
-  // Fetch all posts to find related, previous, and next posts
-  const allPosts = await getAllBlogPosts(websiteData.id);
-  const currentIndex = allPosts.findIndex((p) => p.id === post.id);
-
-  // Get related posts (exclude current post, take up to 3 random posts with same tags)
-  const relatedPosts = allPosts
-    .filter((p) => p.id !== post.id && p.tags?.some((tag) => post.tags?.includes(tag)))
-    .slice(0, 3);
-
-  // If not enough related posts with same tags, fill with other posts
-  if (relatedPosts.length < 3) {
-    const additionalPosts = allPosts
-      .filter((p) => p.id !== post.id && !relatedPosts.includes(p))
-      .slice(0, 3 - relatedPosts.length);
-    relatedPosts.push(...additionalPosts);
-  }
-
-  // Get previous and next posts
-  const previousPost = currentIndex > 0 ? allPosts[currentIndex - 1] : null;
-  const nextPost = currentIndex < allPosts.length - 1 ? allPosts[currentIndex + 1] : null;
+  // Fetch related and surrounding posts with targeted queries (not entire catalog)
+  const [relatedPosts, { previous: previousPost, next: nextPost }] = await Promise.all([
+    getRelatedPosts(websiteData.id, post.id, post.tags || [], 3),
+    getSurroundingPosts(websiteData.id, post.published_at || post.created_at),
+  ]);
 
   return (
     <>

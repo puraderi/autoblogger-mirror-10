@@ -5,8 +5,8 @@ import FrontPage from "@/components/frontpages";
 import WebsiteStructuredData from "@/components/WebsiteStructuredData";
 import { normalizeHostname } from "@/lib/utils";
 
-// Revalidate every 60 seconds (skip for localhost in production check)
-export const revalidate = 60;
+// Revalidate every hour — homepage content rarely changes
+export const revalidate = 3600;
 
 export default async function Home() {
   const headersList = await headers();
