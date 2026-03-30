@@ -7,8 +7,6 @@ import { getBlogPosts } from '@/lib/services/blog';
 import { Metadata } from 'next';
 import { normalizeHostname } from '@/lib/utils';
 
-export const revalidate = 3600;
-
 interface AuthorPageProps {
   params: Promise<{
     'author-slug': string;

@@ -1,4 +1,5 @@
 import { headers } from "next/headers";
+import { redirect } from "next/navigation";
 import { getWebsiteDataByHostname } from "@/lib/services/website";
 import { getBlogPostBySlug, getRelatedPosts, getSurroundingPosts } from "@/lib/services/blog";
 import BlogPostTemplate from "@/components/blogposts";
@@ -6,10 +7,7 @@ import StructuredData from "@/components/StructuredData";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { normalizeHostname } from "@/lib/utils";
-
-// Use ISR with revalidation - pages are cached but refreshed every 24 hours
-export const revalidate = 86400;
-export const dynamicParams = true;
+import { shouldBlockRequest } from "@/lib/geofence";
 
 export async function generateMetadata({
   params,
@@ -83,6 +81,11 @@ export default async function BlogPostPage({
 
   if (!post) {
     return notFound();
+  }
+
+  // Geofence check — redirect blocked users to homepage before heavy rendering
+  if (post.geofenced && shouldBlockRequest(headersList, post.geofenced)) {
+    redirect('/');
   }
 
   // Fetch related and surrounding posts with targeted queries (not entire catalog)

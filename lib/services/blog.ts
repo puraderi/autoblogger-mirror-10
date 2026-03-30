@@ -1,4 +1,5 @@
-import { unstable_cache } from 'next/cache';
+import { cache } from 'react';
+import { cacheLife, cacheTag } from 'next/cache';
 import { supabase } from '../supabase';
 import { Database } from '../database.types';
 
@@ -7,8 +8,13 @@ export type BlogPost = Database['public']['Tables']['blog_post']['Row'];
 // Columns needed for list views (excludes heavy content field)
 const LIST_COLUMNS = 'id, website_id, title, slug, excerpt, image_url, tags, author_name, published_at, created_at, updated_at, published, meta_title, meta_description';
 
-// Fetch blog posts with limit
+// --- Core fetch functions with 'use cache' for cross-request caching ---
+
 async function fetchBlogPosts(websiteId: string, limit: number): Promise<BlogPost[]> {
+  'use cache';
+  cacheLife({ revalidate: 300 }); // 5 minutes
+  cacheTag('posts', `posts-${websiteId}`);
+
   const { data, error } = await supabase
     .from('blog_post')
     .select(LIST_COLUMNS)
@@ -25,8 +31,11 @@ async function fetchBlogPosts(websiteId: string, limit: number): Promise<BlogPos
   return (data || []) as BlogPost[];
 }
 
-// Fetch single blog post by slug (includes content)
 async function fetchBlogPostBySlug(websiteId: string, slug: string): Promise<BlogPost | null> {
+  'use cache';
+  cacheLife({ revalidate: 86400 }); // 24 hours — posts rarely change
+  cacheTag('posts', `post-${websiteId}-${slug}`);
+
   const { data, error } = await supabase
     .from('blog_post')
     .select('*')
@@ -43,8 +52,11 @@ async function fetchBlogPostBySlug(websiteId: string, slug: string): Promise<Blo
   return data;
 }
 
-// Fetch all blog posts for a website
 async function fetchAllBlogPosts(websiteId: string): Promise<BlogPost[]> {
+  'use cache';
+  cacheLife({ revalidate: 300 }); // 5 minutes
+  cacheTag('posts', `posts-${websiteId}`);
+
   const { data, error } = await supabase
     .from('blog_post')
     .select(LIST_COLUMNS)
@@ -60,10 +72,12 @@ async function fetchAllBlogPosts(websiteId: string): Promise<BlogPost[]> {
   return (data || []) as BlogPost[];
 }
 
-// Fetch related posts by matching tags (excludes current post, limit 3)
 async function fetchRelatedPosts(websiteId: string, currentPostId: string, tags: string[], limit: number = 3): Promise<BlogPost[]> {
+  'use cache';
+  cacheLife({ revalidate: 3600 }); // 1 hour
+  cacheTag('posts', `related-${websiteId}-${currentPostId}`);
+
   if (!tags || tags.length === 0) {
-    // No tags to match — just return recent posts excluding current
     const { data, error } = await supabase
       .from('blog_post')
       .select(LIST_COLUMNS)
@@ -80,7 +94,6 @@ async function fetchRelatedPosts(websiteId: string, currentPostId: string, tags:
     return (data || []) as BlogPost[];
   }
 
-  // First try posts with overlapping tags
   const { data: tagMatches, error: tagError } = await supabase
     .from('blog_post')
     .select(LIST_COLUMNS)
@@ -98,7 +111,6 @@ async function fetchRelatedPosts(websiteId: string, currentPostId: string, tags:
 
   const results = (tagMatches || []) as BlogPost[];
 
-  // Fill remaining slots with other recent posts if needed
   if (results.length < limit) {
     const excludeIds = [currentPostId, ...results.map(p => p.id)];
     const { data: fillers } = await supabase
@@ -118,9 +130,11 @@ async function fetchRelatedPosts(websiteId: string, currentPostId: string, tags:
   return results;
 }
 
-// Fetch previous and next posts relative to a given published_at date
 async function fetchSurroundingPosts(websiteId: string, publishedAt: string): Promise<{ previous: BlogPost | null; next: BlogPost | null }> {
-  // Previous = most recent post published BEFORE this one
+  'use cache';
+  cacheLife({ revalidate: 3600 }); // 1 hour
+  cacheTag('posts', `surrounding-${websiteId}-${publishedAt}`);
+
   const prevPromise = supabase
     .from('blog_post')
     .select(LIST_COLUMNS)
@@ -130,7 +144,6 @@ async function fetchSurroundingPosts(websiteId: string, publishedAt: string): Pr
     .order('published_at', { ascending: false })
     .limit(1);
 
-  // Next = oldest post published AFTER this one
   const nextPromise = supabase
     .from('blog_post')
     .select(LIST_COLUMNS)
@@ -148,57 +161,10 @@ async function fetchSurroundingPosts(websiteId: string, publishedAt: string): Pr
   };
 }
 
-// Cached versions with appropriate TTLs and tags for on-demand revalidation
-const cachedGetBlogPosts = unstable_cache(
-  fetchBlogPosts,
-  ['blog-posts'],
-  {
-    revalidate: 300, // 5 minutes
-    tags: ['posts'],
-  }
-);
-
-const cachedGetBlogPostBySlug = unstable_cache(
-  fetchBlogPostBySlug,
-  ['blog-post-by-slug'],
-  {
-    revalidate: 21600, // 6 hours (posts rarely change after publishing)
-    tags: ['posts'],
-  }
-);
-
-const cachedGetAllBlogPosts = unstable_cache(
-  fetchAllBlogPosts,
-  ['all-blog-posts'],
-  {
-    revalidate: 300, // 5 minutes
-    tags: ['posts'],
-  }
-);
-
-const cachedGetRelatedPosts = unstable_cache(
-  fetchRelatedPosts,
-  ['related-posts'],
-  {
-    revalidate: 3600, // 1 hour
-    tags: ['posts'],
-  }
-);
-
-const cachedGetSurroundingPosts = unstable_cache(
-  fetchSurroundingPosts,
-  ['surrounding-posts'],
-  {
-    revalidate: 3600, // 1 hour
-    tags: ['posts'],
-  }
-);
-
-// In development, bypass cache for instant updates
-const isDev = process.env.NODE_ENV === 'development';
-
-export const getBlogPosts = isDev ? fetchBlogPosts : cachedGetBlogPosts;
-export const getBlogPostBySlug = isDev ? fetchBlogPostBySlug : cachedGetBlogPostBySlug;
-export const getAllBlogPosts = isDev ? fetchAllBlogPosts : cachedGetAllBlogPosts;
-export const getRelatedPosts = isDev ? fetchRelatedPosts : cachedGetRelatedPosts;
-export const getSurroundingPosts = isDev ? fetchSurroundingPosts : cachedGetSurroundingPosts;
+// React cache() deduplicates calls within a single request render pass
+// (e.g. generateMetadata + page component calling the same function)
+export const getBlogPosts = cache(fetchBlogPosts);
+export const getBlogPostBySlug = cache(fetchBlogPostBySlug);
+export const getAllBlogPosts = cache(fetchAllBlogPosts);
+export const getRelatedPosts = cache(fetchRelatedPosts);
+export const getSurroundingPosts = cache(fetchSurroundingPosts);

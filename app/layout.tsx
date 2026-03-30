@@ -62,7 +62,6 @@ export default async function RootLayout({
 }>) {
   const headersList = await headers();
   const hostname = normalizeHostname(headersList.get("host") || "localhost");
-  console.log('Hostname received:', hostname);
   const websiteData = await getWebsiteDataByHostname(hostname);
 
   if (!websiteData) {

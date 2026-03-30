@@ -183,6 +183,7 @@ export interface Database {
           tags: string[] | null
           meta_title: string | null
           meta_description: string | null
+          geofenced: string | null
         }
         Insert: {
           id?: string
@@ -201,6 +202,7 @@ export interface Database {
           tags?: string[] | null
           meta_title?: string | null
           meta_description?: string | null
+          geofenced?: string | null
         }
         Update: {
           id?: string
@@ -219,6 +221,7 @@ export interface Database {
           tags?: string[] | null
           meta_title?: string | null
           meta_description?: string | null
+          geofenced?: string | null
         }
       }
       blog_generation_jobs: {

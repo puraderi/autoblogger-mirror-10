@@ -59,55 +59,70 @@ function normalizeHostname(host: string): string {
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
-  const hostname = normalizeHostname(request.headers.get('host') || 'localhost');
 
-  // Check if user is visiting a Swedish slug directly
+  // Fast path: check if this request needs any rewriting at all.
+  // Only localized slug rewrites and Swedish→localized redirects need the middleware.
+  const needsSlugRewrite = slugRewrites[pathname] !== undefined;
+  const needsBlogRewrite = Array.from(blogPrefixes).some(
+    prefix => pathname === `/${prefix}` || pathname.startsWith(`/${prefix}/`)
+  );
   const isSwedishAbout = pathname === '/om-oss';
   const isSwedishContact = pathname === '/kontakt';
   const isSwedishBlog = pathname === '/blogg' || pathname.startsWith('/blogg/');
+  const needsSwedishRedirect = isSwedishAbout || isSwedishContact || isSwedishBlog;
 
-  // If visiting a Swedish slug, check if we need to redirect
-  if (isSwedishAbout || isSwedishContact || isSwedishBlog) {
-    const language = await getLanguageForHostname(hostname);
-    const lang = getLanguageConfig(language);
-
-    // If the site is NOT Swedish, redirect to the localized slug
-    if (language && language !== 'Swedish') {
-      const url = request.nextUrl.clone();
-
-      if (isSwedishAbout && lang.slugs.about !== 'om-oss') {
-        url.pathname = `/${lang.slugs.about}`;
-        return NextResponse.redirect(url, 301);
-      }
-      if (isSwedishContact && lang.slugs.contact !== 'kontakt') {
-        url.pathname = `/${lang.slugs.contact}`;
-        return NextResponse.redirect(url, 301);
-      }
-      if (isSwedishBlog && lang.slugs.blog !== 'blogg') {
-        url.pathname = pathname.replace('/blogg', `/${lang.slugs.blog}`);
-        return NextResponse.redirect(url, 301);
-      }
-    }
+  // If no rewriting needed, skip entirely — no Supabase call
+  if (!needsSlugRewrite && !needsBlogRewrite && !needsSwedishRedirect) {
+    return NextResponse.next();
   }
 
-  // Rewrite localized slugs to Swedish (internal routing)
-  if (slugRewrites[pathname]) {
+  // Rewrite localized slugs to Swedish (internal routing) — no DB call needed
+  if (needsSlugRewrite) {
     const url = request.nextUrl.clone();
     url.pathname = slugRewrites[pathname];
     return NextResponse.rewrite(url);
   }
 
-  // Handle blog post paths: /blog/some-post -> /blogg/some-post
-  for (const prefix of blogPrefixes) {
-    if (pathname.startsWith(`/${prefix}/`)) {
-      const url = request.nextUrl.clone();
-      url.pathname = pathname.replace(`/${prefix}/`, '/blogg/');
-      return NextResponse.rewrite(url);
+  // Handle blog post paths: /blog/some-post -> /blogg/some-post — no DB call needed
+  if (needsBlogRewrite) {
+    for (const prefix of blogPrefixes) {
+      if (pathname.startsWith(`/${prefix}/`)) {
+        const url = request.nextUrl.clone();
+        url.pathname = pathname.replace(`/${prefix}/`, '/blogg/');
+        return NextResponse.rewrite(url);
+      }
+      if (pathname === `/${prefix}`) {
+        const url = request.nextUrl.clone();
+        url.pathname = '/blogg';
+        return NextResponse.rewrite(url);
+      }
     }
-    if (pathname === `/${prefix}`) {
-      const url = request.nextUrl.clone();
-      url.pathname = '/blogg';
-      return NextResponse.rewrite(url);
+  }
+
+  // Only hit Supabase when we need to check if a Swedish slug should redirect
+  if (needsSwedishRedirect) {
+    const hostname = normalizeHostname(request.headers.get('host') || 'localhost');
+    const language = await getLanguageForHostname(hostname);
+
+    // If the site IS Swedish (or unknown), no redirect needed
+    if (!language || language === 'Swedish') {
+      return NextResponse.next();
+    }
+
+    const lang = getLanguageConfig(language);
+    const url = request.nextUrl.clone();
+
+    if (isSwedishAbout && lang.slugs.about !== 'om-oss') {
+      url.pathname = `/${lang.slugs.about}`;
+      return NextResponse.redirect(url, 301);
+    }
+    if (isSwedishContact && lang.slugs.contact !== 'kontakt') {
+      url.pathname = `/${lang.slugs.contact}`;
+      return NextResponse.redirect(url, 301);
+    }
+    if (isSwedishBlog && lang.slugs.blog !== 'blogg') {
+      url.pathname = pathname.replace('/blogg', `/${lang.slugs.blog}`);
+      return NextResponse.redirect(url, 301);
     }
   }
 

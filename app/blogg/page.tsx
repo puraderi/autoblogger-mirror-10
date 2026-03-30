@@ -6,9 +6,6 @@ import Image from "next/image";
 import { normalizeHostname } from "@/lib/utils";
 import { getLanguageConfig } from "@/lib/languages";
 
-// Revalidate every hour — blog list rarely changes
-export const revalidate = 3600;
-
 export default async function BlogListPage() {
   const headersList = await headers();
   const hostname = normalizeHostname(headersList.get("host") || "localhost");
