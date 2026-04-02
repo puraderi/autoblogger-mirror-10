@@ -4,8 +4,6 @@ import { getAllBlogPosts } from '@/lib/services/blog';
 import { normalizeHostname } from '@/lib/utils';
 import { getLanguageConfig } from '@/lib/languages';
 
-export const revalidate = 3600; // Revalidate every hour
-
 export async function GET() {
   const headersList = await headers();
   const hostname = normalizeHostname(headersList.get('host') || 'localhost');
