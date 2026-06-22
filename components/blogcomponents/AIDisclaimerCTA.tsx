@@ -5,11 +5,13 @@ import { getDisclaimerText } from '@/lib/disclaimerVariations';
 
 interface AIDisclaimerCTAProps {
   websiteData: WebsiteData;
+  // Per-article override. Hidden when either the site or the article opts out.
+  aiTag?: boolean | null;
 }
 
-export default function AIDisclaimerCTA({ websiteData }: AIDisclaimerCTAProps) {
-  // Check ai_tag - default to true if null/undefined
-  const showDisclaimer = websiteData.ai_tag !== false;
+export default function AIDisclaimerCTA({ websiteData, aiTag }: AIDisclaimerCTAProps) {
+  // Show only when neither the site nor the article has opted out (null/undefined = on).
+  const showDisclaimer = websiteData.ai_tag !== false && aiTag !== false;
   if (!showDisclaimer) return null;
 
   const { ctaText } = getDisclaimerText(

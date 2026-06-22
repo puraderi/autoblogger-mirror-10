@@ -91,7 +91,7 @@ export default function BlogPost1({ websiteData, post, relatedPosts = [], previo
                 </>
               )}
             </div>
-            <AIDisclaimerCTA websiteData={websiteData} />
+            <AIDisclaimerCTA websiteData={websiteData} aiTag={post.ai_tag} />
           </div>
 
           {post.image_url && (
@@ -112,7 +112,7 @@ export default function BlogPost1({ websiteData, post, relatedPosts = [], previo
         />
 
         <div className="mb-10">
-          <AIDisclaimer websiteData={websiteData} />
+          <AIDisclaimer websiteData={websiteData} aiTag={post.ai_tag} />
         </div>
 
         {/* Tags row */}

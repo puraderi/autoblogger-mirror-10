@@ -6,7 +6,7 @@ import { Database } from '../database.types';
 export type BlogPost = Database['public']['Tables']['blog_post']['Row'];
 
 // Columns needed for list views (excludes heavy content field)
-const LIST_COLUMNS = 'id, website_id, title, slug, excerpt, image_url, tags, author_name, published_at, created_at, updated_at, published, meta_title, meta_description';
+const LIST_COLUMNS = 'id, website_id, title, slug, excerpt, image_url, tags, author_name, published_at, created_at, updated_at, published, meta_title, meta_description, ai_tag';
 
 // --- Core fetch functions with 'use cache' for cross-request caching ---
 

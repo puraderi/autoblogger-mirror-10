@@ -3,11 +3,13 @@ import { getDisclaimerText } from '@/lib/disclaimerVariations';
 
 interface AIDisclaimerProps {
   websiteData: WebsiteData;
+  // Per-article override. Hidden when either the site or the article opts out.
+  aiTag?: boolean | null;
 }
 
-export default function AIDisclaimer({ websiteData }: AIDisclaimerProps) {
-  // Check ai_tag - default to true if null/undefined
-  const showDisclaimer = websiteData.ai_tag !== false;
+export default function AIDisclaimer({ websiteData, aiTag }: AIDisclaimerProps) {
+  // Show only when neither the site nor the article has opted out (null/undefined = on).
+  const showDisclaimer = websiteData.ai_tag !== false && aiTag !== false;
   if (!showDisclaimer) return null;
 
   const { disclaimerText, hasEmail, email } = getDisclaimerText(

@@ -123,7 +123,7 @@ export default function BlogPost4({ websiteData, post, relatedPosts = [], previo
         {/* Content */}
         <div className={`${websiteData.container_width} mx-auto px-4 md:px-6 max-w-3xl py-8`}>
           <div className="mb-4">
-            <AIDisclaimerCTA websiteData={websiteData} />
+            <AIDisclaimerCTA websiteData={websiteData} aiTag={post.ai_tag} />
           </div>
 
           <div
@@ -133,7 +133,7 @@ export default function BlogPost4({ websiteData, post, relatedPosts = [], previo
           />
 
           <div className="mb-10">
-            <AIDisclaimer websiteData={websiteData} />
+            <AIDisclaimer websiteData={websiteData} aiTag={post.ai_tag} />
           </div>
 
           {/* Tags */}

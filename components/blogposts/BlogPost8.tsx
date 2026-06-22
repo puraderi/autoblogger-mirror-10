@@ -124,7 +124,7 @@ export default function BlogPost8({ websiteData, post, relatedPosts = [], previo
       <article className={`${websiteData.container_width} mx-auto px-4 md:px-6 py-10 md:py-16`}>
         <div className="max-w-3xl mx-auto">
           <div className="mb-4">
-            <AIDisclaimerCTA websiteData={websiteData} />
+            <AIDisclaimerCTA websiteData={websiteData} aiTag={post.ai_tag} />
           </div>
 
           <div
@@ -134,7 +134,7 @@ export default function BlogPost8({ websiteData, post, relatedPosts = [], previo
           />
 
           <div className="mb-10">
-            <AIDisclaimer websiteData={websiteData} />
+            <AIDisclaimer websiteData={websiteData} aiTag={post.ai_tag} />
           </div>
 
           {websiteData.show_tags_display && post.tags && post.tags.length > 1 && (

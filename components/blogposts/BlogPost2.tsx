@@ -78,7 +78,7 @@ export default function BlogPost2({ websiteData, post, relatedPosts = [], previo
                   <ReadingTime websiteData={websiteData} content={post.content} />
                 </>
               )}
-              <AIDisclaimerCTA websiteData={websiteData} />
+              <AIDisclaimerCTA websiteData={websiteData} aiTag={post.ai_tag} />
             </div>
 
             <div
@@ -88,7 +88,7 @@ export default function BlogPost2({ websiteData, post, relatedPosts = [], previo
             />
 
             <div className="mb-10">
-              <AIDisclaimer websiteData={websiteData} />
+              <AIDisclaimer websiteData={websiteData} aiTag={post.ai_tag} />
             </div>
 
             {websiteData.show_share_buttons && (

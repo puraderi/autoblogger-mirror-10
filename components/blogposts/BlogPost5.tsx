@@ -106,7 +106,7 @@ export default function BlogPost5({ websiteData, post, relatedPosts = [], previo
                   </div>
                 </div>
                 <div className="mt-4">
-                  <AIDisclaimerCTA websiteData={websiteData} />
+                  <AIDisclaimerCTA websiteData={websiteData} aiTag={post.ai_tag} />
                 </div>
               </header>
 
@@ -117,7 +117,7 @@ export default function BlogPost5({ websiteData, post, relatedPosts = [], previo
               />
 
               <div className="mb-10">
-                <AIDisclaimer websiteData={websiteData} />
+                <AIDisclaimer websiteData={websiteData} aiTag={post.ai_tag} />
               </div>
 
               {websiteData.show_share_buttons && (
