@@ -4,6 +4,7 @@ import { getWebsiteDataByHostname } from '@/lib/services/website';
 import { getAllBlogPosts } from '@/lib/services/blog';
 import { normalizeHostname } from '@/lib/utils';
 import { getLanguageConfig } from '@/lib/languages';
+import { hasGeofence } from '@/lib/geofence';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const headersList = await headers();
@@ -56,8 +57,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     });
   }
 
-  // Blog post pages
-  const blogPostPages: MetadataRoute.Sitemap = blogPosts.map((post) => ({
+  // Blog post pages — geofenced posts are excluded entirely: the sitemap is
+  // crawled globally, so listing them would advertise URLs that redirect for
+  // blocked visitors
+  const blogPostPages: MetadataRoute.Sitemap = blogPosts.filter((post) => !hasGeofence(post.geofenced)).map((post) => ({
     url: `${baseUrl}/${lang.slugs.blog}/${post.slug}`,
     lastModified: new Date(post.updated_at),
     changeFrequency: 'monthly',

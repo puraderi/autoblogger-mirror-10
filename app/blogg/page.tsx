@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { normalizeHostname } from "@/lib/utils";
 import { getLanguageConfig } from "@/lib/languages";
+import { filterGeofencedPosts } from "@/lib/geofence";
 
 export default async function BlogListPage() {
   const headersList = await headers();
@@ -16,7 +17,7 @@ export default async function BlogListPage() {
   }
 
   const lang = getLanguageConfig(websiteData.language);
-  const blogPosts = await getAllBlogPosts(websiteData.id);
+  const blogPosts = filterGeofencedPosts(headersList, await getAllBlogPosts(websiteData.id));
 
   return (
     <>

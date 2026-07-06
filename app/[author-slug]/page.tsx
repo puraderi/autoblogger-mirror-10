@@ -6,6 +6,7 @@ import { getWebsiteDataByHostname } from '@/lib/services/website';
 import { getBlogPosts } from '@/lib/services/blog';
 import { Metadata } from 'next';
 import { normalizeHostname } from '@/lib/utils';
+import { filterGeofencedPosts } from '@/lib/geofence';
 
 interface AuthorPageProps {
   params: Promise<{
@@ -50,7 +51,7 @@ export default async function AuthorPage({ params }: AuthorPageProps) {
   }
 
   // Get all blog posts for this website
-  const posts = await getBlogPosts(websiteData.id, 100);
+  const posts = filterGeofencedPosts(headersList, await getBlogPosts(websiteData.id, 100));
 
   return (
     <div className="min-h-screen">

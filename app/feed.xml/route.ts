@@ -3,6 +3,7 @@ import { getWebsiteDataByHostname } from '@/lib/services/website';
 import { getAllBlogPosts } from '@/lib/services/blog';
 import { normalizeHostname } from '@/lib/utils';
 import { getLanguageConfig } from '@/lib/languages';
+import { hasGeofence } from '@/lib/geofence';
 
 export async function GET() {
   const headersList = await headers();
@@ -27,7 +28,10 @@ export async function GET() {
       .replace(/'/g, '&apos;');
   };
 
+  // Geofenced posts are excluded entirely — the feed is CDN-cached and read
+  // location-agnostically, so per-visitor filtering isn't possible here
   const rssItems = blogPosts
+    .filter((post) => !hasGeofence(post.geofenced))
     .slice(0, 20) // Limit to 20 most recent posts
     .map((post) => {
       const pubDate = post.published_at

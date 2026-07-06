@@ -7,7 +7,7 @@ import StructuredData from "@/components/StructuredData";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { normalizeHostname } from "@/lib/utils";
-import { shouldBlockRequest } from "@/lib/geofence";
+import { shouldBlockRequest, filterGeofencedPosts } from "@/lib/geofence";
 
 export async function generateMetadata({
   params,
@@ -89,10 +89,19 @@ export default async function BlogPostPage({
   }
 
   // Fetch related and surrounding posts with targeted queries (not entire catalog)
-  const [relatedPosts, { previous: previousPost, next: nextPost }] = await Promise.all([
+  const [relatedPostsRaw, surrounding] = await Promise.all([
     getRelatedPosts(websiteData.id, post.id, post.tags || [], 3),
     getSurroundingPosts(websiteData.id, post.published_at || post.created_at),
   ]);
+
+  // Hide posts the current visitor is geofenced out of
+  const relatedPosts = filterGeofencedPosts(headersList, relatedPostsRaw);
+  const previousPost = surrounding.previous && !shouldBlockRequest(headersList, surrounding.previous.geofenced)
+    ? surrounding.previous
+    : null;
+  const nextPost = surrounding.next && !shouldBlockRequest(headersList, surrounding.next.geofenced)
+    ? surrounding.next
+    : null;
 
   return (
     <>

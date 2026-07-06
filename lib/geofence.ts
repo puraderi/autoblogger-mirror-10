@@ -120,8 +120,8 @@ function checkAcceptLanguageRegion(headers: Headers, blockedCountries: string[])
  *
  * Returns true if the user should be blocked/redirected.
  */
-export function shouldBlockRequest(headers: Headers, geofenced: string | null): boolean {
-  const blockedCountries = parseGeofencedCountries(geofenced);
+export function shouldBlockRequest(headers: Headers, geofenced: string | null | undefined): boolean {
+  const blockedCountries = parseGeofencedCountries(geofenced ?? null);
   if (blockedCountries.length === 0) return false;
 
   // Method 1: Vercel IP-based country (most reliable — trust it alone)
@@ -138,4 +138,25 @@ export function shouldBlockRequest(headers: Headers, geofenced: string | null): 
   const regionBlocked = checkAcceptLanguageRegion(headers, blockedCountries);
 
   return langBlocked && regionBlocked;
+}
+
+/**
+ * True if the post has any geofence restriction at all, regardless of viewer.
+ * Used for globally-cached/crawled surfaces (sitemap, RSS feed) where
+ * per-visitor filtering would poison shared caches.
+ */
+export function hasGeofence(geofenced: string | null | undefined): boolean {
+  return parseGeofencedCountries(geofenced ?? null).length > 0;
+}
+
+/**
+ * Remove posts the current visitor is geofenced out of.
+ * Apply at render time (after cached fetches) — the fetch layer is shared
+ * across all visitors and must stay country-agnostic.
+ */
+export function filterGeofencedPosts<T extends { geofenced?: string | null }>(
+  headers: Headers,
+  posts: T[]
+): T[] {
+  return posts.filter(post => !shouldBlockRequest(headers, post.geofenced));
 }
