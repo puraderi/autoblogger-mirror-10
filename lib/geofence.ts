@@ -43,6 +43,18 @@ function parseGeofencedCountries(geofenced: string | null): string[] {
 }
 
 /**
+ * Method 0: Cloudflare's visitor country header (cf-ipcountry).
+ * Set by Cloudflare's IP Geolocation feature from the REAL client IP,
+ * so it survives the Cloudflare→Vercel proxy hop that poisons
+ * x-vercel-ip-country. "XX" (unknown) and "T1" (Tor) mean "no answer".
+ */
+function getCloudflareCountry(headers: Headers): string | null {
+  const country = headers.get('cf-ipcountry')?.toLowerCase();
+  if (!country || country === 'xx' || country === 't1') return null;
+  return country;
+}
+
+/**
  * Method 1: Check Vercel's IP-based country header.
  * This is set automatically by Vercel's CDN on every request.
  * Returns ISO 3166-1 alpha-2 country code (e.g., "SE", "FI").
@@ -115,8 +127,14 @@ function checkAcceptLanguageRegion(headers: Headers, blockedCountries: string[])
 
 /**
  * Check if a request should be geofenced based on the post's geofenced value.
- * Uses a 2-of-3 consensus approach when Vercel header isn't available,
- * or trusts Vercel header alone (it's IP-based and highly accurate).
+ *
+ * Header trust order:
+ * 1. cf-ipcountry — real visitor IP country, trusted fully when present.
+ * 2. x-vercel-ip-country — behind the Cloudflare proxy this reflects the
+ *    CF edge location, not the visitor. A match still blocks, but a
+ *    non-match must NOT unblock, so it never short-circuits.
+ * 3. Accept-Language consensus — both language and locale-region methods
+ *    must agree (reduces false positives).
  *
  * Returns true if the user should be blocked/redirected.
  */
@@ -124,16 +142,15 @@ export function shouldBlockRequest(headers: Headers, geofenced: string | null | 
   const blockedCountries = parseGeofencedCountries(geofenced ?? null);
   if (blockedCountries.length === 0) return false;
 
-  // Method 1: Vercel IP-based country (most reliable — trust it alone)
-  const vercelBlocked = checkVercelCountryHeader(headers, blockedCountries);
-  if (vercelBlocked) return true;
+  // Method 0: Cloudflare visitor country (real client IP — trust it alone)
+  const cfCountry = getCloudflareCountry(headers);
+  if (cfCountry) return blockedCountries.includes(cfCountry);
 
-  // If Vercel header is present and says NOT blocked, trust it
-  const hasVercelHeader = headers.get('x-vercel-ip-country') !== null;
-  if (hasVercelHeader) return false;
+  // Method 1: Vercel IP-based country — only a positive match counts
+  if (checkVercelCountryHeader(headers, blockedCountries)) return true;
 
-  // Fallback: no Vercel header (local dev, non-Vercel hosting)
-  // Require both language methods to agree (reduces false positives)
+  // Fallback: language consensus (also runs when the Vercel header is
+  // present but unmatched, since the proxy makes non-matches unreliable)
   const langBlocked = checkAcceptLanguagePrimary(headers, blockedCountries);
   const regionBlocked = checkAcceptLanguageRegion(headers, blockedCountries);
 
