@@ -63,6 +63,8 @@ export interface Database {
           topic_image_portrait_2_3: string | null
           topic_image_square_1_1: string | null
           ai_tag: boolean | null
+          noindex: boolean | null
+          experiment: boolean | null
         }
         Insert: {
           id?: string
@@ -113,6 +115,8 @@ export interface Database {
           topic_image_portrait_2_3?: string | null
           topic_image_square_1_1?: string | null
           ai_tag?: boolean | null
+          noindex?: boolean | null
+          experiment?: boolean | null
         }
         Update: {
           id?: string
@@ -163,6 +167,8 @@ export interface Database {
           topic_image_portrait_2_3?: string | null
           topic_image_square_1_1?: string | null
           ai_tag?: boolean | null
+          noindex?: boolean | null
+          experiment?: boolean | null
         }
       }
       blog_post: {

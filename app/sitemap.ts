@@ -15,6 +15,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     return [];
   }
 
+  // A sitemap is an indexing request, so keeping one while the Google killswitch
+  // is on both contradicts the noindex tag and produces "Submitted URL marked
+  // noindex" errors in Search Console.
+  if (websiteData.noindex === true) {
+    return [];
+  }
+
   const lang = getLanguageConfig(websiteData.language);
   const blogPosts = await getAllBlogPosts(websiteData.id);
   const baseUrl = `https://${hostname}`;

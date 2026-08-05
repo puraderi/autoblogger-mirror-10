@@ -25,6 +25,12 @@ export async function generateMetadata(): Promise<Metadata> {
   const langConfig = getLanguageConfig(websiteData?.language);
   const ogLocale = langConfig.locale.replace('-', '_'); // sv-SE -> sv_SE
 
+  // Google-only indexing killswitch. Emits <meta name="googlebot" content="noindex">
+  // rather than name="robots", which would apply to every crawler. robots.txt is
+  // deliberately left alone: disallowing Googlebot there would stop it fetching the
+  // page at all, and a page Google cannot crawl is one whose noindex it never reads.
+  const noindex = websiteData?.noindex === true;
+
   return {
     metadataBase: new URL(baseUrl),
     title: {
@@ -45,6 +51,7 @@ export async function generateMetadata(): Promise<Metadata> {
     },
     other: {
       "theme-color": websiteData?.primary_color || "#000000",
+      ...(noindex ? { googlebot: "noindex" } : {}),
     },
     alternates: {
       canonical: "/",

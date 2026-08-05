@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { languages, getLanguageConfig } from '@/lib/languages';
+import { isCrawler } from '@/lib/bots';
 
 // Swedish slugs (our internal routes)
 const SWEDISH_SLUGS = {
@@ -24,29 +25,44 @@ for (const config of Object.values(languages)) {
   if (config.slugs.blog !== 'blogg') blogPrefixes.add(config.slugs.blog);
 }
 
-// In-memory cache for hostname → language (persists within Edge function instance)
-const languageCache = new Map<string, { language: string | null; expires: number }>();
-const LANGUAGE_CACHE_TTL = 3600_000; // 1 hour in ms
+// In-memory cache for hostname → site config (persists within Edge function instance)
+type SiteConfig = { language: string | null; experiment: boolean };
+const siteConfigCache = new Map<string, { config: SiteConfig; expires: number }>();
+const SITE_CONFIG_CACHE_TTL = 3600_000; // 1 hour in ms
 
-// Lightweight function to get just the language for a hostname
-async function getLanguageForHostname(hostname: string): Promise<string | null> {
-  const cached = languageCache.get(hostname);
-  if (cached && cached.expires > Date.now()) return cached.language;
+// Lightweight lookup of the only two columns the middleware needs.
+// Both are read in one query so experiment mode costs no extra round-trip.
+async function getSiteConfig(hostname: string): Promise<SiteConfig> {
+  const cached = siteConfigCache.get(hostname);
+  if (cached && cached.expires > Date.now()) return cached.config;
 
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-  if (!supabaseUrl || !supabaseKey) return null;
+  if (!supabaseUrl || !supabaseKey) return { language: null, experiment: false };
 
   const supabase = createClient(supabaseUrl, supabaseKey);
-  const { data } = await supabase
+  const { data, error } = await supabase
     .from('website_data')
-    .select('language')
+    .select('language, experiment')
     .eq('host_name', hostname)
     .single();
 
-  const language = data?.language || null;
-  languageCache.set(hostname, { language, expires: Date.now() + LANGUAGE_CACHE_TTL });
-  return language;
+  let config: SiteConfig;
+  if (error) {
+    // The experiment column may not exist yet if this deploys before the
+    // migration runs. Retry without it so localized slug redirects keep working.
+    const { data: fallback } = await supabase
+      .from('website_data')
+      .select('language')
+      .eq('host_name', hostname)
+      .single();
+    config = { language: fallback?.language || null, experiment: false };
+  } else {
+    config = { language: data?.language || null, experiment: data?.experiment === true };
+  }
+
+  siteConfigCache.set(hostname, { config, expires: Date.now() + SITE_CONFIG_CACHE_TTL });
+  return config;
 }
 
 // Normalize hostname - keep port for localhost, strip for production
@@ -71,7 +87,33 @@ export async function middleware(request: NextRequest) {
   const isSwedishBlog = pathname === '/blogg' || pathname.startsWith('/blogg/');
   const needsSwedishRedirect = isSwedishAbout || isSwedishContact || isSwedishBlog;
 
-  // If no rewriting needed, skip entirely — no Supabase call
+  // Experiment mode has to be evaluated on every path, so the config lookup can
+  // no longer be skipped the way it was when only slug rewrites needed it. The
+  // in-memory cache keeps this to a Map read after the first request per edge
+  // instance; only a cold instance pays a Supabase round-trip.
+  const hostname = normalizeHostname(request.headers.get('host') || 'localhost');
+  const { language, experiment } = await getSiteConfig(hostname);
+
+  // Experiment mode: non-crawler traffic goes to the front page. Checked before
+  // any rewrite so it covers every path. '/' is exempt or this loops forever,
+  // and /api is exempt so future route handlers keep working.
+  if (
+    experiment &&
+    pathname !== '/' &&
+    !pathname.startsWith('/api/') &&
+    !isCrawler(request.headers.get('user-agent'))
+  ) {
+    const url = request.nextUrl.clone();
+    url.pathname = '/';
+    url.search = '';
+    const response = NextResponse.redirect(url, 302);
+    // Stops Cloudflare or any intermediary caching this redirect and later
+    // replaying it to a crawler, which would defeat the whole arrangement.
+    response.headers.set('Cache-Control', 'no-store, private');
+    return response;
+  }
+
+  // If no rewriting needed, skip entirely
   if (!needsSlugRewrite && !needsBlogRewrite && !needsSwedishRedirect) {
     return NextResponse.next();
   }
@@ -99,11 +141,8 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  // Only hit Supabase when we need to check if a Swedish slug should redirect
+  // Redirect Swedish slugs to the site's own localized slugs
   if (needsSwedishRedirect) {
-    const hostname = normalizeHostname(request.headers.get('host') || 'localhost');
-    const language = await getLanguageForHostname(hostname);
-
     // If the site IS Swedish (or unknown), no redirect needed
     if (!language || language === 'Swedish') {
       return NextResponse.next();
