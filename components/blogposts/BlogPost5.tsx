@@ -12,7 +12,8 @@ import PostNavigation from '@/components/blogcomponents/PostNavigation';
 import RelatedPosts from '@/components/blogcomponents/RelatedPosts';
 import ReadingProgressBar from '@/components/blogcomponents/ReadingProgressBar';
 import AIDisclaimer from '@/components/blogcomponents/AIDisclaimer';
-import AIDisclaimerCTA from '@/components/blogcomponents/AIDisclaimerCTA';
+import AIImageBadge from '@/components/blogcomponents/AIImageBadge';
+import AIAuthorBadge from '@/components/blogcomponents/AIAuthorBadge';
 
 interface BlogPostProps {
   websiteData: WebsiteData;
@@ -48,13 +49,16 @@ export default function BlogPost5({ websiteData, post, relatedPosts = [], previo
 
           <div className={`bg-white shadow-2xl overflow-hidden border-t-4 ${websiteData.border_radius}`} style={{ borderColor: websiteData.accent_color }}>
             {post.image_url && (
-              <Image
-                src={post.image_url}
-                alt={post.title}
-                width={1200}
-                height={500}
-                className="w-full h-64 md:h-80 object-cover"
-              />
+              <div className="relative">
+                <Image
+                  src={post.image_url}
+                  alt={post.title}
+                  width={1200}
+                  height={500}
+                  className="w-full h-64 md:h-80 object-cover"
+                />
+                <AIImageBadge websiteData={websiteData} />
+              </div>
             )}
 
             <div className="p-6 md:p-10 lg:p-12">
@@ -92,6 +96,9 @@ export default function BlogPost5({ websiteData, post, relatedPosts = [], previo
                     <Link href={`/${authorSlug}`} className="font-bold hover:underline block" style={{ color: websiteData.primary_color }}>
                       {websiteData.author_name}
                     </Link>
+                    <div className="my-1">
+                      <AIAuthorBadge websiteData={websiteData} />
+                    </div>
                     <div className="flex items-center gap-2 text-sm text-gray-500">
                       {post.published_at && (
                         <span>{new Date(post.published_at).toLocaleDateString(lang.locale, { year: 'numeric', month: 'long', day: 'numeric' })}</span>
@@ -105,20 +112,17 @@ export default function BlogPost5({ websiteData, post, relatedPosts = [], previo
                     </div>
                   </div>
                 </div>
-                <div className="mt-4">
-                  <AIDisclaimerCTA websiteData={websiteData} aiTag={post.ai_tag} />
-                </div>
               </header>
+
+              <div className="mb-8">
+                <AIDisclaimer websiteData={websiteData} aiTag={post.ai_tag} />
+              </div>
 
               <div
                 className="prose prose-lg max-w-none mb-10"
                 style={{ color: websiteData.text_color }}
                 dangerouslySetInnerHTML={{ __html: post.content }}
               />
-
-              <div className="mb-10">
-                <AIDisclaimer websiteData={websiteData} aiTag={post.ai_tag} />
-              </div>
 
               {websiteData.show_share_buttons && (
                 <div className="mb-10 pb-8 border-t pt-8" style={{ borderColor: websiteData.secondary_color }}>

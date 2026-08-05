@@ -12,7 +12,8 @@ import PostNavigation from '@/components/blogcomponents/PostNavigation';
 import RelatedPosts from '@/components/blogcomponents/RelatedPosts';
 import ReadingProgressBar from '@/components/blogcomponents/ReadingProgressBar';
 import AIDisclaimer from '@/components/blogcomponents/AIDisclaimer';
-import AIDisclaimerCTA from '@/components/blogcomponents/AIDisclaimerCTA';
+import AIImageBadge from '@/components/blogcomponents/AIImageBadge';
+import AIAuthorBadge from '@/components/blogcomponents/AIAuthorBadge';
 
 interface BlogPostProps {
   websiteData: WebsiteData;
@@ -77,6 +78,9 @@ export default function BlogPost3({ websiteData, post, relatedPosts = [], previo
               <Link href={`/${authorSlug}`} className="font-semibold hover:underline block mb-1" style={{ color: websiteData.primary_color }}>
                 {websiteData.author_name}
               </Link>
+              <div className="mb-1.5">
+                <AIAuthorBadge websiteData={websiteData} />
+              </div>
               <div className="flex items-center justify-center gap-2 text-sm text-gray-500">
                 {post.published_at && (
                   <span>{new Date(post.published_at).toLocaleDateString(lang.locale, { year: 'numeric', month: 'long', day: 'numeric' })}</span>
@@ -89,14 +93,11 @@ export default function BlogPost3({ websiteData, post, relatedPosts = [], previo
                 )}
               </div>
             </div>
-            <div className="mt-4">
-              <AIDisclaimerCTA websiteData={websiteData} aiTag={post.ai_tag} />
-            </div>
           </div>
         </header>
 
         {post.image_url && (
-          <div className="mb-10 md:mb-14 -mx-4 md:mx-0">
+          <div className="relative mb-10 md:mb-14 -mx-4 md:mx-0">
             <Image
               src={post.image_url}
               alt={post.title}
@@ -104,8 +105,13 @@ export default function BlogPost3({ websiteData, post, relatedPosts = [], previo
               height={600}
               className={`w-full h-64 md:h-80 lg:h-96 object-cover ${websiteData.border_radius}`}
             />
+            <AIImageBadge websiteData={websiteData} />
           </div>
         )}
+
+        <div className="mb-8">
+          <AIDisclaimer websiteData={websiteData} aiTag={post.ai_tag} />
+        </div>
 
         {/* Content with elegant prose styling */}
         <div
@@ -113,10 +119,6 @@ export default function BlogPost3({ websiteData, post, relatedPosts = [], previo
           style={{ color: websiteData.text_color }}
           dangerouslySetInnerHTML={{ __html: post.content }}
         />
-
-        <div className="mb-10">
-          <AIDisclaimer websiteData={websiteData} aiTag={post.ai_tag} />
-        </div>
 
         {/* Tags centered */}
         {websiteData.show_tags_display && post.tags && post.tags.length > 0 && (

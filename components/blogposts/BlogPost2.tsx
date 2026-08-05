@@ -12,7 +12,8 @@ import PostNavigation from '@/components/blogcomponents/PostNavigation';
 import RelatedPosts from '@/components/blogcomponents/RelatedPosts';
 import ReadingProgressBar from '@/components/blogcomponents/ReadingProgressBar';
 import AIDisclaimer from '@/components/blogcomponents/AIDisclaimer';
-import AIDisclaimerCTA from '@/components/blogcomponents/AIDisclaimerCTA';
+import AIImageBadge from '@/components/blogcomponents/AIImageBadge';
+import AIAuthorBadge from '@/components/blogcomponents/AIAuthorBadge';
 import { formatSwedishDate } from '@/lib/utils';
 
 interface BlogPostProps {
@@ -50,13 +51,16 @@ export default function BlogPost2({ websiteData, post, relatedPosts = [], previo
           {/* Main content */}
           <article className="lg:col-span-8">
             {post.image_url && (
-              <Image
-                src={post.image_url}
-                alt={post.title}
-                width={1200}
-                height={500}
-                className={`w-full h-56 md:h-72 lg:h-80 object-cover mb-8 ${websiteData.border_radius}`}
-              />
+              <div className="relative mb-8">
+                <Image
+                  src={post.image_url}
+                  alt={post.title}
+                  width={1200}
+                  height={500}
+                  className={`w-full h-56 md:h-72 lg:h-80 object-cover ${websiteData.border_radius}`}
+                />
+                <AIImageBadge websiteData={websiteData} />
+              </div>
             )}
 
             <h1 className="text-3xl md:text-4xl font-bold mb-4 leading-tight" style={{ color: websiteData.primary_color }}>
@@ -66,6 +70,7 @@ export default function BlogPost2({ websiteData, post, relatedPosts = [], previo
             {/* Mobile-only meta info */}
             <div className="lg:hidden flex flex-wrap items-center gap-3 mb-6 text-sm text-gray-600">
               <span><Link href={`/${authorSlug}`} className="hover:underline font-medium">{websiteData.author_name}</Link></span>
+              <AIAuthorBadge websiteData={websiteData} />
               {post.published_at && (
                 <>
                   <span>·</span>
@@ -78,7 +83,10 @@ export default function BlogPost2({ websiteData, post, relatedPosts = [], previo
                   <ReadingTime websiteData={websiteData} content={post.content} />
                 </>
               )}
-              <AIDisclaimerCTA websiteData={websiteData} aiTag={post.ai_tag} />
+            </div>
+
+            <div className="mb-8">
+              <AIDisclaimer websiteData={websiteData} aiTag={post.ai_tag} />
             </div>
 
             <div
@@ -86,10 +94,6 @@ export default function BlogPost2({ websiteData, post, relatedPosts = [], previo
               style={{ color: websiteData.text_color }}
               dangerouslySetInnerHTML={{ __html: post.content }}
             />
-
-            <div className="mb-10">
-              <AIDisclaimer websiteData={websiteData} aiTag={post.ai_tag} />
-            </div>
 
             {websiteData.show_share_buttons && (
               <div className="mb-10 pb-8 border-t pt-8" style={{ borderColor: websiteData.secondary_color }}>
@@ -132,6 +136,9 @@ export default function BlogPost2({ websiteData, post, relatedPosts = [], previo
                     <Link href={`/${authorSlug}`} className="font-semibold hover:underline" style={{ color: websiteData.primary_color }}>
                       {websiteData.author_name}
                     </Link>
+                    <div className="mt-1.5">
+                      <AIAuthorBadge websiteData={websiteData} />
+                    </div>
                   </div>
                 </div>
               </div>

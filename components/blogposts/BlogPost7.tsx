@@ -12,7 +12,8 @@ import PostNavigation from '@/components/blogcomponents/PostNavigation';
 import RelatedPosts from '@/components/blogcomponents/RelatedPosts';
 import ReadingProgressBar from '@/components/blogcomponents/ReadingProgressBar';
 import AIDisclaimer from '@/components/blogcomponents/AIDisclaimer';
-import AIDisclaimerCTA from '@/components/blogcomponents/AIDisclaimerCTA';
+import AIImageBadge from '@/components/blogcomponents/AIImageBadge';
+import AIAuthorBadge from '@/components/blogcomponents/AIAuthorBadge';
 import { formatSwedishDate, getContrastTextColor } from '@/lib/utils';
 
 interface BlogPostProps {
@@ -89,6 +90,9 @@ export default function BlogPost7({ websiteData, post, relatedPosts = [], previo
                 <Link href={`/${authorSlug}`} className="font-semibold hover:underline block mb-1" style={{ color: heroTextColor }}>
                   {websiteData.author_name}
                 </Link>
+                <div className="mb-1.5">
+                  <AIAuthorBadge websiteData={websiteData} onDark={heroTextColor === 'white'} />
+                </div>
                 <div className="flex items-center justify-center gap-2 text-sm" style={{ color: heroTextColor, opacity: 0.8 }}>
                   {post.published_at && (
                     <span>{formatSwedishDate(post.published_at)}</span>
@@ -108,7 +112,7 @@ export default function BlogPost7({ websiteData, post, relatedPosts = [], previo
 
       <article className={`${websiteData.container_width} mx-auto px-4 md:px-6`}>
         {post.image_url && (
-          <div className="-mt-12 mb-12">
+          <div className="relative -mt-12 mb-12">
             <Image
               src={post.image_url}
               alt={post.title}
@@ -116,12 +120,13 @@ export default function BlogPost7({ websiteData, post, relatedPosts = [], previo
               height={600}
               className={`w-full h-56 md:h-80 lg:h-[500px] object-cover shadow-2xl ${websiteData.border_radius}`}
             />
+            <AIImageBadge websiteData={websiteData} />
           </div>
         )}
 
         <div className="max-w-3xl mx-auto py-8 md:py-12">
-          <div className="mb-4">
-            <AIDisclaimerCTA websiteData={websiteData} aiTag={post.ai_tag} />
+          <div className="mb-8">
+            <AIDisclaimer websiteData={websiteData} aiTag={post.ai_tag} />
           </div>
 
           <div
@@ -129,10 +134,6 @@ export default function BlogPost7({ websiteData, post, relatedPosts = [], previo
             style={{ color: websiteData.text_color }}
             dangerouslySetInnerHTML={{ __html: post.content }}
           />
-
-          <div className="mb-10">
-            <AIDisclaimer websiteData={websiteData} aiTag={post.ai_tag} />
-          </div>
 
           {websiteData.show_tags_display && post.tags && post.tags.length > 1 && (
             <div className="flex justify-center mb-10 pt-8 border-t" style={{ borderColor: websiteData.secondary_color }}>

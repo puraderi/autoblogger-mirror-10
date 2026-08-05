@@ -12,7 +12,8 @@ import PostNavigation from '@/components/blogcomponents/PostNavigation';
 import RelatedPosts from '@/components/blogcomponents/RelatedPosts';
 import ReadingProgressBar from '@/components/blogcomponents/ReadingProgressBar';
 import AIDisclaimer from '@/components/blogcomponents/AIDisclaimer';
-import AIDisclaimerCTA from '@/components/blogcomponents/AIDisclaimerCTA';
+import AIImageBadge from '@/components/blogcomponents/AIImageBadge';
+import AIAuthorBadge from '@/components/blogcomponents/AIAuthorBadge';
 import { formatSwedishDate } from '@/lib/utils';
 
 interface BlogPostProps {
@@ -78,6 +79,7 @@ export default function BlogPost1({ websiteData, post, relatedPosts = [], previo
               <Link href={`/${authorSlug}`} className="font-medium hover:underline" style={{ color: websiteData.primary_color }}>
                 {websiteData.author_name}
               </Link>
+              <AIAuthorBadge websiteData={websiteData} />
               {post.published_at && (
                 <>
                   <span className="text-gray-300">·</span>
@@ -91,29 +93,31 @@ export default function BlogPost1({ websiteData, post, relatedPosts = [], previo
                 </>
               )}
             </div>
-            <AIDisclaimerCTA websiteData={websiteData} aiTag={post.ai_tag} />
           </div>
 
           {post.image_url && (
-            <Image
-              src={post.image_url}
-              alt={post.title}
-              width={1200}
-              height={600}
-              className={`w-full h-56 md:h-72 lg:h-[420px] object-cover ${websiteData.border_radius}`}
-            />
+            <div className="relative">
+              <Image
+                src={post.image_url}
+                alt={post.title}
+                width={1200}
+                height={600}
+                className={`w-full h-56 md:h-72 lg:h-[420px] object-cover ${websiteData.border_radius}`}
+              />
+              <AIImageBadge websiteData={websiteData} />
+            </div>
           )}
         </header>
+
+        <div className="mb-8">
+          <AIDisclaimer websiteData={websiteData} aiTag={post.ai_tag} />
+        </div>
 
         <div
           className="prose prose-lg max-w-none mb-10 prose-headings:font-bold prose-a:underline prose-img:rounded-lg"
           style={{ color: websiteData.text_color }}
           dangerouslySetInnerHTML={{ __html: post.content }}
         />
-
-        <div className="mb-10">
-          <AIDisclaimer websiteData={websiteData} aiTag={post.ai_tag} />
-        </div>
 
         {/* Tags row */}
         {websiteData.show_tags_display && post.tags && post.tags.length > 1 && (

@@ -12,7 +12,8 @@ import PostNavigation from '@/components/blogcomponents/PostNavigation';
 import RelatedPosts from '@/components/blogcomponents/RelatedPosts';
 import ReadingProgressBar from '@/components/blogcomponents/ReadingProgressBar';
 import AIDisclaimer from '@/components/blogcomponents/AIDisclaimer';
-import AIDisclaimerCTA from '@/components/blogcomponents/AIDisclaimerCTA';
+import AIImageBadge from '@/components/blogcomponents/AIImageBadge';
+import AIAuthorBadge from '@/components/blogcomponents/AIAuthorBadge';
 import { formatSwedishDate, getContrastTextColor } from '@/lib/utils';
 
 interface BlogPostProps {
@@ -82,6 +83,7 @@ export default function BlogPost6({ websiteData, post, relatedPosts = [], previo
               <Link href={`/${authorSlug}`} className="font-medium hover:underline" style={{ color: headerTextColor }}>
                 {websiteData.author_name}
               </Link>
+              <AIAuthorBadge websiteData={websiteData} onDark={headerTextColor === 'white'} />
               {post.published_at && (
                 <>
                   <span style={{ opacity: 0.6 }}>·</span>
@@ -102,7 +104,7 @@ export default function BlogPost6({ websiteData, post, relatedPosts = [], previo
       <article className={`${websiteData.container_width} mx-auto px-4 md:px-6`}>
         {/* Image overlapping the header */}
         {post.image_url && (
-          <div className="-mt-8 md:-mt-12 mb-10">
+          <div className="relative -mt-8 md:-mt-12 mb-10">
             <Image
               src={post.image_url}
               alt={post.title}
@@ -110,12 +112,13 @@ export default function BlogPost6({ websiteData, post, relatedPosts = [], previo
               height={600}
               className={`w-full h-56 md:h-72 lg:h-[450px] object-cover shadow-xl ${websiteData.border_radius}`}
             />
+            <AIImageBadge websiteData={websiteData} />
           </div>
         )}
 
         <div className="py-8 md:py-12">
-          <div className="mb-4">
-            <AIDisclaimerCTA websiteData={websiteData} aiTag={post.ai_tag} />
+          <div className="mb-8">
+            <AIDisclaimer websiteData={websiteData} aiTag={post.ai_tag} />
           </div>
 
           <div
@@ -123,10 +126,6 @@ export default function BlogPost6({ websiteData, post, relatedPosts = [], previo
             style={{ color: websiteData.text_color }}
             dangerouslySetInnerHTML={{ __html: post.content }}
           />
-
-          <div className="mb-10">
-            <AIDisclaimer websiteData={websiteData} aiTag={post.ai_tag} />
-          </div>
 
           {websiteData.show_tags_display && post.tags && post.tags.length > 1 && (
             <div className="mb-8 pb-8 border-b" style={{ borderColor: websiteData.secondary_color }}>

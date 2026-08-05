@@ -7,6 +7,7 @@ import { getBlogPosts } from '@/lib/services/blog';
 import { Metadata } from 'next';
 import { normalizeHostname } from '@/lib/utils';
 import { filterGeofencedPosts } from '@/lib/geofence';
+import { getAuthorDisclosure } from '@/lib/disclaimerVariations';
 
 interface AuthorPageProps {
   params: Promise<{
@@ -71,10 +72,25 @@ export default async function AuthorPage({ params }: AuthorPageProps) {
             {websiteData.author_name}
           </h1>
           {websiteData.author_bio && (
-            <p className="text-base md:text-lg lg:text-xl max-w-2xl mx-auto" style={{ color: websiteData.text_color }}>
+            <p className="text-base md:text-lg lg:text-xl max-w-2xl mx-auto mb-5" style={{ color: websiteData.text_color }}>
               {websiteData.author_bio}
             </p>
           )}
+          {/* Stated in the UI rather than relying on the stored bio copy. */}
+          <p
+            className={`text-sm md:text-base font-medium max-w-2xl mx-auto text-left p-4 ${websiteData.border_radius}`}
+            style={{
+              color: websiteData.text_color,
+              backgroundColor: `${websiteData.accent_color}12`,
+              borderLeft: `3px solid ${websiteData.accent_color}`,
+            }}
+          >
+            {getAuthorDisclosure(
+              websiteData.language,
+              websiteData.author_name,
+              websiteData.website_name
+            )}
+          </p>
         </div>
       </div>
 

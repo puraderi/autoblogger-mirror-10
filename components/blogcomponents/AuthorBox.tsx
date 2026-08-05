@@ -2,6 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { WebsiteData } from '@/lib/services/website';
 import { getLanguageConfig } from '@/lib/languages';
+import { getAuthorDisclosure } from '@/lib/disclaimerVariations';
 
 interface AuthorBoxProps {
   websiteData: WebsiteData;
@@ -16,6 +17,7 @@ export default function AuthorBox({ websiteData, authorName, authorAvatar, autho
 
   const defaultBio = `${authorName} ${lang.labels.author.toLowerCase()} ${websiteData.website_name}.`;
   const authorSlug = websiteData.author_slug;
+  const disclosure = getAuthorDisclosure(websiteData.language, authorName, websiteData.website_name);
 
   const content = (
     <div className={`p-4 md:p-8 ${websiteData.border_radius} flex flex-col sm:flex-row gap-4 sm:gap-6 items-center sm:items-start transition-all duration-200 ${authorSlug ? 'hover:shadow-md' : ''}`} style={{ backgroundColor: websiteData.secondary_color }}>
@@ -36,6 +38,17 @@ export default function AuthorBox({ websiteData, authorName, authorAvatar, autho
         </h3>
         <p className="text-sm leading-relaxed mb-3" style={{ color: websiteData.text_color }}>
           {authorBio || defaultBio}
+        </p>
+        {/* Stated in the UI rather than relying on the stored bio copy. */}
+        <p
+          className={`text-sm font-medium leading-relaxed mb-3 p-3 ${websiteData.border_radius}`}
+          style={{
+            color: websiteData.text_color,
+            backgroundColor: `${websiteData.accent_color}12`,
+            borderLeft: `3px solid ${websiteData.accent_color}`,
+          }}
+        >
+          {disclosure}
         </p>
         {authorSlug && (
           <span className="text-sm font-medium hover:underline" style={{ color: websiteData.accent_color }}>
