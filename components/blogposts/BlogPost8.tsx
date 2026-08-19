@@ -94,7 +94,7 @@ export default function BlogPost8({ websiteData, post, relatedPosts = [], previo
                     {websiteData.author_name}
                   </Link>
                   <div className="mt-1.5">
-                    <AIAuthorBadge websiteData={websiteData} onDark={secondaryTextColor === 'white'} />
+                    <AIAuthorBadge websiteData={websiteData} post={post} onDark={secondaryTextColor === 'white'} />
                   </div>
                   <div className="flex items-center gap-2 mt-1">
                     {post.published_at && <span>{formatSwedishDate(post.published_at)}</span>}
@@ -119,7 +119,7 @@ export default function BlogPost8({ websiteData, post, relatedPosts = [], previo
                   height={500}
                   className={`w-full h-64 md:h-80 lg:h-[400px] object-cover shadow-xl ${websiteData.border_radius}`}
                 />
-                <AIImageBadge websiteData={websiteData} />
+                <AIImageBadge websiteData={websiteData} post={post} />
               </div>
             )}
           </div>
@@ -129,7 +129,7 @@ export default function BlogPost8({ websiteData, post, relatedPosts = [], previo
       <article className={`${websiteData.container_width} mx-auto px-4 md:px-6 py-10 md:py-16`}>
         <div className="max-w-3xl mx-auto">
           <div className="mb-8">
-            <AIDisclaimer websiteData={websiteData} aiTag={post.ai_tag} />
+            <AIDisclaimer websiteData={websiteData} post={post} />
           </div>
 
           <div
@@ -154,6 +154,7 @@ export default function BlogPost8({ websiteData, post, relatedPosts = [], previo
             <div className="mb-10">
               <AuthorBox
                 websiteData={websiteData}
+                post={post}
                 authorName={websiteData.author_name}
                 authorAvatar={websiteData.author_image_url}
               />

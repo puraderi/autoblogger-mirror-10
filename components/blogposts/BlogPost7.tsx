@@ -91,7 +91,7 @@ export default function BlogPost7({ websiteData, post, relatedPosts = [], previo
                   {websiteData.author_name}
                 </Link>
                 <div className="mb-1.5">
-                  <AIAuthorBadge websiteData={websiteData} onDark={heroTextColor === 'white'} />
+                  <AIAuthorBadge websiteData={websiteData} post={post} onDark={heroTextColor === 'white'} />
                 </div>
                 <div className="flex items-center justify-center gap-2 text-sm" style={{ color: heroTextColor, opacity: 0.8 }}>
                   {post.published_at && (
@@ -120,13 +120,13 @@ export default function BlogPost7({ websiteData, post, relatedPosts = [], previo
               height={600}
               className={`w-full h-56 md:h-80 lg:h-[500px] object-cover shadow-2xl ${websiteData.border_radius}`}
             />
-            <AIImageBadge websiteData={websiteData} />
+            <AIImageBadge websiteData={websiteData} post={post} />
           </div>
         )}
 
         <div className="max-w-3xl mx-auto py-8 md:py-12">
           <div className="mb-8">
-            <AIDisclaimer websiteData={websiteData} aiTag={post.ai_tag} />
+            <AIDisclaimer websiteData={websiteData} post={post} />
           </div>
 
           <div
@@ -151,6 +151,7 @@ export default function BlogPost7({ websiteData, post, relatedPosts = [], previo
             <div className="mb-10">
               <AuthorBox
                 websiteData={websiteData}
+                post={post}
                 authorName={websiteData.author_name}
                 authorAvatar={websiteData.author_image_url}
               />

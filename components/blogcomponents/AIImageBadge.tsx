@@ -1,8 +1,11 @@
 import { WebsiteData } from '@/lib/services/website';
+import { BlogPost } from '@/lib/services/blog';
 import { getImageBadgeLabel } from '@/lib/disclaimerVariations';
+import { showAIDisclosure } from '@/lib/aiDisclosure';
 
 interface AIImageBadgeProps {
   websiteData: WebsiteData;
+  post: Pick<BlogPost, 'ai_tag' | 'post_type'> | null;
   // Overrides the default bottom-right placement for templates where that
   // corner is already occupied (e.g. the full-bleed hero in BlogPost4).
   position?: 'bottom-right' | 'top-right';
@@ -14,11 +17,12 @@ const positions = {
 };
 
 /**
- * Corner label marking an article image as AI-generated. Deliberately not
- * gated on the ai_tag opt-out — image disclosure always shows.
+ * Corner label marking an article image as AI-generated.
  * Requires a positioned ancestor.
  */
-export default function AIImageBadge({ websiteData, position = 'bottom-right' }: AIImageBadgeProps) {
+export default function AIImageBadge({ websiteData, post, position = 'bottom-right' }: AIImageBadgeProps) {
+  if (!showAIDisclosure(websiteData, post)) return null;
+
   return (
     <span
       className={`pointer-events-none absolute ${positions[position]} z-20 inline-flex items-center gap-1 rounded-full bg-black/55 px-2 py-1 text-[10px] md:text-[11px] font-medium leading-none text-white backdrop-blur-sm`}

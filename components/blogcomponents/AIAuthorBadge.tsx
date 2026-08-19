@@ -1,8 +1,11 @@
 import { WebsiteData } from '@/lib/services/website';
+import { BlogPost } from '@/lib/services/blog';
 import { getAuthorBadgeLabel, getAuthorDisclosure } from '@/lib/disclaimerVariations';
+import { showAIDisclosure } from '@/lib/aiDisclosure';
 
 interface AIAuthorBadgeProps {
   websiteData: WebsiteData;
+  post: Pick<BlogPost, 'ai_tag' | 'post_type'> | null;
   // Renders light-on-dark for bylines sitting on top of a hero image.
   onDark?: boolean;
 }
@@ -12,8 +15,9 @@ interface AIAuthorBadgeProps {
  * rather than a real person. The full sentence rides along as a title/aria
  * label so the disclosure is available to screen readers and on hover.
  */
-export default function AIAuthorBadge({ websiteData, onDark = false }: AIAuthorBadgeProps) {
+export default function AIAuthorBadge({ websiteData, post, onDark = false }: AIAuthorBadgeProps) {
   if (!websiteData.author_name) return null;
+  if (!showAIDisclosure(websiteData, post)) return null;
 
   const disclosure = getAuthorDisclosure(
     websiteData.language,

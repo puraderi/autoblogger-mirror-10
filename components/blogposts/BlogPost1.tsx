@@ -79,7 +79,7 @@ export default function BlogPost1({ websiteData, post, relatedPosts = [], previo
               <Link href={`/${authorSlug}`} className="font-medium hover:underline" style={{ color: websiteData.primary_color }}>
                 {websiteData.author_name}
               </Link>
-              <AIAuthorBadge websiteData={websiteData} />
+              <AIAuthorBadge websiteData={websiteData} post={post} />
               {post.published_at && (
                 <>
                   <span className="text-gray-300">·</span>
@@ -104,13 +104,13 @@ export default function BlogPost1({ websiteData, post, relatedPosts = [], previo
                 height={600}
                 className={`w-full h-56 md:h-72 lg:h-[420px] object-cover ${websiteData.border_radius}`}
               />
-              <AIImageBadge websiteData={websiteData} />
+              <AIImageBadge websiteData={websiteData} post={post} />
             </div>
           )}
         </header>
 
         <div className="mb-8">
-          <AIDisclaimer websiteData={websiteData} aiTag={post.ai_tag} />
+          <AIDisclaimer websiteData={websiteData} post={post} />
         </div>
 
         <div
@@ -136,6 +136,7 @@ export default function BlogPost1({ websiteData, post, relatedPosts = [], previo
           <div className="mb-10">
             <AuthorBox
               websiteData={websiteData}
+              post={post}
               authorName={websiteData.author_name}
               authorAvatar={websiteData.author_image_url}
             />

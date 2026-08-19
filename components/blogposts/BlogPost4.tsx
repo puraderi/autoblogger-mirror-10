@@ -47,7 +47,7 @@ export default function BlogPost4({ websiteData, post, relatedPosts = [], previo
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
             {/* Top-right here: the bottom of this hero is taken by the title block. */}
-            <AIImageBadge websiteData={websiteData} position="top-right" />
+            <AIImageBadge websiteData={websiteData} post={post} position="top-right" />
             <div className="absolute bottom-0 left-0 right-0">
               <div className={`${websiteData.container_width} mx-auto px-4 md:px-6 pb-10 md:pb-14 text-white`}>
                 {websiteData.show_breadcrumbs && (
@@ -80,7 +80,7 @@ export default function BlogPost4({ websiteData, post, relatedPosts = [], previo
                     />
                   )}
                   <Link href={`/${authorSlug}`} className="font-medium hover:underline">{websiteData.author_name}</Link>
-                  <AIAuthorBadge websiteData={websiteData} onDark />
+                  <AIAuthorBadge websiteData={websiteData} post={post} onDark />
                   {post.published_at && (
                     <>
                       <span className="opacity-60">·</span>
@@ -115,7 +115,7 @@ export default function BlogPost4({ websiteData, post, relatedPosts = [], previo
               <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold mb-4 max-w-4xl">{post.title}</h1>
               <div className="flex items-center gap-4 flex-wrap opacity-90">
                 <span><Link href={`/${authorSlug}`} className="hover:underline">{websiteData.author_name}</Link></span>
-                <AIAuthorBadge websiteData={websiteData} onDark />
+                <AIAuthorBadge websiteData={websiteData} post={post} onDark />
                 {post.published_at && (
                   <span>{new Date(post.published_at).toLocaleDateString(lang.locale, { year: 'numeric', month: 'long', day: 'numeric' })}</span>
                 )}
@@ -131,7 +131,7 @@ export default function BlogPost4({ websiteData, post, relatedPosts = [], previo
           </div>
 
           <div className="mb-8">
-            <AIDisclaimer websiteData={websiteData} aiTag={post.ai_tag} />
+            <AIDisclaimer websiteData={websiteData} post={post} />
           </div>
 
           <div
@@ -157,6 +157,7 @@ export default function BlogPost4({ websiteData, post, relatedPosts = [], previo
             <div className="mb-10">
               <AuthorBox
                 websiteData={websiteData}
+                post={post}
                 authorName={websiteData.author_name}
                 authorAvatar={websiteData.author_image_url}
               />

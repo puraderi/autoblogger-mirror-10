@@ -59,7 +59,7 @@ export default function BlogPost2({ websiteData, post, relatedPosts = [], previo
                   height={500}
                   className={`w-full h-56 md:h-72 lg:h-80 object-cover ${websiteData.border_radius}`}
                 />
-                <AIImageBadge websiteData={websiteData} />
+                <AIImageBadge websiteData={websiteData} post={post} />
               </div>
             )}
 
@@ -70,7 +70,7 @@ export default function BlogPost2({ websiteData, post, relatedPosts = [], previo
             {/* Mobile-only meta info */}
             <div className="lg:hidden flex flex-wrap items-center gap-3 mb-6 text-sm text-gray-600">
               <span><Link href={`/${authorSlug}`} className="hover:underline font-medium">{websiteData.author_name}</Link></span>
-              <AIAuthorBadge websiteData={websiteData} />
+              <AIAuthorBadge websiteData={websiteData} post={post} />
               {post.published_at && (
                 <>
                   <span>·</span>
@@ -86,7 +86,7 @@ export default function BlogPost2({ websiteData, post, relatedPosts = [], previo
             </div>
 
             <div className="mb-8">
-              <AIDisclaimer websiteData={websiteData} aiTag={post.ai_tag} />
+              <AIDisclaimer websiteData={websiteData} post={post} />
             </div>
 
             <div
@@ -105,6 +105,7 @@ export default function BlogPost2({ websiteData, post, relatedPosts = [], previo
               <div className="mb-10">
                 <AuthorBox
                   websiteData={websiteData}
+                  post={post}
                   authorName={websiteData.author_name}
                   authorAvatar={websiteData.author_image_url}
                 />
@@ -137,7 +138,7 @@ export default function BlogPost2({ websiteData, post, relatedPosts = [], previo
                       {websiteData.author_name}
                     </Link>
                     <div className="mt-1.5">
-                      <AIAuthorBadge websiteData={websiteData} />
+                      <AIAuthorBadge websiteData={websiteData} post={post} />
                     </div>
                   </div>
                 </div>

@@ -79,7 +79,7 @@ export default function BlogPost3({ websiteData, post, relatedPosts = [], previo
                 {websiteData.author_name}
               </Link>
               <div className="mb-1.5">
-                <AIAuthorBadge websiteData={websiteData} />
+                <AIAuthorBadge websiteData={websiteData} post={post} />
               </div>
               <div className="flex items-center justify-center gap-2 text-sm text-gray-500">
                 {post.published_at && (
@@ -105,12 +105,12 @@ export default function BlogPost3({ websiteData, post, relatedPosts = [], previo
               height={600}
               className={`w-full h-64 md:h-80 lg:h-96 object-cover ${websiteData.border_radius}`}
             />
-            <AIImageBadge websiteData={websiteData} />
+            <AIImageBadge websiteData={websiteData} post={post} />
           </div>
         )}
 
         <div className="mb-8">
-          <AIDisclaimer websiteData={websiteData} aiTag={post.ai_tag} />
+          <AIDisclaimer websiteData={websiteData} post={post} />
         </div>
 
         {/* Content with elegant prose styling */}
@@ -137,6 +137,7 @@ export default function BlogPost3({ websiteData, post, relatedPosts = [], previo
           <div className="mb-10">
             <AuthorBox
               websiteData={websiteData}
+              post={post}
               authorName={websiteData.author_name}
               authorAvatar={websiteData.author_image_url}
             />

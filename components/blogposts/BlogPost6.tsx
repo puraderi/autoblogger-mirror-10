@@ -83,7 +83,7 @@ export default function BlogPost6({ websiteData, post, relatedPosts = [], previo
               <Link href={`/${authorSlug}`} className="font-medium hover:underline" style={{ color: headerTextColor }}>
                 {websiteData.author_name}
               </Link>
-              <AIAuthorBadge websiteData={websiteData} onDark={headerTextColor === 'white'} />
+              <AIAuthorBadge websiteData={websiteData} post={post} onDark={headerTextColor === 'white'} />
               {post.published_at && (
                 <>
                   <span style={{ opacity: 0.6 }}>·</span>
@@ -112,13 +112,13 @@ export default function BlogPost6({ websiteData, post, relatedPosts = [], previo
               height={600}
               className={`w-full h-56 md:h-72 lg:h-[450px] object-cover shadow-xl ${websiteData.border_radius}`}
             />
-            <AIImageBadge websiteData={websiteData} />
+            <AIImageBadge websiteData={websiteData} post={post} />
           </div>
         )}
 
         <div className="py-8 md:py-12">
           <div className="mb-8">
-            <AIDisclaimer websiteData={websiteData} aiTag={post.ai_tag} />
+            <AIDisclaimer websiteData={websiteData} post={post} />
           </div>
 
           <div
@@ -143,6 +143,7 @@ export default function BlogPost6({ websiteData, post, relatedPosts = [], previo
             <div className="mb-10">
               <AuthorBox
                 websiteData={websiteData}
+                post={post}
                 authorName={websiteData.author_name}
                 authorAvatar={websiteData.author_image_url}
               />

@@ -1,16 +1,15 @@
 import { WebsiteData } from '@/lib/services/website';
+import { BlogPost } from '@/lib/services/blog';
 import { getDisclaimerText, getAuthorDisclosure } from '@/lib/disclaimerVariations';
+import { showAIDisclosure } from '@/lib/aiDisclosure';
 
 interface AIDisclaimerProps {
   websiteData: WebsiteData;
-  // Per-article override. Hidden when either the site or the article opts out.
-  aiTag?: boolean | null;
+  post: Pick<BlogPost, 'ai_tag' | 'post_type'> | null;
 }
 
-export default function AIDisclaimer({ websiteData, aiTag }: AIDisclaimerProps) {
-  // Show only when neither the site nor the article has opted out (null/undefined = on).
-  const showDisclaimer = websiteData.ai_tag !== false && aiTag !== false;
-  if (!showDisclaimer) return null;
+export default function AIDisclaimer({ websiteData, post }: AIDisclaimerProps) {
+  if (!showAIDisclosure(websiteData, post)) return null;
 
   const { disclaimerText, verifyWarning, hasEmail, email } = getDisclaimerText(
     websiteData.id,
